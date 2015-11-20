@@ -1,0 +1,19 @@
+.purchase-amount p{
+	padding:0 40px;
+}
+.enter-price,
+.next-btn{
+	width:100%;
+	max-width:160px;
+	margin:0 auto;
+	position:relative;
+}
+.enter-price .currency{
+	position:absolute;
+	top:6px;
+	left:0;
+}
+.amount .enter-price input{
+	padding-left:20px;
+	padding-right:0;
+}
