@@ -1,0 +1,22 @@
+{
+  "author":"Daniel Hindi"
+,"pluginName":"Loyalty Plugin"
+,"pluginDescription":"Loyalty Plugin Description."
+,"supportEmail":"[Your support Email]"
+,"control":{
+  "content":{
+    "enabled":true
+  }
+, "design":{
+    "enabled":true
+  }
+, "settings":{
+    "enabled":true
+  }
+}
+,"widget":{
+
+},
+  "features" : [],
+  "languages" : ["en"]
+}
