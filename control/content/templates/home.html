@@ -1,0 +1,171 @@
+<div class="loyalty-plugin">
+  <div class="carousel">carousel</div>
+  <hr class="none">
+  <div class="wysiwyg">wysiwyg</div>
+  <hr class="none">
+  <div class="item clearfix row">
+    <div class="labels col-xs-3 pull-left">
+      <span>Points per Purchase</span>
+    </div>
+    <div class="main col-xs-9 pull-right">
+      <input type="text" class="form-control" placeholder="Points per Purchase">
+    </div>
+  </div>
+  <hr class="none">
+  <div class="item clearfix row">
+    <div class="labels col-xs-3 pull-left">
+      <span>Points per Dollar</span>
+    </div>
+    <div class="main col-xs-9 pull-right">
+      <input type="text" class="form-control" placeholder="Points per Dollar">
+    </div>
+  </div>
+  <hr class="none">
+  <div class="item clearfix row">
+    <div class="labels col-xs-3 pull-left">
+      <span>Daily Limit</span>
+    </div>
+    <div class="main col-xs-9 pull-right">
+      <input type="text" class="form-control" placeholder="Daily Limit">
+    </div>
+  </div>
+  <hr class="none">
+  <div class="item clearfix row">
+    <div class="labels col-xs-3 pull-left">
+      <span>Total Limit</span>
+    </div>
+    <div class="main col-xs-9 pull-right">
+      <input type="text" class="form-control" placeholder="Total Limit">
+    </div>
+  </div>
+  <hr class="none">
+  <div class="item clearfix row">
+    <div class="labels col-xs-3 pull-left">
+      <span>Add Points Passcode</span>
+    </div>
+    <div class="main col-xs-9 pull-right">
+      <input type="text" class="form-control" placeholder="Add Points Passcode">
+    </div>
+  </div>
+  <hr>
+  <div class="item clearfix row">
+    <div class="labels col-md-1 padding-right-zero pull-left">
+      <span>Sort</span>
+    </div>
+    <div class="main col-md-11 pull-right">
+      <div class="col-md-4 pull-left padding-left-zero">
+        <div class="dropdown pull-left col-md-12 padding-zero" dropdown>
+          <button ng-disabled="disabled"
+                  class="btn btn-default text-left dropdown-toggle"
+                  data-toggle="dropdown" dropdown-toggle aria-expanded="true">
+            <span class="pull-left">Sort Dropdown</span>
+            <span class="chevron icon-chevron-down pull-right"></span>
+          </button>
+          <ul class="dropdown-menu extended" role="menu">
+            <li>
+              <a tabindex="-1" class="transition-third">Manually</a>
+            </li>
+            <li>
+              <a tabindex="-1" class="transition-third">Item Name A-Z</a>
+            </li>
+            <li>
+              <a tabindex="-1" class="transition-third">Item Name Z-A</a>
+            </li>
+            <li>
+              <a tabindex="-1" class="transition-third">Newest First</a>
+            </li>
+            <li>
+              <a tabindex="-1" class="transition-third">Oldest First</a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="col-md-8 pull-right padding-zero">
+        <div class="col-md-8 pull-left padding-left-zero">
+          <input ng-model="search" type="text" class="form-control"
+                 placeholder="Search Item Name">
+        </div>
+        <div class="col-md-4 pull-right padding-zero">
+          <a ng-click="ContentSections.searchListSection(search)"
+             class="btn btn-primary pull-right stretch">Search</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="item clearfix row">
+    <div class="main col-md-9 pull-right padding-left-zero row">
+      <div class="pull-left inner-main col-md-8 padding-zero">
+        <a class="btn btn-success stretch">Add New Reward</a>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="item clearfix">
+    <div
+        class="tab-order draggable-list-view wide-list has-btn-link border-grey border-radius-four">
+      <div>
+        <div>
+          <div class="d-item double-line square-icon clearfix">
+            <span class="icon icon-menu pull-left cursor-grab"></span>
+
+            <div class="media-holder pull-left">
+              <img src="http://www.placehold.it/100x100">
+            </div>
+            <div class="copy pull-right">
+              <div class="col-md-7 padding-zero pull-left">
+                <a class="text-primary">
+                  <span class="title ellipsis pull-left">Reward Name</span>
+                </a>
+                <span class="title ellipsis pull-left">### Points</span>
+              </div>
+              <div class="pull-right padding-top-fifteen">
+                <span
+                    class="btn-icon btn-delete-icon btn-danger transition-third"></span>
+              </div>
+            </div>
+          </div>
+          <div class="d-item double-line square-icon clearfix">
+            <span class="icon icon-menu pull-left cursor-grab"></span>
+
+            <div class="media-holder pull-left">
+              <img src="http://www.placehold.it/100x100">
+            </div>
+            <div class="copy pull-right">
+              <div class="col-md-7 padding-zero pull-left">
+                <a class="text-primary">
+                  <span class="title ellipsis pull-left">Reward Name</span>
+                </a>
+                <span class="title ellipsis pull-left">### Points</span>
+              </div>
+              <div class="pull-right padding-top-fifteen">
+                <span
+                    class="btn-icon btn-delete-icon btn-danger transition-third"></span>
+              </div>
+            </div>
+          </div>
+          <div class="d-item double-line square-icon clearfix">
+            <span class="icon icon-menu pull-left cursor-grab"></span>
+
+            <div class="media-holder pull-left">
+              <img src="http://www.placehold.it/100x100">
+            </div>
+            <div class="copy pull-right">
+              <div class="col-md-7 padding-zero pull-left">
+                <a class="text-primary">
+                  <span class="title ellipsis pull-left">Reward Name</span>
+                </a>
+                <span class="title ellipsis pull-left">### Points</span>
+              </div>
+              <div class="pull-right padding-top-fifteen">
+                <span
+                    class="btn-icon btn-delete-icon btn-danger transition-third"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
