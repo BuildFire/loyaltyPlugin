@@ -10,6 +10,16 @@
           controllerAs: 'ContentHome',
           controller: 'ContentHomeCtrl'
         })
+        .when('/reward', {
+          templateUrl: 'templates/reward.html',
+          controllerAs: 'ContentReward',
+          controller: 'ContentRewardCtrl'
+        })
+        .when('/reward/:id', {
+          templateUrl: 'templates/reward.html',
+          controllerAs: 'ContentReward',
+          controller: 'ContentRewardCtrl'
+        })
         .otherwise('/');
     }])
 })(window.angular);
