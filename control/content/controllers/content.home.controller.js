@@ -12,9 +12,9 @@
           externalAppId: 15030018,
           appId: 15030018,
           name: 'testloyalty',
-          pointsPerVisit: 0,
-          pointsPerDollar: 0,
-          dailyLimit: 0,
+          pointsPerVisit: 1,
+          pointsPerDollar: 1,
+          dailyLimit: 1000,
           image: "",
           userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
           auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
@@ -44,9 +44,9 @@
         var init = function () {
           var success = function (result) {
               console.info('init success result:', result);
-              ContentHome.data = result.data;
-              if (!ContentHome.data.content)
-                ContentHome.data.content = {};
+              ContentHome.data = result;
+              if (!ContentHome.data)
+                ContentHome.data = {};
 
               updateMasterItem(ContentHome.data);
               if (tmrDelay)clearTimeout(tmrDelay);
