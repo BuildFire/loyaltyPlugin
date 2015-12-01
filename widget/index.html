@@ -15,21 +15,19 @@
   <script src="../../../scripts/angular/angular.min.js"></script>
   <script src="../../../scripts/angular/angular-route.min.js"></script>
   <script src="app.js"></script>
+  <script src="app.services.js"></script>
+  <script src="enums.js"></script>
   <script src="controllers/widget.home.controller.js"></script>
   <script src="controllers/widget.item.controller.js"></script>
 
   <!-- Meta -->
   <meta charset="utf-8">
 </head>
-<body>
-<div class="main_view">
-  <div class="slide">
-    <div ng-controller="WidgetHomeCtrl as WidgetHome">
-      <div ng-include="'templates/List_Layout_3.html'">
-      </div>
-    </div>
+<body class="body-scroll slide no-scroll">
+<div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content">
+  <div ng-include="'templates/List_Layout_1.html'">
   </div>
-  <div ng-view="" class="slide content" ng-hide="showHome"></div>
 </div>
+<div view-switcher=""></div>
 </body>
 </html>
