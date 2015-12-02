@@ -46,4 +46,13 @@
           }
         };
       }])
+    .run(['ViewStack', function (ViewStack) {
+      buildfire.navigation.onBackButtonClick = function () {
+        if (ViewStack.hasViews()) {
+          ViewStack.pop();
+        } else {
+          buildfire.navigation.navigateHome();
+        }
+      };
+    }])
 })(window.angular, window.buildfire);
