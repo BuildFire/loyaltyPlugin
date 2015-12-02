@@ -1,9 +1,10 @@
 
-<div class="holder padding-zero">
+<div class="holder padding-zero" ng-controller="WidgetRedeemCtrl as
+     WidgetRedeem">
 	<div class="loyalty-plugin">				
 		<div class="plugin-slider text-center">
 			<div class="plugin-slide">
-				<img src="http://www.placehold.it/1280x720.jpg">
+        <img src="assets/images/16x9.png">
 			</div>
 		</div>
 		<div class="padded">
@@ -21,7 +22,8 @@
 						<a class="btn btn-danger stretch">Cancel</a>
 					</div>
 					<div class="col-xs-6 pull-right padding-left-five">
-						<a class="btn btn-success stretch">Confirm</a>
+						<a class="btn btn-success stretch" href="javascript:void(0);"
+               ng-click="WidgetRedeem.redeemPoints()">Confirm</a>
 					</div>
 				</div>
 			</div>	

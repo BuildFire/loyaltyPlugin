@@ -1,4 +1,4 @@
-<div class="holder padding-zero">
+<div class="holder padding-zero" ng-controller="WidgetItemCtrl as WidgetItem">
 	<div class="loyalty-plugin">				
 		<div class="plugin-slider text-center">
 			<div class="plugin-slide">
@@ -12,7 +12,8 @@
 					<p class="margin-zero ellipsis opacity-seventy">200 Points</p>
 				</div>
 				<div class="col-xs-4 pull-right">
-					<a class="btn btn-primary stretch">Redeem</a>
+					<a class="btn btn-primary stretch" href="javascript:void(0);"
+             ng-click="WidgetItem.confirmCancel()">Redeem</a>
 				</div>
 			</div>
 			<hr class="small">

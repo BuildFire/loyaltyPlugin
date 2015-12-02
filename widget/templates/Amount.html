@@ -1,5 +1,6 @@
 
-<div class="holder padding-zero">
+<div class="holder padding-zero" ng-controller="WidgetAmountCtrl as
+     WidgetAmount">
 	<div class="loyalty-plugin amount">				
 		<div class="purchase-amount padded margin-top-ten">
 			<p class="text-center">Enter the Purchase Amount</p>
@@ -8,7 +9,9 @@
 				<input type="text" placeholder="100" class="form-control text-right border-none">
 			</div>
 			<div class="next-btn margin-top-twenty">
-				<a class="btn btn-primary stretch margin-top">Next</a>
+				<a class="btn btn-primary stretch margin-top"
+           href="javascript:void(0);" ng-click="WidgetAmount.confirmCode()">Next
+        </a>
 			</div>
 		</div>
 		<div class="col-xs-12 margin-top-five">

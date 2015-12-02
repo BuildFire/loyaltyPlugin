@@ -3,15 +3,16 @@
 (function (angular, window) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetItemCtrl', ['$scope', 'ViewStack',
+    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack',
       function ($scope, ViewStack) {
 
-        var WidgetItem = this;
+        var WidgetRedeem = this;
 
-        WidgetItem.confirmCancel = function () {
+        WidgetRedeem.redeemPoints = function () {
           ViewStack.push({
-            template: 'Confirm_Cancel'
+            template: 'Success'
           });
         };
       }])
 })(window.angular, window);
+
