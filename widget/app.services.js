@@ -44,10 +44,6 @@
         },
         getCurrentView: function () {
           return views.length && views[views.length - 1] || {};
-        },
-        popAllViews: function () {
-          $rootScope.$broadcast('VIEW_CHANGED', 'POPALL', views);
-          views = [];
         }
       };
     }])
