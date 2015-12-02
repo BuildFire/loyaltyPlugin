@@ -35,12 +35,11 @@
             deferred.reject(new Error('Undefined app id'));
           }
           $http.get(SERVER.URL + '/api/loyaltyApp/' + id).success(function (response) {
-            if (response.statusCode == 200)
+            if (response)
               deferred.resolve(response);
             else
               deferred.resolve(null);
-          })
-            .error(function (error) {
+          }).error(function (error) {
               deferred.reject(error);
             });
           return deferred.promise;
