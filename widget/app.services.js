@@ -138,12 +138,31 @@
           return deferred.promise;
         };
 
+        var validatePasscode = function (userToken, loyaltyUnqiueId, passcode) {
+          var deferred = $q.defer();
+          if (!data) {
+            deferred.reject(new Error('Undefined data'));
+          }
+          $http.get(SERVER.URL + '/api/loyaltyUserAddPoint/' + loyaltyUnqiueId + '?userToken=' + userToken + '&redemptionPasscode=' + passcode)
+            .success(function (response) {
+              if (response)
+                deferred.resolve(response);
+              else
+                deferred.resolve(null);
+            })
+            .error(function (error) {
+              deferred.reject(error);
+            });
+          return deferred.promise;
+        };
+
 
         return {
           getApplication: getApplication,
           getRewards: getRewards,
           getLoyaltyPoints: getLoyaltyPoints,
-          addLoyaltyPoints: addLoyaltyPoints
+          addLoyaltyPoints: addLoyaltyPoints,
+          validatePasscode: validatePasscode
         };
       }])
 })(window.angular, window.buildfire);
