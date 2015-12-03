@@ -8,8 +8,18 @@
 		</div>
 		<div class="padded">
 			<div class="text-center">
-				<p>You currently have <span class="text-primary">5,000</span> points.</p>
-				<a class="btn btn-primary padding-left-twenty padding-right-twenty">Get More Points</a>
+        <p ng-if="!WidgetHome.currentLoggedInUser"><span
+            class="text-primary"><a href="javascript:void(0);" ng-click="WidgetHome.openLogin()">Log in
+          or register</a></span> to
+          get points</p>
+
+        <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.loyaltyPoints">You currently have <span
+            class="text-primary">{{WidgetHome.loyaltyPoints}}</span> points.
+        </p>
+        <a class="btn btn-primary padding-left-twenty padding-right-twenty"
+           href="javascript:void(0);"
+           ng-click="WidgetHome.openGetPoints()"
+            >Get More Points</a>
 			</div>	
 		</div>
 		<div class="list-layout">

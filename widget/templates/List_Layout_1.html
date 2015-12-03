@@ -12,7 +12,8 @@
           or register</a></span> to
           get points</p>
 
-        <p ng-if="WidgetHome.currentLoggedInUser">You currently have <span class="text-primary">5,000</span> points.
+        <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.loyaltyPoints">You currently have <span
+            class="text-primary">{{WidgetHome.loyaltyPoints}}</span> points.
         </p>
         <a class="btn btn-primary padding-left-twenty padding-right-twenty"
            href="javascript:void(0);"

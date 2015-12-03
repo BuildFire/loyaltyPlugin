@@ -67,6 +67,7 @@
             });
           return deferred.promise;
         };
+
         var getApplication = function (id) {
           var deferred = $q.defer();
           if (!id) {
@@ -90,7 +91,7 @@
             deferred.reject(new Error('Undefined reward data'));
           }
           $http.post(SERVER.URL + '/api/loyaltyRewards', {data: data}).success(function (response) {
-            if (response.statusCode == 200)
+            if (response)
               deferred.resolve(response);
             else
               deferred.resolve(null);
@@ -107,7 +108,7 @@
             deferred.reject(new Error('Undefined app id'));
           }
           $http.get(SERVER.URL + '/api/loyaltyRewards/' + id).success(function (response) {
-            if (response.statusCode == 200)
+            if (response)
               deferred.resolve(response);
             else
               deferred.resolve(null);
@@ -118,47 +119,13 @@
           return deferred.promise;
         };
 
-        var updateReward = function (data) {
+        var getLoyaltyPoints = function (userId, userToken, loyaltyUnqiueId) {
           var deferred = $q.defer();
-          if (!data._id) {
-            deferred.reject(new Error('Undefined reward id'));
+          if (!userId) {
+            deferred.reject(new Error('Undefined user Id'));
           }
-          $http.post(SERVER.URL + '/api/loyaltyRewards', {data: data}).success(function (response) {
-            if (response.statusCode == 200)
-              deferred.resolve(response);
-            else
-              deferred.resolve(null);
-          })
-            .error(function (error) {
-              deferred.reject(error);
-            });
-          return deferred.promise;
-        };
-
-        var removeReward = function (id) {
-          var deferred = $q.defer();
-          if (!id) {
-            deferred.reject(new Error('Undefined reward id'));
-          }
-          $http.delete(SERVER.URL + '/api/loyaltyRewards/' + id).success(function (response) {
-            if (response.statusCode == 200)
-              deferred.resolve(response);
-            else
-              deferred.resolve(null);
-          })
-            .error(function (error) {
-              deferred.reject(error);
-            });
-          return deferred.promise;
-        };
-
-        var sortRewards = function (data) {
-          var deferred = $q.defer();
-          if (!data.appId) {
-            deferred.reject(new Error('Undefined app Id'));
-          }
-          $http.post(SERVER.URL + '/api/loyaltyRewardsSort', {data: data}).success(function (response) {
-            if (response.statusCode == 200)
+          $http.get(SERVER.URL + '/api/loyaltyUser/' + userId + '?userToken=' + userToken + '&loyaltyUnqiueId=' + loyaltyUnqiueId).success(function (response) {
+            if (response)
               deferred.resolve(response);
             else
               deferred.resolve(null);
@@ -175,9 +142,7 @@
           getApplication: getApplication,
           addReward: addReward,
           getRewards: getRewards,
-          updateReward: updateReward,
-          removeReward: removeReward,
-          sortRewards : sortRewards
+          getLoyaltyPoints: getLoyaltyPoints
         };
       }])
 })(window.angular, window.buildfire);

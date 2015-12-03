@@ -16,8 +16,8 @@
           pointsPerDollar: 1,
           dailyLimit: 1000,
           image: "",
-          userToken: 'f2FlQ0N95TATR5A1+pajZBW2vIPUxUnO3RAR9/loYcQ=',
-          auth: "f2FlQ0N95TATR5A1+pajZBW2vIPUxUnO3RAR9/loYcQ="
+          userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
+          auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
       };
 
         ContentHome.masterData = null;
