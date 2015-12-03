@@ -85,22 +85,6 @@
           return deferred.promise;
         };
 
-        var addReward = function (data) {
-          var deferred = $q.defer();
-          if (!data) {
-            deferred.reject(new Error('Undefined reward data'));
-          }
-          $http.post(SERVER.URL + '/api/loyaltyRewards', {data: data}).success(function (response) {
-            if (response)
-              deferred.resolve(response);
-            else
-              deferred.resolve(null);
-          })
-            .error(function (error) {
-              deferred.reject(error);
-            });
-          return deferred.promise;
-        };
 
         var getRewards = function (id) {
           var deferred = $q.defer();
@@ -136,13 +120,30 @@
           return deferred.promise;
         };
 
+        var addLoyaltyPoints = function (userId, userToken, loyaltyUnqiueId, passcode, amount) {
+          var deferred = $q.defer();
+          if (!data) {
+            deferred.reject(new Error('Undefined data'));
+          }
+          $http.get(SERVER.URL + '/api/loyaltyUserAddPoint/' + userId + '?userToken=' + userToken + '&loyaltyUnqiueId=' + loyaltyUnqiueId + '&redemptionPasscode=' + passcode + '&purchaseAmount=' + amount)
+            .success(function (response) {
+              if (response)
+                deferred.resolve(response);
+              else
+                deferred.resolve(null);
+            })
+            .error(function (error) {
+              deferred.reject(error);
+            });
+          return deferred.promise;
+        };
+
 
         return {
-          addApplication: addApplication,
           getApplication: getApplication,
-          addReward: addReward,
           getRewards: getRewards,
-          getLoyaltyPoints: getLoyaltyPoints
+          getLoyaltyPoints: getLoyaltyPoints,
+          addLoyaltyPoints: addLoyaltyPoints
         };
       }])
 })(window.angular, window.buildfire);
