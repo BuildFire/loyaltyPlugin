@@ -7,7 +7,12 @@
     </div>
     <div class="padded">
       <div class="text-center">
-        <p>You currently have <span class="text-primary">5,000</span> points.
+        <p ng-if="!WidgetHome.currentLoggedInUser"><span
+            class="text-primary"><a href="javascript:void(0);" ng-click="WidgetHome.openLogin()">Log in
+          or register</a></span> to
+          get points</p>
+
+        <p ng-if="WidgetHome.currentLoggedInUser">You currently have <span class="text-primary">5,000</span> points.
         </p>
         <a class="btn btn-primary padding-left-twenty padding-right-twenty"
            href="javascript:void(0);"
