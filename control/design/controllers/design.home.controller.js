@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginDesign')
-    .controller('DesignHomeCtrl', ['$scope', 'LAYOUTS', 'DataStore','TAG_NAMES',
-      function ($scope, LAYOUTS, DataStore,TAG_NAMES) {
+    .controller('DesignHomeCtrl', ['$scope', 'LAYOUTS', 'DataStore','TAG_NAMES','Buildfire',
+      function ($scope, LAYOUTS, DataStore,TAG_NAMES,Buildfire) {
         var DesignHome = this;
         var _data = {
           "design": {
@@ -32,7 +32,40 @@
           return angular.equals(data, DesignHome.masterData);
         }
 
+        /* item List background image add <start>*/
+        DesignHome.itemListBackground = new Buildfire.components.images.thumbnail("#itemListBackground", {title: "Item List Background Image"});
+        DesignHome.itemListBackground.onChange = function (url) {
+          DesignHome.data.design.itemListbackgroundImage = url;
+          if (!$scope.$$phase && !$scope.$root.$$phase) {
+            $scope.$apply();
+          }
+        };
 
+        DesignHome.itemListBackground.onDelete = function (url) {
+          DesignHome.data.design.itemListbackgroundImage = "";
+          if (!$scope.$$phase && !$scope.$root.$$phase) {
+            $scope.$apply();
+          }
+        };
+        /* item List background image add <end>*/
+
+        /* item Details background image add <start>*/
+        DesignHome.itemDetailsBackground = new Buildfire.components.images.thumbnail("#itemDetailsBackground", {title: "Item Details Background Image"});
+        DesignHome.itemDetailsBackground.onChange = function (url) {
+          DesignHome.data.design.itemDetailsBackgroundImage = url;
+          if (!$scope.$$phase && !$scope.$root.$$phase) {
+            $scope.$apply();
+          }
+        };
+
+        DesignHome.itemDetailsBackground.onDelete = function (url) {
+          DesignHome.data.design.itemDetailsBackgroundImage = "";
+          if (!$scope.$$phase && !$scope.$root.$$phase) {
+            $scope.$apply();
+          }
+        };
+
+        /* item Details background image add <end>*/
         var init = function () {
           var success = function (result) {
               console.log("---------------------------", result);
@@ -44,6 +77,12 @@
                 DesignHome.data.design.listLayout = DesignHome.layouts.listLayout[0].name;
               }
               updateMasterItem(DesignHome.data);
+                if (DesignHome.data.design.itemListbackgroundImage) {
+                  DesignHome.itemListBackground.loadbackground(DesignHome.data.design.itemListbackgroundImage);
+                }
+                if (DesignHome.data.design.itemListbackgroundImage) {
+                  DesignHome.itemDetailsBackground.loadbackground(DesignHome.data.design.itemDetailsBackgroundImage);
+                }
               if (tmrDelay)clearTimeout(tmrDelay);
             }
             , error = function (err) {
