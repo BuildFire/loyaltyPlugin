@@ -76,18 +76,19 @@
         class="tab-order draggable-list-view wide-list has-btn-link border-grey border-radius-four">
       <div>
         <div>
-          <div class="d-item double-line square-icon clearfix">
+          <div class="d-item double-line square-icon clearfix" ng-repeat="rewards in ContentHome.loyaltyRewards">
             <span class="icon icon-menu pull-left cursor-grab"></span>
 
             <div class="media-holder pull-left">
-              <img src="assets/images/1x1.png">
+              <img ng-src="{{rewards.image | getImageUrl : 60:60}}" ng-if="rewards.image">
+              <img src="assets/images/1x1.png" ng-if="!rewards.image">
             </div>
             <div class="copy pull-right">
               <div class="col-md-7 padding-zero pull-left">
                 <a class="text-primary">
-                  <span class="title ellipsis pull-left">Reward Name</span>
+                  <span class="title ellipsis pull-left">{{rewards.title}}</span>
                 </a>
-                <span class="title ellipsis pull-left">### Points</span>
+                <span class="title ellipsis pull-left">{{rewards.pointsToRedeem}} Points</span>
               </div>
               <div class="pull-right padding-top-fifteen">
                 <span
@@ -95,44 +96,7 @@
               </div>
             </div>
           </div>
-          <div class="d-item double-line square-icon clearfix">
-            <span class="icon icon-menu pull-left cursor-grab"></span>
 
-            <div class="media-holder pull-left">
-              <img src="assets/images/1x1.png">
-            </div>
-            <div class="copy pull-right">
-              <div class="col-md-7 padding-zero pull-left">
-                <a class="text-primary">
-                  <span class="title ellipsis pull-left">Reward Name</span>
-                </a>
-                <span class="title ellipsis pull-left">### Points</span>
-              </div>
-              <div class="pull-right padding-top-fifteen">
-                <span
-                    class="btn-icon btn-delete-icon btn-danger transition-third"></span>
-              </div>
-            </div>
-          </div>
-          <div class="d-item double-line square-icon clearfix">
-            <span class="icon icon-menu pull-left cursor-grab"></span>
-
-            <div class="media-holder pull-left">
-              <img src="assets/images/1x1.png">
-            </div>
-            <div class="copy pull-right">
-              <div class="col-md-7 padding-zero pull-left">
-                <a class="text-primary">
-                  <span class="title ellipsis pull-left">Reward Name</span>
-                </a>
-                <span class="title ellipsis pull-left">### Points</span>
-              </div>
-              <div class="pull-right padding-top-fifteen">
-                <span
-                    class="btn-icon btn-delete-icon btn-danger transition-third"></span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
