@@ -9,7 +9,7 @@
         var WidgetHome = this;
         WidgetHome.currentLoggedInUser = null;
 
-        WidgetHome.openReward = function () {
+        WidgetHome.openReward = function (reward) {
           ViewStack.push({
             template: 'Item_Details'
           });
@@ -25,6 +25,18 @@
                 console.error('Error while getting points data', err);
               }
             };
+          var successLoyaltyRewards = function (result) {
+              WidgetHome.loyaltyRewards = result;
+              if (!WidgetHome.loyaltyRewards)
+                WidgetHome.loyaltyRewards = [];
+              console.info('Rewards>>>>>>>>>>>>>>.:', result);
+            }
+            , errorLoyaltyRewards = function (err) {
+              if (err && err.code !== STATUS_CODE.NOT_FOUND) {
+                console.error('Error while getting data loyaltyRewards', err);
+              }
+            };
+          LoyaltyAPI.getRewards('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(successLoyaltyRewards, errorLoyaltyRewards);
           LoyaltyAPI.getLoyaltyPoints(userId, 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=', 'e22494ec-73ea-44ac-b82b-75f64b8bc535').then(success, error);
         };
 
