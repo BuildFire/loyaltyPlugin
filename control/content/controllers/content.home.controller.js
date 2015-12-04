@@ -22,7 +22,7 @@
 
         ContentHome.masterData = null;
         ContentHome.data = angular.copy(_data);
-        ContentHome.loyaltyRewards={};
+        ContentHome.loyaltyRewards=[];
         ContentHome.bodyWYSIWYGOptions = {
           plugins: 'advlist autolink link image lists charmap print preview',
           skin: 'lightgray',
@@ -41,8 +41,8 @@
         /*
          * Go pull any previously saved data
          * */
-        var init = function () {
-          var success = function (result) {
+        ContentHome.init = function () {
+          ContentHome.success = function (result) {
               console.info('init success result:', result);
               ContentHome.data = result;
               if (!ContentHome.data)
@@ -51,27 +51,27 @@
               updateMasterItem(ContentHome.data);
               if (tmrDelay)clearTimeout(tmrDelay);
             }
-            , error = function (err) {
+          ContentHome.error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
                 console.error('Error while getting data', err);
                 if (tmrDelay)clearTimeout(tmrDelay);
               }
             };
-          var successloyaltyRewards = function (result) {
+          ContentHome.successloyaltyRewards = function (result) {
                 ContentHome.loyaltyRewards = result;
                 if (!ContentHome.loyaltyRewards)
-                  ContentHome.loyaltyRewards = {};
+                  ContentHome.loyaltyRewards = [];
                 console.info('init success result loyaltyRewards:', result);
                 if (tmrDelay)clearTimeout(tmrDelay);
               }
-              , errorloyaltyRewards = function (err) {
+          ContentHome.errorloyaltyRewards = function (err) {
                 if (err && err.code !== STATUS_CODE.NOT_FOUND) {
                   console.error('Error while getting data loyaltyRewards', err);
                   if (tmrDelay)clearTimeout(tmrDelay);
                 }
               };
-          LoyaltyAPI.getRewards('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(successloyaltyRewards, errorloyaltyRewards);
-          LoyaltyAPI.getApplication('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(success, error);
+          LoyaltyAPI.getRewards('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
+          LoyaltyAPI.getApplication('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(ContentHome.success, ContentHome.error);
         };
 
 
@@ -100,7 +100,7 @@
           return ContentHome.data;
         }, saveDataWithDelay, true);
 
-        init();
+        ContentHome.init();
 
       }]);
 })(window.angular);
