@@ -38,6 +38,24 @@
           return angular.equals(data, ContentHome.masterData);
         }
 
+
+        ContentHome.rewardsSortableOptions = {
+          handle: '> .cursor-grab',
+          update: function (event, ui) {
+            var rewardsId = $.map(ContentHome.loyaltyRewards,function(revard){
+              return revard._id;
+            });
+            var data={
+              appId:15030018,
+              loyaltyUniqueId:'e22494ec-73ea-44ac-b82b-75f64b8bc535',
+              loyaltyRewardId:rewardsId,
+              userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
+              auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
+            }
+            ContentHome.sortRewards(data);
+            console.log('update', rewardsId);
+          }
+        };
         /*
          * Go pull any previously saved data
          * */
@@ -75,6 +93,19 @@
         };
 
 
+        ContentHome.sortRewards = function(data){
+          ContentHome.successSortRewards = function (result) {
+            console.info('Reward list Sorted:', result);
+            if (tmrDelay)clearTimeout(tmrDelay);
+          }
+          ContentHome.errorSortRewards = function (err) {
+            if (err && err.code !== STATUS_CODE.NOT_FOUND) {
+              console.error('Error while sorting rewards', err);
+              if (tmrDelay)clearTimeout(tmrDelay);
+            }
+          };
+          LoyaltyAPI.sortRewards(data).then(ContentHome.successSortRewards , ContentHome.errorSortRewards);
+        }
         /*
          * create an artificial delay so api isnt called on every character entered
          * */

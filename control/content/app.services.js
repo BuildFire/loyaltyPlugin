@@ -120,7 +120,7 @@
             deferred.reject(new Error('Undefined app Id'));
           }
           $http.post(SERVER.URL + '/api/loyaltyRewardsSort', {data: data}).success(function (response) {
-            if (response.statusCode == 200)
+            if (response)
               deferred.resolve(response);
             else
               deferred.resolve(null);
