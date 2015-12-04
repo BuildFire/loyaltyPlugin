@@ -11,7 +11,8 @@
     }])
     .factory('LoyaltyAPI', ['$q', 'STATUS_CODE', 'STATUS_MESSAGES', 'SERVER', '$http',
       function ($q, STATUS_CODE, STATUS_MESSAGES, SERVER, $http) {
-        var addApplication = function (app) {
+        var addEditApplication = function (app) {
+          console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", app);
           var deferred = $q.defer();
           if (!app) {
             deferred.reject(new Error('Undefined app data'));
@@ -19,7 +20,8 @@
           $http.post(SERVER.URL + '/api/loyaltyApp', {
             data: app
           }).success(function (response) {
-            if (response.statusCode == 200)
+            console.log("+++++++++++_+_________+_+_", response);
+            if (response)
               deferred.resolve(response);
             else
               deferred.resolve(null);
@@ -41,8 +43,8 @@
             else
               deferred.resolve(null);
           }).error(function (error) {
-              deferred.reject(error);
-            });
+            deferred.reject(error);
+          });
           return deferred.promise;
         };
 
@@ -132,13 +134,13 @@
         };
 
         return {
-          addApplication: addApplication,
+          addEditApplication: addEditApplication,
           getApplication: getApplication,
           addReward: addReward,
           getRewards: getRewards,
           updateReward: updateReward,
           removeReward: removeReward,
-          sortRewards : sortRewards
+          sortRewards: sortRewards
         };
       }])
 })(window.angular, window.buildfire);
