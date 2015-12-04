@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE',
-      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE) {
+    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore',
+      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore) {
 
         var WidgetHome = this;
         WidgetHome.currentLoggedInUser = null;
@@ -62,6 +62,27 @@
           });
         };
 
+        /*
+         * Fetch user's data from datastore
+         */
+
+        var init = function () {
+          var success = function (result) {
+              WidgetHome.data = result.data;
+              if (!WidgetHome.data.design)
+                WidgetHome.data.design = {};
+              if (!WidgetHome.data.settings)
+                WidgetHome.data.settings = {};
+              if (!WidgetHome.data.design.listLayout) {
+                WidgetHome.data.design.listLayout = LAYOUTS.listLayout[0].name;
+              }
+            }
+            , error = function (err) {
+              console.error('Error while getting data', err);
+            };
+          DataStore.get(TAG_NAMES.LOYALTY_INFO).then(success, error);
+        };
+
         var loginCallback = function () {
           buildfire.auth.getCurrentUser(function (user) {
             console.log("_______________________", user);
@@ -73,6 +94,32 @@
         };
 
         buildfire.auth.onLogin(loginCallback);
+
+        var onUpdateCallback = function (event) {
+          console.log("++++++++++++++++++++++++++", event);
+          setTimeout(function () {
+            if (event && event.tag) {
+              switch (event.tag) {
+                case TAG_NAMES.LOYALTY_INFO:
+                  WidgetHome.data = event.data;
+                  if (!WidgetHome.data.design)
+                    WidgetHome.data.design = {};
+                  if (!WidgetHome.data.design.listLayout) {
+                    WidgetHome.data.design.listLayout = LAYOUTS.listLayout[0].name;
+                  }
+                  break;
+              }
+              $scope.$digest();
+            }
+          }, 0);
+        };
+
+        /**
+         * DataStore.onUpdate() is bound to listen any changes in datastore
+         */
+        DataStore.onUpdate().then(null, null, onUpdateCallback);
+
+        init();
 
       }]);
 })(window.angular, window.buildfire);

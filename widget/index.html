@@ -32,7 +32,7 @@
 </head>
 <body class="body-scroll slide no-scroll">
 <div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content">
-  <div ng-include="'templates/List_Layout_1.html'">
+  <div ng-if="WidgetHome.data.design.listLayout" ng-include="'templates/' + WidgetHome.data.design.listLayout + '.html'">
   </div>
 </div>
 <div view-switcher=""></div>
