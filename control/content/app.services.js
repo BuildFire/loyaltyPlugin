@@ -29,6 +29,7 @@
             });
           return deferred.promise;
         };
+
         var getApplication = function (id) {
           var deferred = $q.defer();
           if (!id) {
@@ -129,7 +130,6 @@
             });
           return deferred.promise;
         };
-
 
         return {
           addApplication: addApplication,

@@ -6,26 +6,17 @@
     <div class="main col-md-9 pull-right">
       <div class="screens clearfix">
         <div class="screen layouticon pull-left">
-          <a class="border-radius-three default-background-hover text-center">
-            <img src="http://www.placehold.it/90x160">
+          <a class="border-radius-three default-background-hover text-center"  ng-if="DesignHome.data.design.listLayout.length">
+            <span class="add-icon hidden">+</span>
+            <img
+                ng-src="assets/images/{{DesignHome.data.design.listLayout}}.png">
           </a>
+
         </div>
-        <div
-            class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
-          <a class="layouticon border-radius-three default-background-hover text-center">
-            <img src="http://www.placehold.it/90x160">
-          </a>
-          <a class="layouticon border-radius-three default-background-hover text-center">
-            <img src="http://www.placehold.it/90x160">
-          </a>
-          <a class="layouticon border-radius-three default-background-hover text-center">
-            <img src="http://www.placehold.it/90x160">
-          </a>
-          <a class="layouticon border-radius-three default-background-hover text-center">
-            <img src="http://www.placehold.it/90x160">
-          </a>
-          <a class="layouticon border-radius-three default-background-hover text-center">
-            <img src="http://www.placehold.it/90x160">
+        <div class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
+          <a ng-repeat="layout in DesignHome.layouts.listLayout"
+             class="layouticon border-radius-three default-background-hover text-center" ng-click="DesignHome.changeListLayout(layout.name)">
+            <img ng-src="assets/images/{{layout.name}}.png">
           </a>
         </div>
       </div>
