@@ -1,0 +1,19 @@
+<div class="item row clearfix">
+    <div class="labels col-md-3 padding-right-zero pull-left">
+        <span>Currency Symbol</span>
+    </div>
+    <div class="main col-md-9 pull-right">
+        <div class="dropdown" dropdown>
+            <button class="btn btn-default text-left dropdown-toggle"
+                    data-toggle="dropdown" dropdown-toggle aria-expanded="true">
+                <span class="pull-left"><span ng-bind-html="SettingsHome.convertHtml(SettingsHome.data.settings.currency.symbol||SettingsHome.currency[0].symbol)"></span>&nbsp;&nbsp;&nbsp;&nbsp;{{SettingsHome.data.settings.currency.name||SettingsHome.currency[0].name}}</span>
+                <span class="chevron icon-chevron-down pull-right"></span>
+            </button  >
+            <ul class="dropdown-menu extended" role="menu">
+                <li ng-repeat="currency in SettingsHome.currency">
+                    <a tabindex="-1"  class="transition-third" ng-click="SettingsHome.changeCurrency(currency)"><span ng-bind-html="SettingsHome.convertHtml(currency.symbol)"></span>&nbsp;&nbsp;&nbsp;&nbsp;{{currency.name}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,47 +1,25 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html ng-app="loyaltyPluginContent">
+<head lang="en">
+  <!-- CSS -->
+  <link href="../../../../styles/helper.css" rel="stylesheet">
+  <link href="../../../../styles/siteIcons.css" rel="stylesheet">
 
-    <!-- CSS -->
-	<link href="../../../../styles/helper.css" rel="stylesheet">
-	
-	<!-- JS -->
-	<script src="../../../../scripts/buildfire.js"></script>
-   
- 	<!--
-    <script src="../../../../scripts/angular/angular.min.js"></script>
-    <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script>
 
-    <script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>
-    -->
+  <!-- JS -->
+  <script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>
+  <script src="../../../../scripts/buildfire.js"></script>
+  <script src="../../../../scripts/angular/angular.min.js"></script>
+  <script src="../../../../scripts/angular/angular-route.min.js"></script>
+  <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script>
+  <script src="app.js"></script>
+  <script src="controllers/settings.home.controller.js"></script>
+  <script src="enums.js"></script>
+  <link href="assets/css/settings.css">
+
+  <meta charset="UTF-8">
 </head>
-<body>
-	<div class="loyalty-plugin">
-		<div class="item row clearfix">
-            <div class="labels col-md-3 padding-right-zero pull-left">
-                <span>Currency Symbol</span>
-            </div>
-            <div class="main col-md-9 pull-right">
-				 <div class="dropdown" dropdown>
-		            <button class="btn btn-default text-left dropdown-toggle" data-toggle="dropdown" dropdown-toggle aria-expanded="true">
-		                <span class="pull-left">Choose Currency</span>
-		                <span class="chevron icon-chevron-down pull-right"></span>
-		            </button  >
-		            <ul class="dropdown-menu extended" role="menu">
-		                <li>
-		                    <a tabindex="-1"  class="transition-third">Euro</a>
-		                </li>
-		                <li>
-		                    <a tabindex="-1"  class="transition-third">Yuan and Yen</a>
-		                </li>
-		                <li>
-		                    <a tabindex="-1"  class="transition-third">Duetsche Mark</a>
-		                </li>
-		            </ul>
-		        </div>
-			</div>
-		</div>
-	</div>
+<body style="height:100%">
+<div class="content" ng-view=""></div>
 </body>
 </html>
