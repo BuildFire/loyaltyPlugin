@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE',
-      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE','$modal',
+      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal) {
         var ContentHome = this;
         var _data = {
           redemptionPasscode: '00000',
@@ -30,6 +30,35 @@
           theme: 'modern'
         };
 
+        // create a new instance of the buildfire carousel editor
+        ContentHome.editor = new Buildfire.components.carousel.editor("#carousel");
+        // this method will be called when a new item added to the list
+        ContentHome.editor.onAddItems = function (items) {
+          if (!ContentHome.data.image)
+            ContentHome.data.image = [];
+
+          ContentHome.data.image.push.apply(ContentHome.data.image, items);
+          $scope.$digest();
+        };
+        // this method will be called when an item deleted from the list
+        ContentHome.editor.onDeleteItem = function (item, index) {
+          ContentHome.data.image.splice(index, 1);
+          $scope.$digest();
+        };
+        // this method will be called when you edit item details
+        ContentHome.editor.onItemChange = function (item, index) {
+          ContentHome.data.image.splice(index, 1, item);
+          $scope.$digest();
+        };
+        // this method will be called when you change the order of items
+        ContentHome.editor.onOrderChange = function (item, oldIndex, newIndex) {
+          var temp = ContentHome.data.image[oldIndex];
+          ContentHome.data.image[oldIndex] = ContentHome.data.image[newIndex];
+          ContentHome.data.image[newIndex] = temp;
+          $scope.$digest();
+        };
+
+
         function updateMasterItem(data) {
           ContentHome.masterData = angular.copy(data);
         }
@@ -42,8 +71,8 @@
         ContentHome.rewardsSortableOptions = {
           handle: '> .cursor-grab',
           update: function (event, ui) {
-            var rewardsId = $.map(ContentHome.loyaltyRewards, function (revard) {
-              return revard._id;
+            var rewardsId = $.map(ContentHome.loyaltyRewards, function (reward) {
+              return reward._id;
             });
             var data = {
               appId: 15030018,
@@ -52,7 +81,7 @@
               userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
               auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
             }
-            ContentHome.sortRewards(data);
+           // ContentHome.sortRewards(data);
             console.log('update', rewardsId);
           }
         };
@@ -65,7 +94,10 @@
             ContentHome.data = result;
             if (!ContentHome.data)
               ContentHome.data = {};
-
+            if (!ContentHome.data.image)
+              ContentHome.editor.loadItems([]);
+            else
+              ContentHome.editor.loadItems(ContentHome.data.image);
             updateMasterItem(ContentHome.data);
             if (tmrDelay)clearTimeout(tmrDelay);
           };
@@ -122,6 +154,48 @@
               console.error('Error while saving data : ', err);
             };
           LoyaltyAPI.addEditApplication(newObj).then(success, error);
+        };
+
+        /*Delete the loyalty*/
+        ContentHome.removeLoyalty = function (loyaltyId, index) {
+          var status = function (result) {
+                console.log(result)
+              },
+              err = function (err) {
+                console.log(err)
+              };
+          var modalInstance = $modal.open({
+            templateUrl: 'templates/modals/remove-loyalty.html',
+            controller: 'RemoveLoyaltyPopupCtrl',
+            controllerAs: 'RemoveLoyaltyPopup',
+            size: 'sm',
+            resolve: {
+              loyaltyPluginData: function () {
+                return ContentHome.loyaltyRewards[index];
+              }
+            }
+          });
+          modalInstance.result.then(function (message) {
+            if (message === 'yes') {
+              ContentHome.loyaltyRewards.splice(index, 1);  //remove this line of code when API will start working.
+
+              //ContentHome.success = function (result){
+              //  ContentHome.loyaltyRewards.splice(index, 1);
+              //  console.log("Reward removed successfully");
+              //}
+              //ContentHome.error = function(err){
+              //  console.log("Some issue in Reward delete");
+              //}
+              //var data = {
+              //  userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
+              //  auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
+              //}
+              //LoyaltyAPI.getApplication(ContentHome.loyaltyRewards._id,data).then(ContentHome.success, ContentHome.error);
+
+            }
+          }, function (data) {
+            //do something on cancel
+          });
         };
 
         /*

@@ -38,6 +38,8 @@
             deferred.reject(new Error('Undefined app id'));
           }
           $http.get(SERVER.URL + '/api/loyaltyApp/' + id).success(function (response) {
+            response.image=[{"action":"noAction","iconUrl":"https://imagelibserver.s3.amazonaws.com/1441017939845-09614174673333764/3e399340-82aa-11e5-8545-1303965d11a5.jpg","title":"image"},{"action":"noAction","iconUrl":"https://imagelibserver.s3.amazonaws.com/1441017939845-09614174673333764/361c1500-8de7-11e5-81a7-bdc8b1a0342d.jpg","title":"image"}]
+
             if (response)
               deferred.resolve(response);
             else
@@ -99,12 +101,12 @@
           return deferred.promise;
         };
 
-        var removeReward = function (id) {
+        var removeReward = function (id, data) {
           var deferred = $q.defer();
           if (!id) {
             deferred.reject(new Error('Undefined reward id'));
           }
-          $http.delete(SERVER.URL + '/api/loyaltyRewards/' + id).success(function (response) {
+          $http.delete(SERVER.URL + '/api/loyaltyRewards/' + id, {data: data}).success(function (response) {
             if (response.statusCode == 200)
               deferred.resolve(response);
             else
