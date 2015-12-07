@@ -10,8 +10,8 @@
 		<div class="padded">
 			<div class="clearfix row">
 				<div class="col-xs-8 pull-left">
-					<p class="margin-zero ellipsis">Day Spa Package</p>
-					<p class="margin-zero ellipsis opacity-seventy">200 Points</p>
+					<p class="margin-zero ellipsis">{{WidgetRedeem.reward.title}}</p>
+					<p class="margin-zero ellipsis opacity-seventy">{{WidgetRedeem.reward.pointsToRedeem}} Points</p>
 				</div>
 			</div>
 			<hr class="small">
@@ -19,13 +19,19 @@
 				<p>Important: By clicking confirm, you are confirming that the reward has been received and the corresponding points will, therefore, be deducted from the user's account.</p>
 				<div class="clearfix row">
 					<div class="col-xs-6 pull-left padding-right-five">
-						<a class="btn btn-danger stretch">Cancel</a>
+						<a class="btn btn-danger stretch" href="javascript:void(0);"
+               ng-click="WidgetRedeem.backToHome()">Cancel</a>
 					</div>
 					<div class="col-xs-6 pull-right padding-left-five">
 						<a class="btn btn-success stretch" href="javascript:void(0);"
-               ng-click="WidgetRedeem.redeemPoints()">Confirm</a>
+               ng-click="WidgetRedeem.redeemPoints(WidgetRedeem.reward._id)">Confirm</a>
 					</div>
 				</div>
+        <br>
+        <div class="col-xs-12 margin-top-five" ng-if="WidgetRedeem.redeemFail">
+          <div class="alert alert-sm text-center alert-danger">Error
+            redeeming reward. Please try again later.</div>
+        </div>
 			</div>	
 		</div>
 	</div>

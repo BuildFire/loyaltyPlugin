@@ -9,8 +9,6 @@
         var WidgetItem = this;
 
         if (RewardCache.getReward()) {
-          console.log("JJJJJJJJJJJJJJJJJJJ");
-          console.log(RewardCache.getReward());
           WidgetItem.reward = RewardCache.getReward();
         }
 

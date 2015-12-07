@@ -85,7 +85,6 @@
           return deferred.promise;
         };
 
-
         var getRewards = function (id) {
           var deferred = $q.defer();
           if (!id) {
@@ -156,13 +155,32 @@
           return deferred.promise;
         };
 
+        var redeemPoints = function (userId, userToken, loyaltyUnqiueId, rewardId) {
+          var deferred = $q.defer();
+          if (!userToken) {
+            deferred.reject(new Error('Undefined user'));
+          }
+          $http.get(SERVER.URL + '/api/loyaltyUserRedeem/' + userId + '?loyaltyUnqiueId=' + loyaltyUnqiueId + '&userToken=' + userToken + '&redeemId=' + rewardId)
+            .success(function (response) {
+              if (response)
+                deferred.resolve(response);
+              else
+                deferred.resolve(null);
+            })
+            .error(function (error) {
+              deferred.reject(error);
+            });
+          return deferred.promise;
+        };
+
 
         return {
           getApplication: getApplication,
           getRewards: getRewards,
           getLoyaltyPoints: getLoyaltyPoints,
           addLoyaltyPoints: addLoyaltyPoints,
-          validatePasscode: validatePasscode
+          validatePasscode: validatePasscode,
+          redeemPoints: redeemPoints
         };
       }])
     .factory("DataStore", ['Buildfire', '$q', 'STATUS_CODE', 'STATUS_MESSAGES', function (Buildfire, $q, STATUS_CODE, STATUS_MESSAGES) {
