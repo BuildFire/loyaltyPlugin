@@ -229,10 +229,10 @@
 
         ContentHome.init();
 
-        buildfire.auth.getCurrentUser(function (user) {
-          console.log(")))))))))))))))))))))))))", user);
-
-        });
+        //buildfire.auth.getCurrentUser(function (user) {
+        //  console.log(")))))))))))))))))))))))))", user);
+        //
+        //});
 
       }]);
 })(window.angular, window.buildfire);
