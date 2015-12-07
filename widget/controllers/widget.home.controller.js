@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache','$rootScope',
-      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache,$rootScope) {
+    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope',
+      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope) {
 
         var WidgetHome = this;
         WidgetHome.currentLoggedInUser = null;
@@ -160,6 +160,11 @@
          * DataStore.onUpdate() is bound to listen any changes in datastore
          */
         DataStore.onUpdate().then(null, null, onUpdateCallback);
+
+        $rootScope.$on('POINTS_REDEEMED', function (e, points) {
+          if (points)
+            WidgetHome.loyaltyPoints = WidgetHome.loyaltyPoints - points;
+        });
 
         init();
 

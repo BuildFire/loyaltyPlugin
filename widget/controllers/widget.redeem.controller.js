@@ -3,8 +3,8 @@
 (function (angular, window) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout',
-      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout) {
+    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope',
+      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope) {
 
         var WidgetRedeem = this;
         WidgetRedeem.redeemFail = false;
@@ -15,6 +15,7 @@
 
         WidgetRedeem.redeemPoints = function (rewardId) {
           var redeemSuccess = function () {
+            $rootScope.$broadcast('POINTS_REDEEMED',WidgetRedeem.reward.pointsToRedeem);
             ViewStack.push({
               template: 'Success'
             });
