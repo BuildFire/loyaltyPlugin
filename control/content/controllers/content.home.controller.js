@@ -30,6 +30,35 @@
           theme: 'modern'
         };
 
+        // create a new instance of the buildfire carousel editor
+        ContentHome.editor = new Buildfire.components.carousel.editor("#carousel");
+        // this method will be called when a new item added to the list
+        ContentHome.editor.onAddItems = function (items) {
+          if (!ContentHome.data.image)
+            ContentHome.data.image = [];
+
+          ContentHome.data.image.push.apply(ContentHome.data.image, items);
+          $scope.$digest();
+        };
+        // this method will be called when an item deleted from the list
+        ContentHome.editor.onDeleteItem = function (item, index) {
+          ContentHome.data.image.splice(index, 1);
+          $scope.$digest();
+        };
+        // this method will be called when you edit item details
+        ContentHome.editor.onItemChange = function (item, index) {
+          ContentHome.data.image.splice(index, 1, item);
+          $scope.$digest();
+        };
+        // this method will be called when you change the order of items
+        ContentHome.editor.onOrderChange = function (item, oldIndex, newIndex) {
+          var temp = ContentHome.data.image[oldIndex];
+          ContentHome.data.image[oldIndex] = ContentHome.data.image[newIndex];
+          ContentHome.data.image[newIndex] = temp;
+          $scope.$digest();
+        };
+
+
         function updateMasterItem(data) {
           ContentHome.masterData = angular.copy(data);
         }
@@ -65,7 +94,10 @@
             ContentHome.data = result;
             if (!ContentHome.data)
               ContentHome.data = {};
-
+            if (!ContentHome.data.image)
+              ContentHome.editor.loadItems([]);
+            else
+              ContentHome.editor.loadItems(ContentHome.data.image);
             updateMasterItem(ContentHome.data);
             if (tmrDelay)clearTimeout(tmrDelay);
           };
