@@ -57,6 +57,7 @@
         };
 
         WidgetHome.openLogin = function () {
+          console.log("PPPPPPPPPPPPPPPPPPPPPPPPPPP");
           buildfire.auth.login({}, function () {
 
           });

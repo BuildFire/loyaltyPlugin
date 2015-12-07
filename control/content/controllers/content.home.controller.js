@@ -1,6 +1,6 @@
 'use strict';
 
-(function (angular) {
+(function (angular, buildfire) {
   angular
     .module('loyaltyPluginContent')
     .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE',
@@ -125,7 +125,7 @@
         };
 
         /*
-         * create an artificial delay so api isnt called on every character entered
+         * create an artificial delay so api isn't called on every character entered
          * */
         var tmrDelay = null;
 
@@ -152,5 +152,10 @@
 
         ContentHome.init();
 
+        buildfire.auth.getCurrentUser(function (user) {
+          console.log(")))))))))))))))))))))))))", user);
+
+        });
+
       }]);
-})(window.angular);
+})(window.angular, window.buildfire);
