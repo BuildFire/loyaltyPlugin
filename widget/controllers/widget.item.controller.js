@@ -7,15 +7,20 @@
       function ($scope, ViewStack, RewardCache, $sce) {
 
         var WidgetItem = this;
+        var currentView = ViewStack.getCurrentView();
 
         if (RewardCache.getReward()) {
           WidgetItem.reward = RewardCache.getReward();
         }
 
         WidgetItem.confirmCancel = function () {
-          ViewStack.push({
-            template: 'Confirm_Cancel'
-          });
+          if (WidgetItem.reward.pointsToRedeem <= currentView.totalPoints) {
+            ViewStack.push({
+              template: 'Confirm_Cancel'
+            });
+          } else {
+            alert("Not Enough Points. Please earn more points in order to redeem this reward.");
+          }
         };
 
         WidgetItem.safeHtml = function (html) {

@@ -74,7 +74,7 @@
             deferred.reject(new Error('Undefined app id'));
           }
           $http.get(SERVER.URL + '/api/loyaltyApp/' + id).success(function (response) {
-            if (response.statusCode == 200)
+            if (response)
               deferred.resolve(response);
             else
               deferred.resolve(null);
@@ -231,12 +231,19 @@
     }])
     .factory('RewardCache', ['$rootScope', function ($rootScope) {
       var reward = {};
+      var application = {};
       return {
         setReward: function (data) {
           reward = data;
         },
         getReward: function () {
           return reward;
+        },
+        setApplication: function (data) {
+          application = data;
+        },
+        getApplication: function () {
+          return application;
         }
       };
     }])
