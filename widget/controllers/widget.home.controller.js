@@ -3,13 +3,14 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore',
-      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore) {
+    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache',
+      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache) {
 
         var WidgetHome = this;
         WidgetHome.currentLoggedInUser = null;
 
         WidgetHome.openReward = function (reward) {
+          RewardCache.setReward(reward);
           ViewStack.push({
             template: 'Item_Details'
           });
@@ -41,12 +42,15 @@
         };
 
         buildfire.auth.getCurrentUser(function (user) {
+          WidgetHome.currentLoggedInUser = {};
+          WidgetHome.getLoyaltyPoints("5317c378a6611c6009000001");
+
           console.log("_______________________", user);
-          if (user) {
-            WidgetHome.currentLoggedInUser = user;
-            WidgetHome.getLoyaltyPoints(user._id);
-            $scope.$digest();
-          }
+          //if (user) {
+          //  WidgetHome.currentLoggedInUser = user;
+          //  WidgetHome.getLoyaltyPoints(user._id);
+          //  $scope.$digest();
+          //}
         });
 
         WidgetHome.openGetPoints = function () {
