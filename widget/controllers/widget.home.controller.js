@@ -12,7 +12,8 @@
         WidgetHome.openReward = function (reward) {
           RewardCache.setReward(reward);
           ViewStack.push({
-            template: 'Item_Details'
+            template: 'Item_Details',
+            totalPoints: WidgetHome.loyaltyPoints
           });
         };
 
@@ -37,6 +38,16 @@
                 console.error('Error while getting data loyaltyRewards', err);
               }
             };
+
+
+          var successApplication = function (result) {
+            RewardCache.setApplication(result);
+          };
+
+          var errorApplication = function (error) {
+            console.info('Error fetching loyalty application');
+          };
+          LoyaltyAPI.getApplication('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(successApplication, errorApplication);
           LoyaltyAPI.getRewards('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(successLoyaltyRewards, errorLoyaltyRewards);
           LoyaltyAPI.getLoyaltyPoints(userId, 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=', 'e22494ec-73ea-44ac-b82b-75f64b8bc535').then(success, error);
         };

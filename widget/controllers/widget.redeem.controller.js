@@ -3,16 +3,38 @@
 (function (angular, window) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack',
-      function ($scope, ViewStack) {
+    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout',
+      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout) {
 
         var WidgetRedeem = this;
+        WidgetRedeem.redeemFail = false;
 
-        WidgetRedeem.redeemPoints = function () {
-          ViewStack.push({
-            template: 'Success'
-          });
+        if (RewardCache.getReward()) {
+          WidgetRedeem.reward = RewardCache.getReward();
+        }
+
+        WidgetRedeem.redeemPoints = function (rewardId) {
+          var redeemSuccess = function () {
+            ViewStack.push({
+              template: 'Success'
+            });
+          };
+
+          var redeemFailure = function () {
+            WidgetRedeem.redeemFail = true;
+            $timeout(function () {
+              WidgetRedeem.redeemFail = false;
+            }, 3000);
+
+          };
+
+          LoyaltyAPI.redeemPoints('5317c378a6611c6009000001', 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=', 'e22494ec-73ea-44ac-b82b-75f64b8bc535', rewardId).then(redeemSuccess, redeemFailure);
         };
+
+        WidgetRedeem.backToHome = function () {
+          ViewStack.pop();
+        };
+
       }])
 })(window.angular, window);
 

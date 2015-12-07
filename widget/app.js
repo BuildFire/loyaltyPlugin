@@ -31,6 +31,12 @@
               } else if (type === 'POP') {
                 $(elem).find('#' + view.template).remove();
                 views--;
+              } else if (type === 'POPALL') {
+                console.log(view);
+                angular.forEach(view, function (value, key) {
+                  $(elem).find('#' + value.template).remove();
+                });
+                views = 0;
               }
               manageDisplay();
             });
