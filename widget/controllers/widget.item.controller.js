@@ -34,7 +34,7 @@
         };
 
         /**
-         * To parse and show reward's description in html format
+         * Method to parse and show reward's description in html format
          */
         WidgetItem.safeHtml = function (html) {
           if (html)
