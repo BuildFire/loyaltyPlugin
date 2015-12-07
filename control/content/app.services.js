@@ -99,12 +99,12 @@
           return deferred.promise;
         };
 
-        var removeReward = function (id) {
+        var removeReward = function (id, data) {
           var deferred = $q.defer();
           if (!id) {
             deferred.reject(new Error('Undefined reward id'));
           }
-          $http.delete(SERVER.URL + '/api/loyaltyRewards/' + id).success(function (response) {
+          $http.delete(SERVER.URL + '/api/loyaltyRewards/' + id, {data: data}).success(function (response) {
             if (response.statusCode == 200)
               deferred.resolve(response);
             else

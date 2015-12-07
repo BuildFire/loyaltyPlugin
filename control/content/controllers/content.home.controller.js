@@ -3,8 +3,8 @@
 (function (angular) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE',
-      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE','$modal',
+      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal) {
         var ContentHome = this;
         var _data = {
           redemptionPasscode: '00000',
@@ -42,8 +42,8 @@
         ContentHome.rewardsSortableOptions = {
           handle: '> .cursor-grab',
           update: function (event, ui) {
-            var rewardsId = $.map(ContentHome.loyaltyRewards, function (revard) {
-              return revard._id;
+            var rewardsId = $.map(ContentHome.loyaltyRewards, function (reward) {
+              return reward._id;
             });
             var data = {
               appId: 15030018,
@@ -52,7 +52,7 @@
               userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
               auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
             }
-            ContentHome.sortRewards(data);
+           // ContentHome.sortRewards(data);
             console.log('update', rewardsId);
           }
         };
@@ -122,6 +122,48 @@
               console.error('Error while saving data : ', err);
             };
           LoyaltyAPI.addEditApplication(newObj).then(success, error);
+        };
+
+        /*Delete the loyalty*/
+        ContentHome.removeLoyalty = function (loyaltyId, index) {
+          var status = function (result) {
+                console.log(result)
+              },
+              err = function (err) {
+                console.log(err)
+              };
+          var modalInstance = $modal.open({
+            templateUrl: 'templates/modals/remove-loyalty.html',
+            controller: 'RemoveLoyaltyPopupCtrl',
+            controllerAs: 'RemoveLoyaltyPopup',
+            size: 'sm',
+            resolve: {
+              loyaltyPluginData: function () {
+                return ContentHome.loyaltyRewards[index];
+              }
+            }
+          });
+          modalInstance.result.then(function (message) {
+            if (message === 'yes') {
+              ContentHome.loyaltyRewards.splice(index, 1);  //remove this line of code when API will start working.
+
+              //ContentHome.success = function (result){
+              //  ContentHome.loyaltyRewards.splice(index, 1);
+              //  console.log("Reward removed successfully");
+              //}
+              //ContentHome.error = function(err){
+              //  console.log("Some issue in Reward delete");
+              //}
+              //var data = {
+              //  userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
+              //  auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
+              //}
+              //LoyaltyAPI.getApplication(ContentHome.loyaltyRewards._id,data).then(ContentHome.success, ContentHome.error);
+
+            }
+          }, function (data) {
+            //do something on cancel
+          });
         };
 
         /*
