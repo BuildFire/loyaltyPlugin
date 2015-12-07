@@ -180,9 +180,10 @@
         /**
          * Check for current logged in user, if yes fetch its loyalty points
          */
-        buildfire.auth.getCurrentUser(function (user) {
-          WidgetHome.currentLoggedInUser = {};
-          WidgetHome.getLoyaltyPoints("5317c378a6611c6009000001");
+        WidgetHome.currentLoggedInUser = {};
+        WidgetHome.getLoyaltyPoints("5317c378a6611c6009000001");
+
+        /*buildfire.auth.getCurrentUser(function (user) {
 
           console.log("_______________________", user);
           //if (user) {
@@ -190,7 +191,7 @@
           //  WidgetHome.getLoyaltyPoints(user._id);
           //  $scope.$digest();
           //}
-        });
+        });*/
 
         init();
 
