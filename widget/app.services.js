@@ -211,4 +211,15 @@
         }
       }
     }])
+    .factory('RewardCache', ['$rootScope', function ($rootScope) {
+      var reward = {};
+      return {
+        setReward: function (data) {
+          reward = data;
+        },
+        getReward: function () {
+          return reward;
+        }
+      };
+    }])
 })(window.angular, window.buildfire);
