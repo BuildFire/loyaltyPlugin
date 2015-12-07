@@ -81,7 +81,7 @@
               userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
               auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
             }
-           // ContentHome.sortRewards(data);
+           // ContentHome.sortRewards(data);  //uncomment it when API will start working
             console.log('update', rewardsId);
           }
         };
@@ -179,18 +179,21 @@
             if (message === 'yes') {
               ContentHome.loyaltyRewards.splice(index, 1);  //remove this line of code when API will start working.
 
-              //ContentHome.success = function (result){
-              //  ContentHome.loyaltyRewards.splice(index, 1);
-              //  console.log("Reward removed successfully");
-              //}
-              //ContentHome.error = function(err){
-              //  console.log("Some issue in Reward delete");
-              //}
-              //var data = {
-              //  userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
-              //  auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
-              //}
-              //LoyaltyAPI.getApplication(ContentHome.loyaltyRewards._id,data).then(ContentHome.success, ContentHome.error);
+              //uncomment it when API will start working
+/*
+              ContentHome.success = function (result){
+                ContentHome.loyaltyRewards.splice(index, 1);
+                console.log("Reward removed successfully");
+              }
+              ContentHome.error = function(err){
+                console.log("Some issue in Reward delete");
+              }
+              var data = {
+                userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
+                auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
+              }
+              LoyaltyAPI.getApplication(ContentHome.loyaltyRewards._id,data).then(ContentHome.success, ContentHome.error);
+*/
 
             }
           }, function (data) {
