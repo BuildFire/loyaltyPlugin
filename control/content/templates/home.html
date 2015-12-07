@@ -1,0 +1,104 @@
+<div class="loyalty-plugin">
+  <div id="carousel"></div>
+  <hr class="none">
+  <div class="item clearfix row">
+    <div class="labels col-md-3 padding-right-zero pull-left">
+      <span>Text</span>
+    </div>
+  </div>
+  <hr class="none">
+  <div class="item clearfix row">
+    <div class="main col-md-12 pull-right">
+    <textarea id="text" ui-tinymce="ContentHome.bodyWYSIWYGOptions"
+              class="form-control" rows="5" width="100%"
+              ng-model="ContentHome.data.content.description"></textarea>
+    </div>
+  </div>
+  <hr class="none">
+  <div class="item clearfix row">
+    <div class="labels col-xs-3 pull-left">
+      <span>Points per Purchase</span>
+    </div>
+    <div class="main col-xs-9 pull-right">
+      <input type="text" class="form-control"
+             placeholder="Points per Purchase" ng-model="ContentHome.data.pointsPerVisit">
+    </div>
+  </div>
+  <hr class="none">
+  <div class="item clearfix row">
+    <div class="labels col-xs-3 pull-left">
+      <span>Points per Dollar</span>
+    </div>
+    <div class="main col-xs-9 pull-right">
+      <input type="text" class="form-control" placeholder="Points per Dollar" ng-model="ContentHome.data.pointsPerDollar">
+    </div>
+  </div>
+  <hr class="none">
+  <div class="item clearfix row">
+    <div class="labels col-xs-3 pull-left">
+      <span>Daily Limit</span>
+    </div>
+    <div class="main col-xs-9 pull-right">
+      <input type="text" class="form-control" placeholder="Daily Limit"
+             ng-model="ContentHome.data.dailyLimit">
+    </div>
+  </div>
+  <hr class="none">
+  <div class="item clearfix row">
+    <div class="labels col-xs-3 pull-left">
+      <span>Total Limit</span>
+    </div>
+    <div class="main col-xs-9 pull-right">
+      <input type="text" class="form-control" placeholder="Total Limit">
+    </div>
+  </div>
+  <hr class="none">
+  <div class="item clearfix row">
+    <div class="labels col-xs-3 pull-left">
+      <span>Add Points Passcode</span>
+    </div>
+    <div class="main col-xs-9 pull-right">
+      <input type="text" class="form-control"
+             placeholder="Add Points Passcode" ng-model="ContentHome.data.redemptionPasscode">
+    </div>
+  </div>
+  <hr>
+  <div class="item clearfix row">
+    <div class="main col-md-9 pull-right padding-left-zero row">
+      <div class="pull-left inner-main col-md-8 padding-zero">
+        <a class="btn btn-success stretch" href="#/reward">Add New Reward</a>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="item clearfix">
+    <div
+        class="tab-order draggable-list-view wide-list has-btn-link border-grey border-radius-four">
+      <div>
+        <div ui-sortable="ContentHome.rewardsSortableOptions" ng-model="ContentHome.loyaltyRewards">
+          <div class="d-item double-line square-icon clearfix" ng-repeat="rewards in ContentHome.loyaltyRewards">
+            <span class="icon icon-menu pull-left cursor-grab"></span>
+
+            <div class="media-holder pull-left">
+              <img ng-src="{{rewards.image | getImageUrl : 60:60}}" ng-if="rewards.image">
+              <img src="assets/images/1x1.png" ng-if="!rewards.image">
+            </div>
+            <div class="copy pull-right">
+              <div class="col-md-7 padding-zero pull-left">
+                <a class="text-primary">
+                  <span class="title ellipsis pull-left">{{rewards.title}}</span>
+                </a>
+                <span class="title ellipsis pull-left">{{rewards.pointsToRedeem}} Points</span>
+              </div>
+              <div class="pull-right padding-top-fifteen">
+                <span
+                    class="btn-icon btn-delete-icon btn-danger transition-third"></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

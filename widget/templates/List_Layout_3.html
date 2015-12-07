@@ -1,0 +1,41 @@
+
+<div class="holder padding-zero layout3">
+	<div class="loyalty-plugin">				
+		<div class="plugin-slider text-center">
+			<div class="plugin-slide">
+        <img src="assets/images/16x9.png">
+			</div>
+		</div>
+		<div class="padded">
+			<div class="text-center">
+        <p ng-if="!WidgetHome.currentLoggedInUser"><span
+            class="text-primary"><a href="javascript:void(0);" ng-click="WidgetHome.openLogin()">Log in
+          or register</a></span> to
+          get points</p>
+
+        <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.loyaltyPoints">You currently have <span
+            class="text-primary">{{WidgetHome.loyaltyPoints}}</span> points.
+        </p>
+        <a class="btn btn-primary padding-left-twenty padding-right-twenty"
+           href="javascript:void(0);"
+           ng-click="WidgetHome.openGetPoints()"
+            >Get More Points</a>
+			</div>	
+		</div>
+		<div class="list-layout">
+			<div class="list-item" ng-repeat="reward in WidgetHome.loyaltyRewards">
+				<div class="list-item-media text-left overflow-hidden">
+					<div class="list-media-holder pull-left">
+            <img src="assets/images/16x9.png">
+					</div>
+					<div class="list-item-copy text-left padding-left-ten padding-right-ten">
+						<p class="ellipsis margin-zero text-primary margin-top-ten"><a
+                class="text-primary" href="javascript:void(0);"
+                ng-click="WidgetHome.openReward(reward)">{{reward.title}}</a></p>
+						<p class="ellipsis margin-zero opacity-seventy">{{reward.pointsToRedeem}} Points</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

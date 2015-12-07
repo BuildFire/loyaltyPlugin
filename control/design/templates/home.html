@@ -1,0 +1,30 @@
+<div class="loyalty-plugin">
+  <div class="item row margin-bottom-twenty clearfix">
+    <div class="labels col-md-3 padding-right-zero pull-left">
+      <span>Item List Layout Style</span>
+    </div>
+    <div class="main col-md-9 pull-right">
+      <div class="screens clearfix">
+        <div class="screen layouticon pull-left">
+          <a class="border-radius-three default-background-hover text-center"  ng-if="DesignHome.data.design.listLayout.length">
+            <span class="add-icon hidden">+</span>
+            <img
+                ng-src="assets/images/{{DesignHome.data.design.listLayout}}.png">
+          </a>
+
+        </div>
+        <div class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
+          <a ng-repeat="layout in DesignHome.layouts.listLayout"
+             class="layouticon border-radius-three default-background-hover text-center" ng-click="DesignHome.changeListLayout(layout.name)">
+            <img ng-src="assets/images/{{layout.name}}.png">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<hr class="none">
+<div id="itemListBackground"></div>
+<hr class="none">
+<div id="itemDetailsBackground"></div>

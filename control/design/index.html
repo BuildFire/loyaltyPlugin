@@ -1,88 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="loyaltyPluginDesign">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-	<!-- CSS -->
-	<link href="../../../../styles/helper.css" rel="stylesheet">
-	
-	<!-- JS -->
-	<script src="../../../../scripts/buildfire.js"></script>
-   
- 	<!--
-    <script src="../../../../scripts/angular/angular.min.js"></script>
-    <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>
-    -->
+  <!-- CSS -->
+  <link href="../../../../styles/helper.css" rel="stylesheet">
+  <link href="../../../../styles/siteIcons.css" rel="stylesheet">
+
+  <!-- JS -->
+  <script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>
+  <script src="../../../../scripts/angular/angular.min.js"></script>
+  <script src="../../../../scripts/angular/angular-route.min.js"></script>
+  <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script>
+  <script src="../../../../scripts/buildfire.js"></script>
+  <script src="../../../../scripts/buildfire/components/images/thumbnail.js"></script>
+  <script src="app.js"></script>
+  <script src="enums.js"></script>
+  <script src="app.services.js"></script>
+  <script src="controllers/design.home.controller.js"></script>
+
 </head>
 <body>
-	<div class="loyalty-plugin">
-		<div class="item row margin-bottom-twenty clearfix">
-            <div class="labels col-md-3 padding-right-zero pull-left">
-                <span>Item List Layout Style</span>
-            </div>
-            <div class="main col-md-9 pull-right">
-                <div class="screens clearfix">
-                    <div class="screen layouticon pull-left">
-                        <a class="border-radius-three default-background-hover text-center">
-                            <img src="http://www.placehold.it/90x160">
-                        </a>
-                    </div>
-                    <div class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
-                        <a class="layouticon border-radius-three default-background-hover text-center">
-                            <img src="http://www.placehold.it/90x160">
-                        </a>
-						<a class="layouticon border-radius-three default-background-hover text-center">
-                            <img src="http://www.placehold.it/90x160">
-                        </a>
-						<a class="layouticon border-radius-three default-background-hover text-center">
-                            <img src="http://www.placehold.it/90x160">
-                        </a>
-						<a class="layouticon border-radius-three default-background-hover text-center">
-                            <img src="http://www.placehold.it/90x160">
-                        </a>
-						<a class="layouticon border-radius-three default-background-hover text-center">
-                            <img src="http://www.placehold.it/90x160">
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-		<hr class="none">
-		<div class="item row margin-bottom-twenty clearfix">
-            <div class="labels col-md-3 padding-right-zero pull-left">
-                <span>Item List Background Image</span>
-            </div>
-            <div class="main col-md-9 pull-right">
-				 <div class="screens clearfix">
-	                    <div class="screen text-center layouticon pull-left">
-	                        <a class="border-radius-three default-background-hover text-center">
-	                            <img src="http://www.placehold.it/90x160">
-	                        </a>
-							<span class="icon btn-icon btn-delete-icon btn-danger transition-third"></span>
-	                    </div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<hr class="none">
-		<div class="item row margin-bottom-twenty clearfix">
-            <div class="labels col-md-3 padding-right-zero pull-left">
-                <span>Item Details Background Image</span>
-            </div>
-            <div class="main col-md-9 pull-right">
-				 <div class="screens clearfix">
-	                    <div class="screen text-center layouticon pull-left">
-	                        <a class="border-radius-three default-background-hover text-center">
-	                            <img src="http://www.placehold.it/90x160">
-	                        </a>
-							<span class="icon btn-icon btn-delete-icon btn-danger transition-third"></span>
-	                    </div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+<div class="content" ng-view=""></div>
 </body>
 </html>
