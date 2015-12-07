@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache',
-      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache) {
+    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache','$rootScope',
+      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache,$rootScope) {
 
         var WidgetHome = this;
         WidgetHome.currentLoggedInUser = null;
@@ -16,6 +16,11 @@
             totalPoints: WidgetHome.loyaltyPoints
           });
         };
+
+        $rootScope.deviceHeight = window.innerHeight;
+        $rootScope.deviceWidth = window.innerWidth;
+        $rootScope.itemListbackgroundImage = "";
+        $rootScope.itemDetailsBackgroundImage = "";
 
         WidgetHome.getLoyaltyPoints = function (userId) {
           var success = function (result) {
@@ -92,6 +97,16 @@
               if (!WidgetHome.data.design.listLayout) {
                 WidgetHome.data.design.listLayout = LAYOUTS.listLayout[0].name;
               }
+              if (!WidgetHome.data.design.itemListbackgroundImage) {
+                  $rootScope.itemListbackgroundImage = "";
+                } else {
+                  $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListbackgroundImage;
+                }
+                if (!WidgetHome.data.design.itemDetailsBackgroundImage) {
+                  $rootScope.itemDetailsBackgroundImage = "";
+                } else {
+                  $rootScope.itemDetailsBackgroundImage = WidgetHome.data.design.itemDetailsBackgroundImage;
+                }
             }
             , error = function (err) {
               console.error('Error while getting data', err);
@@ -123,9 +138,20 @@
                   if (!WidgetHome.data.design.listLayout) {
                     WidgetHome.data.design.listLayout = LAYOUTS.listLayout[0].name;
                   }
+                  if (!WidgetHome.data.design.itemListbackgroundImage) {
+                    $rootScope.itemListbackgroundImage = "";
+                  } else {
+                    $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListbackgroundImage;
+                  }
+                  if (!WidgetHome.data.design.itemDetailsBackgroundImage) {
+                    $rootScope.itemDetailsBackgroundImage = "";
+                  } else {
+                    $rootScope.itemDetailsBackgroundImage = WidgetHome.data.design.itemDetailsBackgroundImage;
+                  }
                   break;
               }
               $scope.$digest();
+              $rootScope.$digest();
             }
           }, 0);
         };

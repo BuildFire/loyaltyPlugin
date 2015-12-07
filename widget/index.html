@@ -32,7 +32,7 @@
   <meta charset="utf-8">
 </head>
 <body class="body-scroll slide no-scroll">
-<div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content">
+<div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content" data-ng-attr-style="background:url({{ itemListbackgroundImage | cropImage:deviceWidth:deviceHeight:true}}) !important; background-size:cover;">
   <div ng-if="WidgetHome.data.design.listLayout" ng-include="'templates/' + WidgetHome.data.design.listLayout + '.html'">
   </div>
 </div>
