@@ -126,8 +126,8 @@
 
         var addLoyaltyPoints = function (userId, userToken, loyaltyUnqiueId, passcode, amount) {
           var deferred = $q.defer();
-          if (!data) {
-            deferred.reject(new Error('Undefined data'));
+          if (!loyaltyUnqiueId) {
+            deferred.reject(new Error('Undefined application'));
           }
           $http.get(SERVER.URL + '/api/loyaltyUserAddPoint/' + userId + '?userToken=' + userToken + '&loyaltyUnqiueId=' + loyaltyUnqiueId + '&redemptionPasscode=' + passcode + '&purchaseAmount=' + amount)
             .success(function (response) {
@@ -144,8 +144,8 @@
 
         var validatePasscode = function (userToken, loyaltyUnqiueId, passcode) {
           var deferred = $q.defer();
-          if (!data) {
-            deferred.reject(new Error('Undefined data'));
+          if (!loyaltyUnqiueId) {
+            deferred.reject(new Error('Undefined application'));
           }
           $http.get(SERVER.URL + '/api/loyaltyUserAddPoint/' + loyaltyUnqiueId + '?userToken=' + userToken + '&redemptionPasscode=' + passcode)
             .success(function (response) {
@@ -245,6 +245,7 @@
           return reward;
         },
         setApplication: function (data) {
+          data.totalPoints = 3000;
           application = data;
         },
         getApplication: function () {
