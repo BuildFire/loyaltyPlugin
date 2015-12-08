@@ -61,50 +61,49 @@
         }
       };
     }]).filter('cropImage', [function () {
-        return function (url, width, height, noDefault) {
-          if (noDefault) {
-            if (!url)
-              return '';
+      return function (url, width, height, noDefault) {
+        if (noDefault) {
+          if (!url)
+            return '';
+        }
+        return buildfire.imageLib.cropImage(url, {
+          width: width,
+          height: height
+        });
+      };
+    }]).directive('backImg', ["$filter", "$rootScope", function ($filter, $rootScope) {
+      return function (scope, element, attrs) {
+        attrs.$observe('backImg', function (value) {
+          var img = '';
+          if (value) {
+            img = $filter("cropImage")(value, $rootScope.deviceWidth, $rootScope.deviceHeight, true);
+            element.attr("style", 'background:url(' + img + ') !important');
+            element.css({
+              'background-size': 'cover'
+            });
           }
-          return buildfire.imageLib.cropImage(url, {
-            width: width,
-            height: height
-          });
-        };
-      }]).directive('backImg', ["$filter", "$rootScope", function ($filter, $rootScope) {
-        return function (scope, element, attrs) {
-          attrs.$observe('backImg', function (value) {
-            var img='';
-            if(value) {
-              img = $filter("cropImage")(value, $rootScope.deviceWidth, $rootScope.deviceHeight, true);
-              element.attr("style", 'background:url(' + img + ') !important');
-              element.css({
-                'background-size': 'cover'
-              });
-            }
-            else{
-              img = "";
-              element.attr("style", 'background-color:white');
-              element.css({
-                'background-size': 'cover'
-              });
-            }
-          });
-        };
-      }]).run(['Location', '$location', '$rootScope', 'RewardCache','ViewStack', function (Location, $location, $rootScope, RewardCache, ViewStack) {
-
-        buildfire.messaging.onReceivedMessage = function (msg) {
-          switch (msg.type) {
-
-            case 'AddNewItem':
-              RewardCache.setReward(msg.data);
-              console.log("aaaaaaaaaaaa",msg)
-              ViewStack.push({
-                template: 'Item_Details',
-                totalPoints: msg.data.pointsToRedeem
-              });
-              break;
+          else {
+            img = "";
+            element.attr("style", 'background-color:white');
+            element.css({
+              'background-size': 'cover'
+            });
           }
-        };
-      }]);
+        });
+      };
+    }]).run(['Location', '$location', '$rootScope', 'RewardCache', 'ViewStack', function (Location, $location, $rootScope, RewardCache, ViewStack) {
+      buildfire.messaging.onReceivedMessage = function (msg) {
+        switch (msg.type) {
+          case 'AddNewItem':
+            RewardCache.setReward(msg.data);
+            ViewStack.popAllViews();
+            ViewStack.push({
+              template: 'Item_Details',
+              totalPoints: msg.data.pointsToRedeem
+            });
+            $rootScope.$apply();
+            break;
+        }
+      };
+    }])
 })(window.angular, window.buildfire);
