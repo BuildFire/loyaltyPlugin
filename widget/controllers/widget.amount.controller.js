@@ -24,11 +24,12 @@
          * Method to check if user has exceeded the total points limit.
          */
         WidgetAmount.confirmCode = function () {
-          var calculatedPoints = (WidgetAmount.amount * WidgetAmount.application.pointsPerDollar) + currentView.loyaltyPoints;
+          var calculatedPoints = (WidgetAmount.amount * WidgetAmount.application.pointsPerDollar) + WidgetAmount.application.pointsPerVisit + currentView.loyaltyPoints;
           if (WidgetAmount.application.totalPoints <= calculatedPoints) {
             WidgetAmount.totalLimitExceeded = true;
             setTimeout(function () {
               WidgetAmount.totalLimitExceeded = false;
+              $scope.$digest();
             }, 3000);
           }
           else {
