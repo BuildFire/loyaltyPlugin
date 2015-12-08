@@ -3,8 +3,8 @@
 (function (angular) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetCodeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache',
-      function ($scope, ViewStack, LoyaltyAPI, RewardCache) {
+    .controller('WidgetCodeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', '$rootScope',
+      function ($scope, ViewStack, LoyaltyAPI, RewardCache, $rootScope) {
 
         var WidgetCode = this;
         /**
@@ -20,6 +20,7 @@
 
         WidgetCode.addPoints = function () {
           var success = function (result) {
+            $rootScope.$broadcast('POINTS_ADDED', (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit);
             ViewStack.push({
               template: 'Awarded',
               pointsAwarded: (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit
