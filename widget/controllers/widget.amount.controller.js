@@ -33,7 +33,8 @@
           }
           else {
             ViewStack.push({
-              template: 'Code'
+              template: 'Code',
+              amount: WidgetAmount.amount
             });
           }
         };

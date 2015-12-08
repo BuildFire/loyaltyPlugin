@@ -6,15 +6,18 @@
 
       <div class="enter-price clearfix border-bottom-grey">
         <input type="password" placeholder="Enter Code"
-               class="form-control text-center border-none">
+               class="form-control text-center border-none"
+               ng-model="WidgetCode.passcode">
       </div>
       <div class="next-btn margin-top-twenty">
-        <a class="btn btn-success stretch" href="javascript:void(0);"
-           ng-click="WidgetCode.addPoints()">
-          Confirm</a>
+        <button class="btn btn-success stretch" href="javascript:void(0);"
+                ng-click="WidgetCode.confirmPasscode()"
+                ng-disabled="!WidgetCode.passcode">
+          Confirm
+        </button>
       </div>
     </div>
-    <div class="col-xs-12 margin-top-five">
+    <div class="col-xs-12 margin-top-five" ng-if="WidgetCode.passcodeFailure">
       <div class="alert alert-sm text-center alert-danger">Invalid confirmation
         code.
       </div>
