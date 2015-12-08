@@ -11,7 +11,7 @@ describe('Unit : loyaltyPluginContent content Enums', function () {
   }));
 
   describe('Enum : STATUS_CODE', function () {
-    it('STATUS_CODE should exist and be an object', function () {
+    xit('STATUS_CODE should exist and be an object', function () {
       expect(typeof STATUS_CODE).toEqual('object');
     });
     xit('STATUS_CODE.INSERTED should exist and equals to "inserted"', function () {
