@@ -118,6 +118,13 @@
           ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: result._id});
           ContentReward.item = Object.assign(ContentReward.item, result);
           ContentReward.isInserted = true;
+          if (ContentReward.item._id) {
+            buildfire.messaging.sendMessageToWidget({
+              id: ContentReward.item._id,
+              type: 'AddNewItem',
+              data:ContentReward.item
+            });
+          }
           console.log("aaaaaaaaaaaaAdd",data);
           $scope.$digest();
              // }
