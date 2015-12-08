@@ -11,9 +11,11 @@
                ng-model="WidgetAmount.amount">
       </div>
       <div class="next-btn margin-top-twenty">
-        <a class="btn btn-primary stretch margin-top"
-           href="javascript:void(0);" ng-click="WidgetAmount.confirmCode()">Next
-        </a>
+        <button class="btn btn-primary stretch margin-top"
+                href="javascript:void(0);" ng-click="WidgetAmount.confirmCode()"
+                ng-disabled="!WidgetAmount.amount"
+            >Next
+        </button>
       </div>
     </div>
     <div class="col-xs-12 margin-top-five">
