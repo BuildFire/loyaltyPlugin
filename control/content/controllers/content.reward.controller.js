@@ -3,17 +3,17 @@
 (function (angular) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentRewardCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI','STATUS_CODE',
-      function ($scope, Buildfire, LoyaltyAPI,STATUS_CODE) {
+    .controller('ContentRewardCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI','STATUS_CODE','$location',
+      function ($scope, Buildfire, LoyaltyAPI,STATUS_CODE, $location) {
         var ContentReward = this;
         ContentReward.item ={
-          itemTitle:"",
+          title:"",
           pointsToRedeem:"",
           description:"",
           listImage:"",
           BackgroundImage:""
         };
-
+        ContentReward.isInserted = false;
         ContentReward.masterData=null;
         updateMasterItem(ContentReward.item);
         ContentReward.bodyWYSIWYGOptions = {
@@ -95,22 +95,65 @@
           return angular.equals(data, ContentReward.masterData);
         }
 
-        var saveData = function (newObj, tag) {
+        ContentReward.addReward = function (newObj) {
           if (typeof newObj === 'undefined') {
             return;
           }
          var data = newObj;
+          data.appId=15030018;
+          data.loyaltyUnqiueId= 'e22494ec-73ea-44ac-b82b-75f64b8bc535'
           data.userToken= 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=';
           data.auth= "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=";
           // var success = function (result) {
            //     console.info('Saved data result: ', result);
-                updateMasterItem(newObj);
+         var result={
+           _id : new Date().getUTCMilliseconds(),
+           appId:15030018,
+          loyaltyUnqiueId:'e22494ec-73ea-44ac-b82b-75f64b8bc535',
+          userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
+          auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
+         };
+
+          updateMasterItem(newObj);
+          ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: result._id});
+          ContentReward.item = Object.assign(ContentReward.item, result);
+          ContentReward.isInserted = true;
+          console.log("aaaaaaaaaaaaAdd",data);
+          $scope.$digest();
              // }
              // , error = function (err) {
+            // ContentReward.isInserted = false;
             //    console.error('Error while saving data : ', err);
             //  };
         //  LoyaltyAPI.addReward(data).then(success, error);
         };
+
+        ContentReward.updateReward = function (newObj) {
+          if (typeof newObj === 'undefined') {
+            return;
+          }
+          updateMasterItem(newObj);
+          var data = newObj;
+          console.log("aaaaaaaaaaaaUpdate",data);
+          $scope.$digest();
+          // var success = function (result) {
+          //     console.info('Saved data result: ', result);
+          // }
+          // , error = function (err) {
+          //    console.error('Error while saving data : ', err);
+          //  };
+          //  LoyaltyAPI.updateReward(data).then(success, error);
+        };
+
+        ContentReward.isValidReward = function (reward) {
+          if (reward)
+            return (reward.title && reward.pointsToRedeem);
+        };
+
+        ContentReward.gotToHome = function () {
+          $location.path('#/');
+        };
+
         var tmrDelay = null;
         var saveDataWithDelay = function (newObj) {
           if (newObj) {
@@ -121,7 +164,13 @@
               clearTimeout(tmrDelay);
             }
             tmrDelay = setTimeout(function () {
-              saveData(JSON.parse(angular.toJson(newObj)));
+              if(ContentReward.isValidReward(ContentReward.item) && !ContentReward.isInserted){
+                ContentReward.addReward(JSON.parse(angular.toJson(newObj)));
+              }
+              if(ContentReward.isValidReward(ContentReward.item) && ContentReward.isInserted){
+                ContentReward.updateReward(JSON.parse(angular.toJson(newObj)));
+              }
+              //saveData(JSON.parse(angular.toJson(newObj)));
             }, 500);
           }
         };
