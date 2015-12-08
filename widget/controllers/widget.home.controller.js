@@ -122,7 +122,7 @@
         };
 
         var loginCallback = function () {
-          buildfire.auth.getCurrentUser(function (user) {
+          buildfire.auth.getCurrentUser(function (err,user) {
             console.log("_______________________", user);
             if (user) {
               WidgetHome.currentLoggedInUser = user;
@@ -180,20 +180,24 @@
         });
 
         /**
+         * This event listener is bound for "POINTS_ADDED" event broadcast
+         */
+        $rootScope.$on('POINTS_ADDED', function (e, points) {
+          if (points)
+            WidgetHome.loyaltyPoints = WidgetHome.loyaltyPoints + points;
+        });
+
+        /**
          * Check for current logged in user, if yes fetch its loyalty points
          */
-        WidgetHome.currentLoggedInUser = {};
-        WidgetHome.getLoyaltyPoints("5317c378a6611c6009000001");
-
-        /*buildfire.auth.getCurrentUser(function (user) {
-
-         console.log("_______________________", user);
-         //if (user) {
-         //  WidgetHome.currentLoggedInUser = user;
-         //  WidgetHome.getLoyaltyPoints(user._id);
-         //  $scope.$digest();
-         //}
-         });*/
+        buildfire.auth.getCurrentUser(function (err, user) {
+          console.log("_______________________", user);
+          if (user) {
+            WidgetHome.currentLoggedInUser = user;
+            WidgetHome.getLoyaltyPoints(user._id);
+            $scope.$digest();
+          }
+        });
 
         init();
 
