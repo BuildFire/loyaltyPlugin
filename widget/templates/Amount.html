@@ -1,22 +1,30 @@
-
 <div class="holder padding-zero" ng-controller="WidgetAmountCtrl as
      WidgetAmount">
-	<div class="loyalty-plugin amount">				
-		<div class="purchase-amount padded margin-top-ten">
-			<p class="text-center">Enter the Purchase Amount</p>
-			<div class="enter-price clearfix border-bottom-grey">
-				<span class="currency">$</span>
-				<input type="text" placeholder="100" class="form-control text-right border-none">
-			</div>
-			<div class="next-btn margin-top-twenty">
-				<a class="btn btn-primary stretch margin-top"
+  <div class="loyalty-plugin amount">
+    <div class="purchase-amount padded margin-top-ten">
+      <p class="text-center">Enter the Purchase Amount</p>
+
+      <div class="enter-price clearfix border-bottom-grey">
+        <span class="currency">$</span>
+        <input type="text" placeholder="100"
+               class="form-control text-right border-none"
+               ng-model="WidgetAmount.amount">
+      </div>
+      <div class="next-btn margin-top-twenty">
+        <a class="btn btn-primary stretch margin-top"
            href="javascript:void(0);" ng-click="WidgetAmount.confirmCode()">Next
         </a>
-			</div>
-		</div>
-		<div class="col-xs-12 margin-top-five">
-			<div class="alert alert-sm text-center alert-danger">You have exceeded the daily limit.</div>
-			<div class="alert alert-sm text-center alert-danger">You have exceeded the total limit.</div>
-		</div>
-	</div>
+      </div>
+    </div>
+    <div class="col-xs-12 margin-top-five">
+      <div class="alert alert-sm text-center alert-danger"
+           ng-if="WidgetAmount.dailyLimitExceeded">You have
+        exceeded the daily limit.
+      </div>
+      <div class="alert alert-sm text-center alert-danger"
+           ng-if="WidgetAmount.totalLimitExceeded">You have
+        exceeded the total limit.
+      </div>
+    </div>
+  </div>
 </div>

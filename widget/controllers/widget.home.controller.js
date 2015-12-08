@@ -74,7 +74,9 @@
         WidgetHome.openGetPoints = function () {
           console.log(">>>>>>>>>>>>>>");
           ViewStack.push({
-            template: 'Amount'
+            template: 'Amount',
+            loyaltyPoints: WidgetHome.loyaltyPoints
+
           });
         };
 
@@ -103,15 +105,15 @@
                 WidgetHome.data.design.listLayout = LAYOUTS.listLayout[0].name;
               }
               if (!WidgetHome.data.design.itemListbackgroundImage) {
-                  $rootScope.itemListbackgroundImage = "";
-                } else {
-                  $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListbackgroundImage;
-                }
-                if (!WidgetHome.data.design.itemDetailsBackgroundImage) {
-                  $rootScope.itemDetailsBackgroundImage = "";
-                } else {
-                  $rootScope.itemDetailsBackgroundImage = WidgetHome.data.design.itemDetailsBackgroundImage;
-                }
+                $rootScope.itemListbackgroundImage = "";
+              } else {
+                $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListbackgroundImage;
+              }
+              if (!WidgetHome.data.design.itemDetailsBackgroundImage) {
+                $rootScope.itemDetailsBackgroundImage = "";
+              } else {
+                $rootScope.itemDetailsBackgroundImage = WidgetHome.data.design.itemDetailsBackgroundImage;
+              }
             }
             , error = function (err) {
               console.error('Error while getting data', err);
@@ -185,13 +187,13 @@
 
         /*buildfire.auth.getCurrentUser(function (user) {
 
-          console.log("_______________________", user);
-          //if (user) {
-          //  WidgetHome.currentLoggedInUser = user;
-          //  WidgetHome.getLoyaltyPoints(user._id);
-          //  $scope.$digest();
-          //}
-        });*/
+         console.log("_______________________", user);
+         //if (user) {
+         //  WidgetHome.currentLoggedInUser = user;
+         //  WidgetHome.getLoyaltyPoints(user._id);
+         //  $scope.$digest();
+         //}
+         });*/
 
         init();
 
