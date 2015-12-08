@@ -4,7 +4,7 @@
 			<span>Item Title</span>
 		</div>
 		<div class="main col-md-9 pull-right">
-			<input type="text" class="form-control" placeholder="Item Title" ng-model = "ContentReward.item.itemTitle">
+			<input type="text" class="form-control" placeholder="Item Title" ng-model = "ContentReward.item.title">
 		</div>
 	</div>
 	<hr class="none">
@@ -15,7 +15,7 @@
 			<span>Deep Link URL</span>
 		</div>
 		<div class="main col-md-9 pull-right">
-			<p>{{ContentReward.item.deeplinkUrl}}</p>
+			<p>{{ContentReward.item.deepLinkUrl}}</p>
 		</div>
 	</div>
 	<hr>
@@ -40,4 +40,15 @@
 	</div>
 	<hr class="none">
 <div id="background"></div>
+	<hr class="none">
+	<div class="item clearfix row">
+		<div class="main col-md-9 pull-right">
+			<div class="col-md-6 pull-right padding-right-zero padding-left-ten">
+				<button class="btn btn-primary pull-right stretch"
+						ng-click="ContentReward.gotToHome()">
+					Done
+				</button>
+			</div>
+		</div>
+	</div>
 </div>

@@ -91,5 +91,20 @@
             }
           });
         };
+      }]).run(['Location', '$location', '$rootScope', 'RewardCache','ViewStack', function (Location, $location, $rootScope, RewardCache, ViewStack) {
+
+        buildfire.messaging.onReceivedMessage = function (msg) {
+          switch (msg.type) {
+
+            case 'AddNewItem':
+              RewardCache.setReward(msg.data);
+              console.log("aaaaaaaaaaaa",msg)
+              ViewStack.push({
+                template: 'Item_Details',
+                totalPoints: msg.data.pointsToRedeem
+              });
+              break;
+          }
+        };
       }]);
 })(window.angular, window.buildfire);
