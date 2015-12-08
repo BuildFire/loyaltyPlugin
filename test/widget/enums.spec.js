@@ -1,5 +1,5 @@
-describe('Unit : loyaltyPluginWidget content Enums', function () {
-  var STATUS_CODE, STATUS_MESSAGES,SERVER;
+describe('Unit : loyaltyPluginWidget Widget Enums', function () {
+  var STATUS_CODE, STATUS_MESSAGES, SERVER;
 
 
   beforeEach(module('loyaltyPluginWidget'));

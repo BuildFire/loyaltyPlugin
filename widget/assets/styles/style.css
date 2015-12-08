@@ -21,3 +21,7 @@
 .body-scroll{
     height: auto !important;
 }
+
+.slide.wrapper{
+	background-color:white !important;
+}
