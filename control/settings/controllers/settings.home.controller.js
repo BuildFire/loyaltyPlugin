@@ -1,7 +1,7 @@
 'use strict';
 (function (angular) {
     angular
-        .module('loyaltyPluginContent')
+        .module('loyaltyPluginSettings')
         .controller('SettingsCtrl', ['$scope','TAG_NAMES','$sce',
             function ($scope,TAG_NAMES,$sce) {
                 var SettingsHome = this;

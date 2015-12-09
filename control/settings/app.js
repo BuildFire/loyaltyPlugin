@@ -1,7 +1,7 @@
 'use strict';
 (function (angular) {
   angular
-    .module('loyaltyPluginContent',['ngRoute', 'ui.bootstrap'])
+    .module('loyaltyPluginSettings',['ngRoute', 'ui.bootstrap'])
       .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/', {
