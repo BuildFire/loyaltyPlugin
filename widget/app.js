@@ -2,7 +2,7 @@
 
 (function (angular, buildfire) {
   angular
-    .module('loyaltyPluginWidget', ['ngRoute'])
+    .module('loyaltyPluginWidget', ['ngRoute', 'ngAnimate'])
     .config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
 
       /**
@@ -29,14 +29,27 @@
                 views++;
 
               } else if (type === 'POP') {
-                $(elem).find('#' + view.template).remove();
-                views--;
+                var _elToRemove = $(elem).find('#' + view.template),
+                    _child = _elToRemove.children("div").eq(0);
+
+                _child.addClass("ng-enter ng-enter-active");
+                _child.one("webkitTransitionEnd transitionend oTransitionEnd", function(e) {
+                  _elToRemove.remove();
+                  views--;
+                });
               } else if (type === 'POPALL') {
                 console.log(view);
                 angular.forEach(view, function (value, key) {
-                  $(elem).find('#' + value.template).remove();
+                  var _elToRemove = $(elem).find('#' + value.template),
+                      _child = _elToRemove.children("div").eq(0);
+
+                  _child.addClass("ng-enter ng-enter-active");
+                  _child.one("webkitTransitionEnd transitionend oTransitionEnd", function(e) {
+                    _elToRemove.remove();
+                    views--;
+                  });
                 });
-                views = 0;
+
               }
               manageDisplay();
             });
