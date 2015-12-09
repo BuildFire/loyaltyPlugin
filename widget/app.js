@@ -65,15 +65,7 @@
           }
         };
       }])
-    .run(['ViewStack', function (ViewStack) {
-      buildfire.navigation.onBackButtonClick = function () {
-        if (ViewStack.hasViews()) {
-          ViewStack.pop();
-        } else {
-          buildfire.navigation.navigateHome();
-        }
-      };
-    }]).filter('cropImage', [function () {
+    .filter('cropImage', [function () {
       return function (url, width, height, noDefault) {
         if (noDefault) {
           if (!url)
@@ -84,7 +76,8 @@
           height: height
         });
       };
-    }]).directive('backImg', ["$filter", "$rootScope", function ($filter, $rootScope) {
+    }])
+    .directive('backImg', ["$filter", "$rootScope", function ($filter, $rootScope) {
       return function (scope, element, attrs) {
         attrs.$observe('backImg', function (value) {
           var img = '';
@@ -104,7 +97,16 @@
           }
         });
       };
-    }]).run(['Location', '$location', '$rootScope', 'RewardCache', 'ViewStack', function (Location, $location, $rootScope, RewardCache, ViewStack) {
+    }])
+    .directive("buildFireCarousel", ["$rootScope", function ($rootScope) {
+      return {
+        restrict: 'A',
+        link: function (scope, elem, attrs) {
+          $rootScope.$broadcast("Carousel:LOADED");
+        }
+      };
+    }])
+    .run(['Location', '$location', '$rootScope', 'RewardCache', 'ViewStack', function (Location, $location, $rootScope, RewardCache, ViewStack) {
       buildfire.messaging.onReceivedMessage = function (msg) {
         switch (msg.type) {
           case 'AddNewItem':
@@ -116,6 +118,14 @@
             });
             $rootScope.$apply();
             break;
+        }
+      };
+
+      buildfire.navigation.onBackButtonClick = function () {
+        if (ViewStack.hasViews()) {
+          ViewStack.pop();
+        } else {
+          buildfire.navigation.navigateHome();
         }
       };
     }])

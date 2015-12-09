@@ -13,6 +13,8 @@
         $rootScope.itemListbackgroundImage = "";
         $rootScope.itemDetailsBackgroundImage = "";
 
+        //create new instance of buildfire carousel viewer
+        WidgetHome.view = null;
 
         /**
          * Initialize current logged in user as null. This field is re-initialized if user is already logged in or user login user auth api.
@@ -43,6 +45,13 @@
                 console.error('Error while getting points data', err);
               }
             };
+          LoyaltyAPI.getLoyaltyPoints(userId, 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=', 'e22494ec-73ea-44ac-b82b-75f64b8bc535').then(success, error);
+        };
+
+        /**
+         * Method to fetch loyalty application and list of rewards
+         */
+        WidgetHome.getApplicationAndRewards = function () {
           var successLoyaltyRewards = function (result) {
               WidgetHome.loyaltyRewards = result;
               if (!WidgetHome.loyaltyRewards)
@@ -54,9 +63,9 @@
                 console.error('Error while getting data loyaltyRewards', err);
               }
             };
-
-
           var successApplication = function (result) {
+            if (result.image)
+              WidgetHome.carouselImages = result.image;
             RewardCache.setApplication(result);
           };
 
@@ -65,7 +74,6 @@
           };
           LoyaltyAPI.getApplication('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(successApplication, errorApplication);
           LoyaltyAPI.getRewards('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(successLoyaltyRewards, errorLoyaltyRewards);
-          LoyaltyAPI.getLoyaltyPoints(userId, 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=', 'e22494ec-73ea-44ac-b82b-75f64b8bc535').then(success, error);
         };
 
         /**
@@ -119,13 +127,15 @@
               console.error('Error while getting data', err);
             };
           DataStore.get(TAG_NAMES.LOYALTY_INFO).then(success, error);
+          WidgetHome.getApplicationAndRewards();
         };
 
         var loginCallback = function () {
-          buildfire.auth.getCurrentUser(function (err,user) {
+          buildfire.auth.getCurrentUser(function (err, user) {
             console.log("_______________________", user);
             if (user) {
               WidgetHome.currentLoggedInUser = user;
+              WidgetHome.getLoyaltyPoints(user._id);
               $scope.$digest();
             }
           });
@@ -185,6 +195,21 @@
         $rootScope.$on('POINTS_ADDED', function (e, points) {
           if (points)
             WidgetHome.loyaltyPoints = WidgetHome.loyaltyPoints + points;
+        });
+
+        /**
+         * This event listener is bound for "Carousel:LOADED" event broadcast
+         */
+        $rootScope.$on("Carousel:LOADED", function () {
+          WidgetHome.view = null;
+          if (!WidgetHome.view) {
+            WidgetHome.view = new buildfire.components.carousel.view("#carousel", [], "WideScreen");
+          }
+          if (WidgetHome.carouselImages) {
+            WidgetHome.view.loadItems(WidgetHome.carouselImages, null, "WideScreen");
+          } else {
+            WidgetHome.view.loadItems([]);
+          }
         });
 
         /**

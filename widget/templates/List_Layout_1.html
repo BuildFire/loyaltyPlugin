@@ -1,6 +1,7 @@
 <div class="holder padding-zero">
   <div class="loyalty-plugin">
-    <div class="plugin-slider text-center">
+    <div id="carousel" ng-if="WidgetHome.carouselImages" build-fire-carousel=""></div>
+    <div class="plugin-slider text-center" ng-if="!WidgetHome.carouselImages">
       <div class="plugin-slide">
         <img src="assets/images/16x9.png">
       </div>
