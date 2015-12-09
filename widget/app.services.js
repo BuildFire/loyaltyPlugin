@@ -147,7 +147,7 @@
           if (!loyaltyUnqiueId) {
             deferred.reject(new Error('Undefined application'));
           }
-          $http.get(SERVER.URL + '/api/loyaltyUserAddPoint/' + loyaltyUnqiueId + '?userToken=' + userToken + '&redemptionPasscode=' + passcode)
+          $http.get(SERVER.URL + '/api/loyaltyAppPassCode/' + loyaltyUnqiueId + '?userToken=' + userToken + '&redemptionPasscode=' + passcode)
             .success(function (response) {
               if (response)
                 deferred.resolve(response);
