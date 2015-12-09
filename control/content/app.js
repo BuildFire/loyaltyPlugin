@@ -2,7 +2,7 @@
 
 (function (angular) {
   angular.module('loyaltyPluginContent', ['ngRoute', 'ui.bootstrap', 'ui.tinymce',
-    'ui.sortable'])
+    'ui.sortable', 'ngAnimate'])
     //injected ngRoute for routing
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider
