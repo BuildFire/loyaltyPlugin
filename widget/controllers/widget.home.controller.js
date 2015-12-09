@@ -13,6 +13,8 @@
         $rootScope.itemListbackgroundImage = "";
         $rootScope.itemDetailsBackgroundImage = "";
 
+        //create new instance of buildfire carousel viewer
+        WidgetHome.view = null;
 
         /**
          * Initialize current logged in user as null. This field is re-initialized if user is already logged in or user login user auth api.
@@ -57,6 +59,8 @@
 
 
           var successApplication = function (result) {
+            if (result.image)
+              WidgetHome.carouselImages = result.image;
             RewardCache.setApplication(result);
           };
 
@@ -122,7 +126,7 @@
         };
 
         var loginCallback = function () {
-          buildfire.auth.getCurrentUser(function (err,user) {
+          buildfire.auth.getCurrentUser(function (err, user) {
             console.log("_______________________", user);
             if (user) {
               WidgetHome.currentLoggedInUser = user;
@@ -185,6 +189,21 @@
         $rootScope.$on('POINTS_ADDED', function (e, points) {
           if (points)
             WidgetHome.loyaltyPoints = WidgetHome.loyaltyPoints + points;
+        });
+
+        /**
+         * This event listener is bound for "Carousel:LOADED" event broadcast
+         */
+        $rootScope.$on("Carousel:LOADED", function () {
+          WidgetHome.view = null;
+          if (!WidgetHome.view) {
+            WidgetHome.view = new buildfire.components.carousel.view("#carousel", [], "WideScreen");
+          }
+          if (WidgetHome.carouselImages) {
+            WidgetHome.view.loadItems(WidgetHome.carouselImages, null, "WideScreen");
+          } else {
+            WidgetHome.view.loadItems([]);
+          }
         });
 
         /**
