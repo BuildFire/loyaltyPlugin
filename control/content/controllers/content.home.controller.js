@@ -129,7 +129,7 @@
         };
 
 
-        /*SortRewards method declation*/
+        /*SortRewards method declaration*/
         ContentHome.sortRewards = function (data) {
           ContentHome.successSortRewards = function (result) {
             console.info('Reward list Sorted:', result);
