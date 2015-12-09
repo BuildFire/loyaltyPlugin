@@ -45,6 +45,13 @@
                 console.error('Error while getting points data', err);
               }
             };
+          LoyaltyAPI.getLoyaltyPoints(userId, 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=', 'e22494ec-73ea-44ac-b82b-75f64b8bc535').then(success, error);
+        };
+
+        /**
+         * Method to fetch loyalty application and list of rewards
+         */
+        WidgetHome.getApplicationAndRewards = function () {
           var successLoyaltyRewards = function (result) {
               WidgetHome.loyaltyRewards = result;
               if (!WidgetHome.loyaltyRewards)
@@ -56,8 +63,6 @@
                 console.error('Error while getting data loyaltyRewards', err);
               }
             };
-
-
           var successApplication = function (result) {
             if (result.image)
               WidgetHome.carouselImages = result.image;
@@ -69,7 +74,6 @@
           };
           LoyaltyAPI.getApplication('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(successApplication, errorApplication);
           LoyaltyAPI.getRewards('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(successLoyaltyRewards, errorLoyaltyRewards);
-          LoyaltyAPI.getLoyaltyPoints(userId, 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=', 'e22494ec-73ea-44ac-b82b-75f64b8bc535').then(success, error);
         };
 
         /**
@@ -123,6 +127,7 @@
               console.error('Error while getting data', err);
             };
           DataStore.get(TAG_NAMES.LOYALTY_INFO).then(success, error);
+          WidgetHome.getApplicationAndRewards();
         };
 
         var loginCallback = function () {
@@ -130,6 +135,7 @@
             console.log("_______________________", user);
             if (user) {
               WidgetHome.currentLoggedInUser = user;
+              WidgetHome.getLoyaltyPoints(user._id);
               $scope.$digest();
             }
           });
