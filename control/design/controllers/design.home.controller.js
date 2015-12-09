@@ -80,7 +80,7 @@
                 if (DesignHome.data.design.itemListbackgroundImage) {
                   DesignHome.itemListBackground.loadbackground(DesignHome.data.design.itemListbackgroundImage);
                 }
-                if (DesignHome.data.design.itemListbackgroundImage) {
+                if (DesignHome.data.design.itemDetailsBackgroundImage) {
                   DesignHome.itemDetailsBackground.loadbackground(DesignHome.data.design.itemDetailsBackgroundImage);
                 }
               if (tmrDelay)clearTimeout(tmrDelay);
