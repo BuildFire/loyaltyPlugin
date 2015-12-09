@@ -7,13 +7,16 @@
   <link rel="stylesheet" href="../../../styles/siteIcons.css">
   <link rel="stylesheet" href="../../../styles/appStyle.css">
   <link rel="stylesheet" href="../../../styles/helper.css">
+  <link rel="stylesheet" href="../../../scripts/owlCarousel/owlCarousel.css">
 
   <!-- Plugin CSS -->
   <link rel="stylesheet" href="assets/styles/style.css">
 
   <!-- BuildFire JS -->
   <script src="../../../scripts/jquery/jquery-1.11.2.min.js"></script>
-  <script type="text/javascript" src="../../../scripts/buildfire.js"></script>
+  <script src="../../../scripts/buildfire.js"></script>
+  <script src="../../../scripts/owlCarousel/owlCarousel.js"></script>
+  <script src="../../../scripts/buildfire/components/carousel/carousel.js"></script>
   <script src="../../../scripts/angular/angular.min.js"></script>
   <script src="../../../scripts/angular/angular-route.min.js"></script>
   <script src="app.js"></script>
@@ -24,14 +27,16 @@
   <script src="controllers/widget.amount.controller.js"></script>
   <script src="controllers/widget.redeem.controller.js"></script>
   <script src="controllers/widget.code.controller.js"></script>
-
+  <script src="controllers/widget.success.controller.js"></script>
+  <script src="controllers/widget.awarded.controller.js"></script>
+  <script src="../../../scripts/angular/angular-animate.min.js"></script>
   <link rel="stylesheet" href="../../../styles/transitionAnimation.css">
 
   <!-- Meta -->
   <meta charset="utf-8">
 </head>
 <body class="body-scroll slide no-scroll">
-<div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content">
+<div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content" data-ng-attr-style="background:url({{ itemListbackgroundImage | cropImage:deviceWidth:deviceHeight:true}}) !important; background-size:cover;">
   <div ng-if="WidgetHome.data.design.listLayout" ng-include="'templates/' + WidgetHome.data.design.listLayout + '.html'">
   </div>
 </div>

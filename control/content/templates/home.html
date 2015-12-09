@@ -21,7 +21,8 @@
     </div>
     <div class="main col-xs-9 pull-right">
       <input type="text" class="form-control"
-             placeholder="Points per Purchase" ng-model="ContentHome.data.pointsPerVisit">
+             placeholder="Points per Purchase"
+             ng-model="ContentHome.data.pointsPerVisit">
     </div>
   </div>
   <hr class="none">
@@ -30,7 +31,8 @@
       <span>Points per Dollar</span>
     </div>
     <div class="main col-xs-9 pull-right">
-      <input type="text" class="form-control" placeholder="Points per Dollar" ng-model="ContentHome.data.pointsPerDollar">
+      <input type="text" class="form-control" placeholder="Points per Dollar"
+             ng-model="ContentHome.data.pointsPerDollar">
     </div>
   </div>
   <hr class="none">
@@ -49,7 +51,8 @@
       <span>Total Limit</span>
     </div>
     <div class="main col-xs-9 pull-right">
-      <input type="text" class="form-control" placeholder="Total Limit">
+      <input type="text" class="form-control" placeholder="Total Limit"
+             ng-model="ContentHome.data.totalLimit">
     </div>
   </div>
   <hr class="none">
@@ -59,7 +62,8 @@
     </div>
     <div class="main col-xs-9 pull-right">
       <input type="text" class="form-control"
-             placeholder="Add Points Passcode" ng-model="ContentHome.data.redemptionPasscode">
+             placeholder="Add Points Passcode"
+             ng-model="ContentHome.data.redemptionPasscode">
     </div>
   </div>
   <hr>
@@ -72,33 +76,40 @@
   </div>
   <hr>
   <div class="item clearfix">
-    <div
+    <div ng-if="ContentHome.loyaltyRewards.length"
         class="tab-order draggable-list-view wide-list has-btn-link border-grey border-radius-four">
       <div>
-        <div ui-sortable="ContentHome.rewardsSortableOptions" ng-model="ContentHome.loyaltyRewards">
-          <div class="d-item double-line square-icon clearfix" ng-repeat="rewards in ContentHome.loyaltyRewards">
+        <div ui-sortable="ContentHome.rewardsSortableOptions"
+             ng-model="ContentHome.loyaltyRewards">
+          <div class="d-item double-line square-icon clearfix"
+               ng-repeat="rewards in ContentHome.loyaltyRewards">
             <span class="icon icon-menu pull-left cursor-grab"></span>
 
             <div class="media-holder pull-left">
-              <img ng-src="{{rewards.image | getImageUrl : 60:60}}" ng-if="rewards.image">
+              <img ng-src="{{rewards.image | getImageUrl : 60:60}}"
+                   ng-if="rewards.image">
               <img src="assets/images/1x1.png" ng-if="!rewards.image">
             </div>
             <div class="copy pull-right">
               <div class="col-md-7 padding-zero pull-left">
                 <a class="text-primary">
-                  <span class="title ellipsis pull-left">{{rewards.title}}</span>
+                  <span
+                      class="title ellipsis pull-left">{{rewards.title}}</span>
                 </a>
                 <span class="title ellipsis pull-left">{{rewards.pointsToRedeem}} Points</span>
               </div>
               <div class="pull-right padding-top-fifteen">
                 <span
-                    class="btn-icon btn-delete-icon btn-danger transition-third"></span>
+                    class="btn-icon btn-delete-icon btn-danger transition-third"
+                    ng-click="ContentHome.removeLoyalty(rewards._id, $index)"></span>
               </div>
             </div>
           </div>
-
         </div>
       </div>
+    </div>
+    <div class="padded" ng-if="!ContentHome.loyaltyRewards.length">
+      <div class="well text-center">No rewards found.</div>
     </div>
   </div>
 </div>

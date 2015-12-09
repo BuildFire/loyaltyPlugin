@@ -1,5 +1,5 @@
 describe('Unit : loyaltyPluginContent content Enums', function () {
-  var STATUS_CODE, STATUS_MESSAGES,SERVER;
+  var STATUS_CODE, STATUS_MESSAGES, SERVER;
 
 
   beforeEach(module('loyaltyPluginContent'));
@@ -32,7 +32,7 @@ describe('Unit : loyaltyPluginContent content Enums', function () {
     it('STATUS_CODE.UNDEFINED_ID should exist and equals to "UNDEFINED_ID"', function () {
       expect(STATUS_CODE.UNDEFINED_ID).toEqual('UNDEFINED_ID');
     });
-    it('STATUS_CODE.ITEM_ARRAY_FOUND should exist and equals to "ITEM_ARRAY_FOUND"', function () {
+   it('STATUS_CODE.ITEM_ARRAY_FOUND should exist and equals to "ITEM_ARRAY_FOUND"', function () {
       expect(STATUS_CODE.ITEM_ARRAY_FOUND).toEqual('ITEM_ARRAY_FOUND');
     });
     it('STATUS_CODE.NOT_ITEM_ARRAY should exist and equals to "NOT_ITEM_ARRAY"', function () {
@@ -70,3 +70,4 @@ describe('Unit : loyaltyPluginContent content Enums', function () {
     });
   });
 });
+

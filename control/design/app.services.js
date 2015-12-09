@@ -13,13 +13,14 @@
       return {
         get: function (_tagName) {
           var deferred = $q.defer();
-          Buildfire.datastore.get(_tagName, function (err, result) {
+          var callback=function (err, result) {
             if (err) {
               return deferred.reject(err);
             } else if (result) {
               return deferred.resolve(result);
             }
-          });
+          };
+          Buildfire.datastore.get(_tagName, callback);
           return deferred.promise;
         },
         save: function (_item, _tagName) {
@@ -30,13 +31,15 @@
               message: STATUS_MESSAGES.UNDEFINED_DATA
             }));
           }
-          Buildfire.datastore.save(_item, _tagName, function (err, result) {
+          var callback =function (err, result) {
             if (err) {
               return deferred.reject(err);
             } else if (result) {
               return deferred.resolve(result);
             }
-          });
+          };
+          Buildfire.datastore.save(_item, _tagName, callback);
+
           return deferred.promise;
         }
       }

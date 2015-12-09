@@ -1,13 +1,12 @@
-describe('Unit : loyaltyPluginWidget Widget Enums', function () {
+describe('Unit : loyaltyPluginDesign Design Enums', function () {
   var STATUS_CODE, STATUS_MESSAGES, SERVER;
 
 
-  beforeEach(module('loyaltyPluginWidget'));
+  beforeEach(module('loyaltyPluginDesign'));
 
-  beforeEach(inject(function (_STATUS_CODE_, _STATUS_MESSAGES_, _SERVER_) {
+  beforeEach(inject(function (_STATUS_CODE_, _STATUS_MESSAGES_) {
     STATUS_CODE = _STATUS_CODE_;
     STATUS_MESSAGES = _STATUS_MESSAGES_;
-    SERVER = _SERVER_;
   }));
 
   describe('Enum : STATUS_CODE', function () {
@@ -32,16 +31,16 @@ describe('Unit : loyaltyPluginWidget Widget Enums', function () {
     it('STATUS_CODE.UNDEFINED_ID should exist and equals to "UNDEFINED_ID"', function () {
       expect(STATUS_CODE.UNDEFINED_ID).toEqual('UNDEFINED_ID');
     });
-    it('STATUS_CODE.ITEM_ARRAY_FOUND should exist and equals to "ITEM_ARRAY_FOUND"', function () {
+   it('STATUS_CODE.ITEM_ARRAY_FOUND should exist and equals to "ITEM_ARRAY_FOUND"', function () {
       expect(STATUS_CODE.ITEM_ARRAY_FOUND).toEqual('ITEM_ARRAY_FOUND');
     });
-    it('STATUS_CODE.NOT_ITEM_ARRAY should exist and equals to "NOT_ITEM_ARRAY"', function () {
+   it('STATUS_CODE.NOT_ITEM_ARRAY should exist and equals to "NOT_ITEM_ARRAY"', function () {
       expect(STATUS_CODE.NOT_ITEM_ARRAY).toEqual('NOT_ITEM_ARRAY');
     });
 
   });
   describe('Enum : STATUS_MESSAGES', function () {
-    it('STATUS_MESSAGES should exist and be an object', function () {
+   it('STATUS_MESSAGES should exist and be an object', function () {
       expect(typeof STATUS_MESSAGES).toEqual('object');
     });
     it('STATUS_MESSAGES.UNDEFINED_DATA should exist and equals to "Undefined data provided"', function () {
@@ -61,13 +60,5 @@ describe('Unit : loyaltyPluginWidget Widget Enums', function () {
     });
   });
 
-  describe('Enum : SERVER', function () {
-    it('SERVER should exist and be an object', function () {
-      expect(typeof SERVER).toEqual('object');
-    });
-    it('SERVER.URL should exist and equals to "http://loyalty.kaleoapps.com"', function () {
-      expect(SERVER.URL).toEqual('http://loyalty.kaleoapps.com');
-    });
-  });
 });
 
