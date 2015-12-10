@@ -134,6 +134,16 @@
             $rootScope.$broadcast("REWARD_UPDATED", msg.data);
             $rootScope.$apply();
             break;
+
+          case 'RemoveItem':
+            $rootScope.$broadcast("REWARD_DELETED", msg.index);
+            $rootScope.$apply();
+            break;
+
+          case 'ListSorted':
+            $rootScope.$broadcast("REWARDS_SORTED");
+            $rootScope.$apply();
+            break;
         }
       };
 
