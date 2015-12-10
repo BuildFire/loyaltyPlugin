@@ -154,16 +154,16 @@
           sortRewards: sortRewards
         };
       }])
-      .factory('rewardCache', ['$rootScope', function($rootScope){
-        var reward ={};
+    .factory('RewardCache', [function () {
+      var reward = {};
 
-        return {
-          setReward: function(data){
-            reward = data;
-          },
-          getReward: function(){
-            return reward;
-          }
-        };
-      }])
+      return {
+        setReward: function (data) {
+          reward = data;
+        },
+        getReward: function () {
+          return reward;
+        }
+      };
+    }])
 })(window.angular, window.buildfire);

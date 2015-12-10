@@ -30,6 +30,10 @@
             template: 'Item_Details',
             totalPoints: WidgetHome.loyaltyPoints
           });
+          buildfire.messaging.sendMessageToControl({
+            type: 'OpenItem',
+            data: reward
+          });
         };
 
         /**

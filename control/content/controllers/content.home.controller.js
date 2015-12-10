@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal','rewardCache','$location',
-      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, rewardCache,$location) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal','RewardCache','$location',
+      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache,$location) {
         var ContentHome = this;
         var _data = {
           redemptionPasscode: '',
@@ -230,7 +230,7 @@
         };
 
         ContentHome.openReward = function(data){
-          rewardCache.setReward(data);
+          RewardCache.setReward(data);
           $location.path('/reward/' + data._id);
         //  $scope.$digest();
         };
