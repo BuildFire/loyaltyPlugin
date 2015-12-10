@@ -97,27 +97,25 @@
           return angular.equals(data, ContentReward.masterData);
         }
 
+        buildfire.auth.getCurrentUser(function (err, user) {
+          if (user) {
+            ContentReward.currentLoggedInUser = user;
+            $scope.$digest();
+          }
+        });
+
         /*Add reward method declaration*/
         ContentReward.addReward = function (newObj) {
           if (typeof newObj === 'undefined') {
             return;
           }
           var data = newObj;
-          data.appId = 15030018;
+          data.appId =  'b036ab75-9ddd-11e5-88d3-124798dea82d';
           data.loyaltyUnqiueId = buildfire.context.instanceId;
-          data.userToken = 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=';
-          data.auth = "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=";
-          // var success = function (result) {
-          //     console.info('Saved data result: ', result);
-          /*This is dummy result call(remove it when actula api will start working*/
-          var result = {
-            _id: new Date().getUTCMilliseconds(),
-            appId: 15030018,
-            loyaltyUnqiueId: 'e22494ec-73ea-44ac-b82b-75f64b8bc535',
-            userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
-            auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
-          };
-
+          data.userToken = ContentReward.currentLoggedInUser.userToken;
+          data.auth = ContentReward.currentLoggedInUser.auth;
+           var success = function (result) {
+               console.info('Saved data result: ', result);
           updateMasterItem(newObj);
           ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: result._id});
           ContentReward.item = Object.assign(ContentReward.item, result);
@@ -129,14 +127,13 @@
               data: ContentReward.item
             });
           }
-          console.log("aaaaaaaaaaaaAdd", data);
-          $scope.$digest();
-          // }
-          // , error = function (err) {
-          // ContentReward.isInserted = false;
-          //    console.error('Error while saving data : ', err);
-          //  };
-          //  LoyaltyAPI.addReward(data).then(success, error);
+           $scope.$digest();
+           }
+           , error = function (err) {
+           ContentReward.isInserted = false;
+              console.error('Error while saving data : ', err);
+            };
+            LoyaltyAPI.addReward(data).then(success, error);
         };
 
         /*Update reward method declaration*/
@@ -146,21 +143,23 @@
           }
           updateMasterItem(newObj);
           var data = newObj;
-          console.log("aaaaaaaaaaaaUpdate", data);
-          buildfire.messaging.sendMessageToWidget({
+          data.appId =  'b036ab75-9ddd-11e5-88d3-124798dea82d';
+          data.loyaltyUnqiueId = buildfire.context.instanceId;
+          data.userToken = ContentReward.currentLoggedInUser.userToken;
+          data.auth = ContentReward.currentLoggedInUser.auth;
+           buildfire.messaging.sendMessageToWidget({
             id: $routeParams.id,
             type: 'UpdateItem',
             data: ContentReward.item
           });
           $scope.$digest();
-          // var success = function (result) {
-          //     console.info('Saved data result: ', result);
-          // }
-          // , error = function (err) {
-          //    console.error('Error while saving data : ', err);
-          //  };
-          //  LoyaltyAPI.updateReward(data).then(success, error);
-
+           var success = function (result) {
+               console.info('Saved data result: ', result);
+           }
+           , error = function (err) {
+              console.error('Error while saving data : ', err);
+            };
+            LoyaltyAPI.updateReward(data).then(success, error);
         };
 
         /*validate the required fields whether its there or not */
@@ -184,7 +183,12 @@
 
         if ($routeParams.id && RewardCache.getReward()) {
           ContentReward.item = RewardCache.getReward();
-          buildfire.messaging.sendMessageToWidget({
+          ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: ContentReward.item ._id});
+          console.log("aaaaaaaaaaaaaaaaaaaaaa",ContentReward.item)
+          ContentReward.listImage.loadbackground(ContentReward.item.listImage);
+          ContentReward.BackgroundImage.loadbackground(ContentReward.item.BackgroundImage);
+          ContentReward.isInserted = true;
+           buildfire.messaging.sendMessageToWidget({
             id: $routeParams.id,
             type: 'OpenItem',
             data: ContentReward.item
@@ -202,7 +206,7 @@
               clearTimeout(tmrDelay);
             }
             tmrDelay = setTimeout(function () {
-              if (ContentReward.isValidReward(ContentReward.item) && !ContentReward.isInserted) {
+              if (ContentReward.isValidReward(ContentReward.item) && !ContentReward.isInserted && !$routeParams.id) {
                 ContentReward.addReward(JSON.parse(angular.toJson(newObj)));
               }
               if (ContentReward.isValidReward(ContentReward.item) && ContentReward.isInserted) {

@@ -86,7 +86,7 @@
           if (!data._id) {
             deferred.reject(new Error('Undefined reward id'));
           }
-          $http.post(SERVER.URL + '/api/loyaltyRewards', {data: data}).success(function (response) {
+          $http.post(SERVER.URL + '/api/loyaltyRewards', data).success(function (response) {
             if (response.statusCode == 200)
               deferred.resolve(response);
             else
