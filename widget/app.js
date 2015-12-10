@@ -18,7 +18,7 @@
           link: function (scope, elem, attrs) {
             var views = 0;
             manageDisplay();
-            $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+            $rootScope.$on('VIEW_CHANGED', function (e, type, view, noAnimation) {
               if (type === 'PUSH') {
                 console.log("VIEW_CHANGED>>>>>>>>");
                 var newScope = $rootScope.$new();
@@ -38,16 +38,20 @@
                   views--;
                 });
               } else if (type === 'POPALL') {
-                console.log(view);
                 angular.forEach(view, function (value, key) {
                   var _elToRemove = $(elem).find('#' + value.template),
                     _child = _elToRemove.children("div").eq(0);
 
-                  _child.addClass("ng-enter ng-enter-active");
-                  _child.one("webkitTransitionEnd transitionend oTransitionEnd", function (e) {
+                  if(!noAnimation) {
+                    _child.addClass("ng-enter ng-enter-active");
+                    _child.one("webkitTransitionEnd transitionend oTransitionEnd", function (e) {
+                      _elToRemove.remove();
+                      views--;
+                    });
+                  } else {
                     _elToRemove.remove();
                     views--;
-                  });
+                  }
                 });
 
               }
@@ -111,7 +115,7 @@
         switch (msg.type) {
           case 'AddNewItem':
             RewardCache.setReward(msg.data);
-            ViewStack.popAllViews();
+            ViewStack.popAllViews(true);
             ViewStack.push({
               template: 'Item_Details',
               totalPoints: msg.data.pointsToRedeem
@@ -121,7 +125,7 @@
 
           case 'OpenItem':
             RewardCache.setReward(msg.data);
-            ViewStack.popAllViews();
+            ViewStack.popAllViews(true);
             ViewStack.push({
               template: 'Item_Details',
               totalPoints: msg.data.pointsToRedeem
@@ -148,6 +152,7 @@
       };
 
       buildfire.navigation.onBackButtonClick = function () {
+
         if (ViewStack.hasViews()) {
           ViewStack.pop();
         } else {

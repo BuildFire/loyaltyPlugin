@@ -30,7 +30,7 @@
           };
 
           var redeemFailure = function (error) {
-            if (error.code == 2103) {
+            if (error && error.code == 2103) {
               WidgetRedeem.dailyLimitExceeded = true;
               $timeout(function () {
                 WidgetRedeem.dailyLimitExceeded = false;

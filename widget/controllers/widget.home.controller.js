@@ -16,6 +16,8 @@
         //create new instance of buildfire carousel viewer
         WidgetHome.view = null;
 
+        WidgetHome.listeners = {};
+
         /**
          * Initialize current logged in user as null. This field is re-initialized if user is already logged in or user login user auth api.
          */
@@ -96,7 +98,6 @@
          * Method to open buildfire auth login pop up and allow user to login using credentials.
          */
         WidgetHome.openLogin = function () {
-          console.log("PPPPPPPPPPPPPPPPPPPPPPPPPPP");
           buildfire.auth.login({}, function () {
 
           });
@@ -188,7 +189,7 @@
         /**
          * This event listener is bound for "POINTS_REDEEMED" event broadcast
          */
-        $rootScope.$on('POINTS_REDEEMED', function (e, points) {
+        WidgetHome.listeners['POINTS_REDEEMED'] = $rootScope.$on('POINTS_REDEEMED', function (e, points) {
           if (points)
             WidgetHome.loyaltyPoints = WidgetHome.loyaltyPoints - points;
         });
@@ -196,7 +197,7 @@
         /**
          * This event listener is bound for "POINTS_ADDED" event broadcast
          */
-        $rootScope.$on('POINTS_ADDED', function (e, points) {
+        WidgetHome.listeners['POINTS_ADDED'] = $rootScope.$on('POINTS_ADDED', function (e, points) {
           if (points)
             WidgetHome.loyaltyPoints = WidgetHome.loyaltyPoints + points;
         });
@@ -204,7 +205,7 @@
         /**
          * This event listener is bound for "REWARD_DELETED" event broadcast
          */
-        $rootScope.$on('REWARD_DELETED', function (e, index) {
+        WidgetHome.listeners['REWARD_DELETED'] = $rootScope.$on('REWARD_DELETED', function (e, index) {
           if (index)
             WidgetHome.loyaltyRewards.splice(index, 1);
         });
@@ -212,14 +213,14 @@
         /**
          * This event listener is bound for "REWARDS_SORTED" event broadcast
          */
-        $rootScope.$on('REWARDS_SORTED', function (e) {
+        WidgetHome.listeners['REWARDS_SORTED'] = $rootScope.$on('REWARDS_SORTED', function (e) {
           WidgetHome.getApplicationAndRewards();
         });
 
         /**
          * This event listener is bound for "Carousel:LOADED" event broadcast
          */
-        $rootScope.$on("Carousel:LOADED", function () {
+        WidgetHome.listeners['Carousel:LOADED'] = $rootScope.$on("Carousel:LOADED", function () {
           WidgetHome.view = null;
           if (!WidgetHome.view) {
             WidgetHome.view = new buildfire.components.carousel.view("#carousel", [], "WideScreen");
@@ -242,6 +243,17 @@
             $scope.$digest();
           }
         });
+
+        $scope.$on("$destroy", function () {
+          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
+          for (var i in WidgetHome.listeners) {
+            if (WidgetHome.listeners.hasOwnProperty(i)) {
+              WidgetHome.listeners[i]();
+            }
+          }
+          DataStore.clearListener();
+        });
+
 
         init();
 

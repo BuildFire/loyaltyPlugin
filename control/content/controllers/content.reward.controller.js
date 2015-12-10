@@ -104,7 +104,7 @@
           }
           var data = newObj;
           data.appId = 15030018;
-          data.loyaltyUnqiueId = 'e22494ec-73ea-44ac-b82b-75f64b8bc535'
+          data.loyaltyUnqiueId = 'e22494ec-73ea-44ac-b82b-75f64b8bc535';
           data.userToken = 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=';
           data.auth = "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=";
           // var success = function (result) {
