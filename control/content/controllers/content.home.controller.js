@@ -80,7 +80,7 @@
             });
             var data = {
               appId: 15030018,
-              loyaltyUniqueId: 'e22494ec-73ea-44ac-b82b-75f64b8bc535',
+              loyaltyUniqueId: buildfire.context.instanceId,
               loyaltyRewardId: rewardsId,
               userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
               auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
@@ -145,7 +145,7 @@
               if (tmrDelay)clearTimeout(tmrDelay);
             }
           };
-          LoyaltyAPI.getRewards('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
+          LoyaltyAPI.getRewards(buildfire.context.instanceId).then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
           LoyaltyAPI.getApplication(buildfire.context.instanceId).then(ContentHome.success, ContentHome.error);
         };
 
