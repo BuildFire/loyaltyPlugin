@@ -270,7 +270,7 @@ describe('Unit: loyaltyPluginWidget widget app', function () {
     var ViewStack, $rootScope;
     beforeEach(module('loyaltyPluginWidget'));
     beforeEach(inject(function (_ViewStack_, _$rootScope_) {
-      ViewStack =_RewardCache_;
+      ViewStack =_ViewStack_;
       $rootScope = _$rootScope_;
     }));
     var msg = {
