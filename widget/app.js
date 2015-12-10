@@ -139,6 +139,11 @@
             $rootScope.$broadcast("REWARD_DELETED", msg.index);
             $rootScope.$apply();
             break;
+
+          case 'ListSorted':
+            $rootScope.$broadcast("REWARDS_SORTED");
+            $rootScope.$apply();
+            break;
         }
       };
 

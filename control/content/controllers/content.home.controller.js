@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal','RewardCache','$location',
-      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache,$location) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal', 'RewardCache', '$location',
+      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache, $location) {
         var ContentHome = this;
         var _data = {
           redemptionPasscode: '',
@@ -152,6 +152,11 @@
 
         /*SortRewards method declaration*/
         ContentHome.sortRewards = function (data) {
+        // Move this code to successSortRewards callback when API is working
+          buildfire.messaging.sendMessageToWidget({
+            type: 'ListSorted'
+          });
+
           ContentHome.successSortRewards = function (result) {
             console.info('Reward list Sorted:', result);
             if (tmrDelay)clearTimeout(tmrDelay);
@@ -233,10 +238,10 @@
           });
         };
 
-        ContentHome.openReward = function(data){
+        ContentHome.openReward = function (data) {
           RewardCache.setReward(data);
           $location.path('/reward/' + data._id);
-        //  $scope.$digest();
+          //  $scope.$digest();
         };
         /*
          * create an artificial delay so api isn't called on every character entered

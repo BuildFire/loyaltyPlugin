@@ -210,6 +210,13 @@
         });
 
         /**
+         * This event listener is bound for "REWARDS_SORTED" event broadcast
+         */
+        $rootScope.$on('REWARDS_SORTED', function (e) {
+          WidgetHome.getApplicationAndRewards();
+        });
+
+        /**
          * This event listener is bound for "Carousel:LOADED" event broadcast
          */
         $rootScope.$on("Carousel:LOADED", function () {
