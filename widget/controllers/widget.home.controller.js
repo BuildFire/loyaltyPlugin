@@ -87,11 +87,17 @@
          */
         WidgetHome.openGetPoints = function () {
           console.log(">>>>>>>>>>>>>>");
-          ViewStack.push({
-            template: 'Amount',
-            loyaltyPoints: WidgetHome.loyaltyPoints
+          if(WidgetHome.currentLoggedInUser){
+            ViewStack.push({
+              template: 'Amount',
+              loyaltyPoints: WidgetHome.loyaltyPoints
 
-          });
+            });
+          }
+          else
+          alert("Please login to earn points!")
+
+
         };
 
         /**

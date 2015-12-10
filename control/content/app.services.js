@@ -17,9 +17,7 @@
           if (!app) {
             deferred.reject(new Error('Undefined app data'));
           }
-          $http.post(SERVER.URL + '/api/loyaltyApp', {
-            data: app
-          }).success(function (response) {
+          $http.post(SERVER.URL + '/api/loyaltyApp', app).success(function (response) {
             console.log("+++++++++++_+_________+_+_", response);
             if (response)
               deferred.resolve(response);
