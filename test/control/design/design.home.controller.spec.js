@@ -49,7 +49,10 @@ describe('Unit : loyaltyPluginDesign design.home.controller.js', function () {
                         get: function () { },
                         save: function () { }
                     }
-                }
+                },
+                $scope: $scope,
+                DataStore: DataStore,
+                TAG_NAMES: TAG_NAMES,
 
             });
             DataStore = jasmine.createSpyObj('DataStore', ['get', 'save']);
@@ -112,22 +115,18 @@ describe('Unit : loyaltyPluginDesign design.home.controller.js', function () {
             expect(DesignHome.data.design.itemDetailsBackgroundImage).toEqual("");
         });
     });
-    describe('Units: Init()- DataStore.get returns error', function () {
+
+    describe('Units: DataStore.save returns error', function () {
         beforeEach(function () {
-            DataStore.get.and.callFake(function () {
+            DataStore.save.and.callFake(function () {
                 var deferred = q.defer();
                 deferred.resolve({
                     data:  {
                         "content": {
-                            "carouselImages": [],
-                            "description": "<p>&nbsp;<br></p>",
-                            "rssUrl": ""
+
                         },
                         "design": {
-                            "itemListLayout": "ss",
-                            "itemDetailsLayout": "ssa",
-                            "itemListBgImage": "",
-                            "itemDetailsBgImage": ""
+
                         }
                     }
                 });
@@ -141,11 +140,18 @@ describe('Unit : loyaltyPluginDesign design.home.controller.js', function () {
 
         });
 
-        it('DataStore.get should be called with error callback', function () {
+        it('DesignHome.isNotSaved should be true and false when timeout called', function () {
             $rootScope.$digest();
-            DataStore.get(TAG_NAMES.LOYALTY_INFO);
+        //    DesignHome.data.design.itemListLayout=LAYOUTS.itemListLayouts[3].name;
+            $rootScope.$digest();
+           // $timeout.flush();
+          //  expect(DesignHome.isNotSaved).toEqual(true);
+            //$timeout.flush();
+          //  expect(DesignHome.isNotSaved).toEqual(false);
         });
-    });
+    })
+
+
 
 })
 ;

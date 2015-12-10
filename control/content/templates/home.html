@@ -82,26 +82,26 @@
         <div ui-sortable="ContentHome.rewardsSortableOptions"
              ng-model="ContentHome.loyaltyRewards">
           <div class="d-item double-line square-icon clearfix"
-               ng-repeat="rewards in ContentHome.loyaltyRewards">
+               ng-repeat="reward in ContentHome.loyaltyRewards">
             <span class="icon icon-menu pull-left cursor-grab"></span>
 
             <div class="media-holder pull-left">
-              <img ng-src="{{rewards.image | getImageUrl : 60:60}}"
-                   ng-if="rewards.image">
-              <img src="assets/images/1x1.png" ng-if="!rewards.image">
+              <img ng-src="{{reward.image | getImageUrl : 60:60}}"
+                   ng-if="reward.image">
+              <img src="assets/images/1x1.png" ng-if="!reward.image">
             </div>
             <div class="copy pull-right">
               <div class="col-md-7 padding-zero pull-left">
-                <a class="text-primary">
+                <a class="text-primary" href="javascript:void(0);" ng-click="ContentHome.openReward(reward)">
                   <span
-                      class="title ellipsis pull-left">{{rewards.title}}</span>
+                      class="title ellipsis pull-left">{{reward.title}}</span>
                 </a>
-                <span class="title ellipsis pull-left">{{rewards.pointsToRedeem}} Points</span>
+                <span class="title ellipsis pull-left">{{reward.pointsToRedeem}} Points</span>
               </div>
               <div class="pull-right padding-top-fifteen">
                 <span
                     class="btn-icon btn-delete-icon btn-danger transition-third"
-                    ng-click="ContentHome.removeLoyalty(rewards._id, $index)"></span>
+                    ng-click="ContentHome.removeLoyalty(reward._id, $index)"></span>
               </div>
             </div>
           </div>

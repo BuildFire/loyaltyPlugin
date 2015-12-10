@@ -118,6 +118,16 @@
             });
             $rootScope.$apply();
             break;
+
+          case 'OpenItem':
+            RewardCache.setReward(msg.data);
+            ViewStack.popAllViews();
+            ViewStack.push({
+              template: 'Item_Details',
+              totalPoints: msg.data.pointsToRedeem
+            });
+            $rootScope.$apply();
+            break;
         }
       };
 

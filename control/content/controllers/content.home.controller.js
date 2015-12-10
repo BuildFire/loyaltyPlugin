@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal',
-      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal','rewardCache','$location',
+      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, rewardCache,$location) {
         var ContentHome = this;
         var _data = {
           redemptionPasscode: '',
@@ -208,6 +208,11 @@
           });
         };
 
+        ContentHome.openReward = function(data){
+          rewardCache.setReward(data);
+          $location.path('/reward/' + data._id);
+        //  $scope.$digest();
+        };
         /*
          * create an artificial delay so api isn't called on every character entered
          * */

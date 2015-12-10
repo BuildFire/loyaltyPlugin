@@ -1,10 +1,10 @@
 'use strict';
 
-(function (angular) {
+(function (angular,buildfire) {
   angular
       .module('loyaltyPluginContent')
-      .controller('ContentRewardCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI','STATUS_CODE','$location',
-        function ($scope, Buildfire, LoyaltyAPI,STATUS_CODE, $location) {
+      .controller('ContentRewardCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI','STATUS_CODE','$location','$routeParams','rewardCache',
+        function ($scope, Buildfire, LoyaltyAPI,STATUS_CODE, $location, $routeParams,rewardCache) {
           var ContentReward = this;
           ContentReward.item = {
             title:"",
@@ -147,6 +147,11 @@
             updateMasterItem(newObj);
             var data = newObj;
             console.log("aaaaaaaaaaaaUpdate",data);
+            buildfire.messaging.sendMessageToWidget({
+              id: $routeParams.id,
+              type: 'UpdateItem',
+              data:ContentReward.item
+            });
             $scope.$digest();
             // var success = function (result) {
             //     console.info('Saved data result: ', result);
@@ -155,6 +160,7 @@
             //    console.error('Error while saving data : ', err);
             //  };
             //  LoyaltyAPI.updateReward(data).then(success, error);
+
           };
 
           /*validate the required fields whether its there or not */
@@ -163,10 +169,27 @@
               return (reward.title && reward.pointsToRedeem);
           };
 
+         /*This method is used to get the rewards details*/
+          ContentReward.getRewards = function(rewardId){
+
+          };
+
+
+          console.log(">>>>>>>>>>><<<<<<<<<<",rewardCache.getReward());
+
           /*Go back to home on done button click*/
           ContentReward.gotToHome = function () {
             $location.path('#/');
           };
+
+          if ($routeParams.id && rewardCache.getReward()) {
+            ContentReward.item = rewardCache.getReward();
+            buildfire.messaging.sendMessageToWidget({
+              id: $routeParams.id,
+              type: 'OpenItem',
+              data:ContentReward.item
+            });
+          }
 
           /*Save the data on .5 sec delay*/
           var tmrDelay = null;
@@ -198,4 +221,4 @@
             return ContentReward.item;
           }, saveDataWithDelay, true);
         }]);
-})(window.angular);
+})(window.angular,window.buildfire);
