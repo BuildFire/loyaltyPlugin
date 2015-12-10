@@ -52,7 +52,7 @@
           if (!data) {
             deferred.reject(new Error('Undefined reward data'));
           }
-          $http.post(SERVER.URL + '/api/loyaltyRewards', {data: data}).success(function (response) {
+          $http.post(SERVER.URL + '/api/loyaltyRewards', data).success(function (response) {
             if (response)
               deferred.resolve(response);
             else

@@ -97,26 +97,32 @@
           return angular.equals(data, ContentReward.masterData);
         }
 
+        buildfire.auth.getCurrentUser(function (err, user) {
+            if (user) {
+            ContentReward.currentLoggedInUser = user;
+            $scope.$digest();
+          }
+        });
         /*Add reward method declaration*/
         ContentReward.addReward = function (newObj) {
           if (typeof newObj === 'undefined') {
             return;
           }
           var data = newObj;
-          data.appId = 15030018;
-          data.loyaltyUnqiueId = 'e22494ec-73ea-44ac-b82b-75f64b8bc535';
-          data.userToken = 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=';
-          data.auth = "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=";
-          // var success = function (result) {
-          //     console.info('Saved data result: ', result);
+          data.appId =  'b036ab75-9ddd-11e5-88d3-124798dea82d';
+          data.loyaltyUnqiueId = buildfire.context.instanceId;
+          data.userToken = ContentReward.currentLoggedInUser.userToken;
+          data.auth = ContentReward.currentLoggedInUser.auth;
+           var success = function (result) {
+               console.info('Saved data result: ', result);
           /*This is dummy result call(remove it when actula api will start working*/
-          var result = {
+        /*  var result = {
             _id: new Date().getUTCMilliseconds(),
             appId: 15030018,
             loyaltyUnqiueId: 'e22494ec-73ea-44ac-b82b-75f64b8bc535',
             userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
             auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
-          };
+          };*/
 
           updateMasterItem(newObj);
           ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: result._id});
@@ -131,12 +137,12 @@
           }
           console.log("aaaaaaaaaaaaAdd", data);
           $scope.$digest();
-          // }
-          // , error = function (err) {
-          // ContentReward.isInserted = false;
-          //    console.error('Error while saving data : ', err);
-          //  };
-          //  LoyaltyAPI.addReward(data).then(success, error);
+           }
+           , error = function (err) {
+           ContentReward.isInserted = false;
+              console.error('Error while saving data : ', err);
+            };
+            LoyaltyAPI.addReward(data).then(success, error);
         };
 
         /*Update reward method declaration*/
