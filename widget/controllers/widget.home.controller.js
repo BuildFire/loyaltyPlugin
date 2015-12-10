@@ -202,6 +202,14 @@
         });
 
         /**
+         * This event listener is bound for "REWARD_DELETED" event broadcast
+         */
+        $rootScope.$on('REWARD_DELETED', function (e, index) {
+          if (index)
+            WidgetHome.loyaltyRewards.splice(index, 1);
+        });
+
+        /**
          * This event listener is bound for "Carousel:LOADED" event broadcast
          */
         $rootScope.$on("Carousel:LOADED", function () {

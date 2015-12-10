@@ -206,6 +206,10 @@
           modalInstance.result.then(function (message) {
             if (message === 'yes') {
               ContentHome.loyaltyRewards.splice(index, 1);  //remove this line of code when API will start working.
+              buildfire.messaging.sendMessageToWidget({
+                index: loyaltyId,
+                type: 'RemoveItem'
+              });
 
               //uncomment it when API will start working
               /*
