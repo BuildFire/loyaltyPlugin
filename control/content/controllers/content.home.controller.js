@@ -106,9 +106,30 @@
             if (tmrDelay)clearTimeout(tmrDelay);
           };
           ContentHome.error = function (err) {
-            if (err && err.code !== STATUS_CODE.NOT_FOUND) {
-              console.error('Error while getting data', err);
-              if (tmrDelay)clearTimeout(tmrDelay);
+            if (err && err.code == 2100) {
+              console.error('Error while getting application:', err);
+              var success = function (result) {
+                  console.info('Saved data result: ', result);
+                  updateMasterItem(app);
+                }
+                , error = function (err) {
+                  console.error('Error while saving data : ', err);
+                };
+              var app = {
+                redemptionPasscode: '11111',
+                unqiueId: buildfire.context.instanceId,
+                externalAppId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
+                appId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
+                name: 'Sakshi-Loyalty',
+                pointsPerVisit: 1,
+                pointsPerDollar: 1,
+                totalLimit: 6000,
+                dailyLimit: 500,
+                image: [],
+                userToken: ContentHome.currentLoggedInUser.userToken,
+                auth: ContentHome.currentLoggedInUser.auth
+              };
+              LoyaltyAPI.addEditApplication(app).then(success, error);
             }
           };
           ContentHome.successloyaltyRewards = function (result) {
@@ -125,7 +146,7 @@
             }
           };
           LoyaltyAPI.getRewards('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
-          LoyaltyAPI.getApplication('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(ContentHome.success, ContentHome.error);
+          LoyaltyAPI.getApplication(buildfire.context.instanceId).then(ContentHome.success, ContentHome.error);
         };
 
 
