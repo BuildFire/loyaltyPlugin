@@ -30,10 +30,10 @@
 
               } else if (type === 'POP') {
                 var _elToRemove = $(elem).find('#' + view.template),
-                    _child = _elToRemove.children("div").eq(0);
+                  _child = _elToRemove.children("div").eq(0);
 
                 _child.addClass("ng-enter ng-enter-active");
-                _child.one("webkitTransitionEnd transitionend oTransitionEnd", function(e) {
+                _child.one("webkitTransitionEnd transitionend oTransitionEnd", function (e) {
                   _elToRemove.remove();
                   views--;
                 });
@@ -41,10 +41,10 @@
                 console.log(view);
                 angular.forEach(view, function (value, key) {
                   var _elToRemove = $(elem).find('#' + value.template),
-                      _child = _elToRemove.children("div").eq(0);
+                    _child = _elToRemove.children("div").eq(0);
 
                   _child.addClass("ng-enter ng-enter-active");
-                  _child.one("webkitTransitionEnd transitionend oTransitionEnd", function(e) {
+                  _child.one("webkitTransitionEnd transitionend oTransitionEnd", function (e) {
                     _elToRemove.remove();
                     views--;
                   });
@@ -126,6 +126,12 @@
               template: 'Item_Details',
               totalPoints: msg.data.pointsToRedeem
             });
+            $rootScope.$apply();
+            break;
+
+          case 'UpdateItem':
+            RewardCache.setReward(msg.data);
+            $rootScope.$broadcast("REWARD_UPDATED", msg.data);
             $rootScope.$apply();
             break;
         }

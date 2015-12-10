@@ -3,8 +3,8 @@
 (function (angular, window) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetItemCtrl', ['$scope', 'ViewStack', 'RewardCache', '$sce',
-      function ($scope, ViewStack, RewardCache, $sce) {
+    .controller('WidgetItemCtrl', ['$scope', 'ViewStack', 'RewardCache', '$sce', '$rootScope',
+      function ($scope, ViewStack, RewardCache, $sce, $rootScope) {
 
         var WidgetItem = this;
 
@@ -40,5 +40,9 @@
           if (html)
             return $sce.trustAsHtml(html);
         };
+
+        $rootScope.$on('REWARD_UPDATED', function (e, item) {
+          WidgetItem.reward = item;
+        });
       }])
 })(window.angular, window);
