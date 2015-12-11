@@ -55,6 +55,21 @@
           ViewStack.pop();
         };
 
+        $rootScope.$on('REWARD_UPDATED', function (e, item) {
+          WidgetRedeem.reward = item;
+        });
+        $rootScope.$on("Carousel3:LOADED", function () {
+          WidgetRedeem.view=null;
+          if (!WidgetRedeem.view) {
+            WidgetRedeem.view = new buildfire.components.carousel.view("#carousel3", [], "WideScreen");
+          }
+          if (WidgetRedeem.reward && WidgetRedeem.reward.carouselImage) {
+            WidgetRedeem.view.loadItems(WidgetRedeem.reward.carouselImage, null, "WideScreen");
+          } else {
+            WidgetRedeem.view.loadItems([]);
+          }
+        });
+
         /**
          * Check for current logged in user
          */
