@@ -85,7 +85,7 @@
               userToken: ContentHome.currentLoggedInUser.userToken,
               auth: ContentHome.currentLoggedInUser.auth
             };
-             ContentHome.sortRewards(data);  //uncomment it when API will start working
+            ContentHome.sortRewards(data);
             console.log('update', rewardsId);
           }
         };
@@ -119,11 +119,11 @@
                 _data.userToken = ContentHome.currentLoggedInUser.userToken;
                 _data.auth = ContentHome.currentLoggedInUser.auth;
                 LoyaltyAPI.addEditApplication(_data).then(success, error);
-              }else{
+              } else {
                 ContentHome.needToLoginInCP = true;
-                $timeout(function(){
+                $timeout(function () {
                   ContentHome.needToLoginInCP = false;
-                },5000);
+                }, 5000);
               }
             }
           };
@@ -147,8 +147,6 @@
 
         /*SortRewards method declaration*/
         ContentHome.sortRewards = function (data) {
-          // Move this code to successSortRewards callback when API is working
-
 
           ContentHome.successSortRewards = function (result) {
             buildfire.messaging.sendMessageToWidget({
@@ -176,6 +174,10 @@
           var success = function (result) {
               console.info('Saved data result: ', result);
               updateMasterItem(newObj);
+              buildfire.messaging.sendMessageToWidget({
+                type: 'UpdateApplication',
+                data: newObj
+              });
             }
             , error = function (err) {
               console.log('Error while updating application : ', err);

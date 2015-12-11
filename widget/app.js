@@ -171,6 +171,11 @@
             $rootScope.$broadcast("REWARDS_SORTED");
             $rootScope.$apply();
             break;
+
+          case 'UpdateApplication':
+            $rootScope.$broadcast("APPLICATION_UPDATED", msg.data);
+            $rootScope.$apply();
+            break;
         }
       };
 
