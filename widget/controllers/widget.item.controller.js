@@ -52,6 +52,7 @@
          * This event listener is bound for "Carousel2:LOADED" event broadcast
          */
         $rootScope.$on("Carousel2:LOADED", function () {
+          WidgetItem.view=null;
           if (!WidgetItem.view) {
             WidgetItem.view = new buildfire.components.carousel.view("#carousel2", [], "WideScreen");
           }
