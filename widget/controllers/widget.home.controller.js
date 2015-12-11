@@ -241,7 +241,6 @@
           }
         });
         $rootScope.$on('REWARD_ADDED', function (e, item) {
-          console.log("SOniiiiiiiiiiiiiiiiiii", item);
           WidgetHome.loyaltyRewards.unshift(item);
         });
 
