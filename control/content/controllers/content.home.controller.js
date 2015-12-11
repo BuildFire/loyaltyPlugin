@@ -80,7 +80,7 @@
             });
             var data = {
               appId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
-              loyaltyUniqueId: buildfire.context.instanceId,
+              loyaltyUnqiueId: buildfire.context.instanceId,
               loyaltyRewardIds: rewardsId,
               userToken: ContentHome.currentLoggedInUser.userToken,
               auth: ContentHome.currentLoggedInUser.auth
