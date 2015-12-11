@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope',
-      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope) {
+    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope','$sce',
+      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope,$sce) {
 
         var WidgetHome = this;
 
@@ -72,6 +72,7 @@
           var successApplication = function (result) {
             if (result.image)
               WidgetHome.carouselImages = result.image;
+              WidgetHome.description = result.content.description;
             RewardCache.setApplication(result);
           };
 
@@ -266,6 +267,18 @@
           }
         });
 
+
+        WidgetHome.showDescription = function (description) {
+          return !((description == '<p>&nbsp;<br></p>') || (description == '<p><br data-mce-bogus="1"></p>'));
+        };
+
+        /**
+         * Method to parse and show description in html format
+         */
+        WidgetHome.safeHtml = function (html) {
+          if (html)
+            return $sce.trustAsHtml(html);
+        };
 
         init();
 

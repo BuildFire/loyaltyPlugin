@@ -6,6 +6,9 @@
         <img src="assets/images/16x9.png">
       </div>
     </div>
+    <div class="padded padding-bottom-zero" ng-if="WidgetHome.showDescription(WidgetHome.description)">
+      <p ng-bind-html='WidgetHome.safeHtml(WidgetHome.description)'></p>
+    </div>
     <div class="padded">
       <div class="text-center">
         <p ng-if="!WidgetHome.currentLoggedInUser"><span

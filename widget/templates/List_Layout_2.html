@@ -7,6 +7,9 @@
         <img src="assets/images/16x9.png">
       </div>
     </div>
+    <div class="padded padding-bottom-zero" ng-if="WidgetHome.showDescription(WidgetHome.description)">
+      <p ng-bind-html='WidgetHome.safeHtml(WidgetHome.description)'></p>
+    </div>
 		<div class="padded">
 			<div class="text-center">
         <p ng-if="!WidgetHome.currentLoggedInUser"><span
@@ -27,7 +30,7 @@
 			<div class="list-item" ng-repeat="reward in WidgetHome.loyaltyRewards">
 				<div class="list-item-media text-left overflow-hidden">
 					<div class="list-media-holder square-icon pull-left">
-            <img ng-src="{{reward.listImage}}"
+            <img ng-src="{{reward.listImage | getImageUrl : 60:60}}"
                  ng-if="reward.listImage">
             <img src="assets/images/1x1.png" ng-if="!reward.listImage">
 					</div>
