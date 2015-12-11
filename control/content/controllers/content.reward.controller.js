@@ -26,12 +26,11 @@
         /*buildfire carousel component*/
 
         // create a new instance of the buildfire carousel editor
-        ContentReward.editor = new Buildfire.components.carousel.editor("#carousel");
+        ContentReward.editor = new Buildfire.components.carousel.editor("#carouselReward");
         // this method will be called when a new item added to the list
         ContentReward.editor.onAddItems = function (items) {
           if (!ContentReward.item.carouselImage)
             ContentReward.item.carouselImage = [];
-
           ContentReward.item.carouselImage.push.apply(ContentReward.item.carouselImage, items);
           $scope.$digest();
         };
@@ -193,6 +192,10 @@
             type: 'OpenItem',
             data: ContentReward.item
           });
+          if (!ContentReward.item.carouselImage)
+            ContentReward.editor.loadItems([]);
+          else
+            ContentReward.editor.loadItems(ContentReward.item.carouselImage);
         }
 
         /*Save the data on .5 sec delay*/

@@ -86,7 +86,7 @@
               userToken: ContentHome.currentLoggedInUser.userToken,
               auth: ContentHome.currentLoggedInUser.auth
             };
-            // ContentHome.sortRewards(data);  //uncomment it when API will start working
+             ContentHome.sortRewards(data);  //uncomment it when API will start working
             console.log('update', rewardsId);
           }
         };
@@ -149,11 +149,12 @@
         /*SortRewards method declaration*/
         ContentHome.sortRewards = function (data) {
           // Move this code to successSortRewards callback when API is working
-          buildfire.messaging.sendMessageToWidget({
-            type: 'ListSorted'
-          });
+
 
           ContentHome.successSortRewards = function (result) {
+            buildfire.messaging.sendMessageToWidget({
+              type: 'ListSorted'
+            });
             console.info('Reward list Sorted:', result);
             if (tmrDelay)clearTimeout(tmrDelay);
           };
