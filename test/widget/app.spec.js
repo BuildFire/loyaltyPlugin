@@ -284,4 +284,89 @@ describe('Unit: loyaltyPluginWidget widget app', function () {
       $rootScope.$apply();
     });
   });
+  describe('calling the buildfire.messaging.onReceivedMessage for RemoveItem condition', function () {
+    var RewardCache, $rootScope;
+    beforeEach(module('loyaltyPluginWidget'));
+    beforeEach(inject(function (_RewardCache_, _$rootScope_) {
+      RewardCache =_RewardCache_;
+      $rootScope = _$rootScope_;
+    }));
+    var msg = {
+      type:'RemoveItem',
+      data:{
+        pointsToRedeem:5
+      }
+    };
+    it('it should pass when buildfire.messaging.onReceivedMessage', function () {
+      buildfire.messaging.onReceivedMessage(msg)
+      $rootScope.$apply();
+    });
+
+    it('it should pass when buildfire.messaging.onReceivedMessage', function () {
+      RewardCache.setReward();
+      $rootScope.$apply();
+    });
+  });
+
+  describe('calling the buildfire.navigation.onBackButtonClick', function () {
+    var ViewStack, $rootScope;
+    beforeEach(module('loyaltyPluginWidget'));
+    beforeEach(inject(function (_ViewStack_, _$rootScope_) {
+      ViewStack =_ViewStack_;
+      $rootScope = _$rootScope_;
+    }));
+    var msg = {
+      type:'RemoveItem',
+      data:{
+        pointsToRedeem:5
+      }
+    };
+    it('it should pass when buildfire.messaging.onReceivedMessage', function () {
+      buildfire.navigation.onBackButtonClick()
+      $rootScope.$apply();
+    });
+  });
+
+  describe('calling the buildfire.messaging.onReceivedMessage for ListSorted condition', function () {
+    var RewardCache, $rootScope;
+    beforeEach(module('loyaltyPluginWidget'));
+    beforeEach(inject(function (_RewardCache_, _$rootScope_) {
+      RewardCache =_RewardCache_;
+      $rootScope = _$rootScope_;
+    }));
+    var msg = {
+      type:'ListSorted',
+      data:{
+        pointsToRedeem:5
+      }
+    };
+    it('it should pass when buildfire.messaging.onReceivedMessage', function () {
+      buildfire.messaging.onReceivedMessage(msg)
+      $rootScope.$apply();
+    });
+
+    it('it should pass when buildfire.messaging.onReceivedMessage', function () {
+      RewardCache.setReward();
+      $rootScope.$apply();
+    });
+  });
+
+  describe('calling the buildfire.navigation.onBackButtonClick', function () {
+    var ViewStack, $rootScope;
+    beforeEach(module('loyaltyPluginWidget'));
+    beforeEach(inject(function (_ViewStack_, _$rootScope_) {
+      ViewStack =_ViewStack_;
+      $rootScope = _$rootScope_;
+    }));
+    var msg = {
+      type:'ListSorted',
+      data:{
+        pointsToRedeem:5
+      }
+    };
+    it('it should pass when buildfire.messaging.onReceivedMessage', function () {
+      buildfire.navigation.onBackButtonClick()
+      $rootScope.$apply();
+    });
+  });
 });

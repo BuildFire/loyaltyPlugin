@@ -80,11 +80,11 @@
               return reward._id;
             });
             var data = {
-              appId: 15030018,
+              appId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
               loyaltyUniqueId: buildfire.context.instanceId,
               loyaltyRewardId: rewardsId,
-              userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
-              auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
+              userToken: ContentHome.currentLoggedInUser.userToken,
+              auth: ContentHome.currentLoggedInUser.auth
             };
             // ContentHome.sortRewards(data);  //uncomment it when API will start working
             console.log('update', rewardsId);
