@@ -110,6 +110,20 @@
         }
       };
     }])
+    .filter('getImageUrl', function () {
+      return function (url, width, height, type) {
+        if (type == 'resize')
+          return buildfire.imageLib.resizeImage(url, {
+            width: width,
+            height: height
+          });
+        else
+          return buildfire.imageLib.cropImage(url, {
+            width: width,
+            height: height
+          });
+      }
+    })
     .run(['Location', '$location', '$rootScope', 'RewardCache', 'ViewStack', function (Location, $location, $rootScope, RewardCache, ViewStack) {
       buildfire.messaging.onReceivedMessage = function (msg) {
         switch (msg.type) {

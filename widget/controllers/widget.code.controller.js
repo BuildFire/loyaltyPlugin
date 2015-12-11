@@ -1,6 +1,6 @@
 'use strict';
 
-(function (angular) {
+(function (angular,buildfire) {
   angular
     .module('loyaltyPluginWidget')
     .controller('WidgetCodeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', '$rootScope',
@@ -20,6 +20,7 @@
 
         WidgetCode.addPoints = function () {
           var success = function (result) {
+            Buildfire.spinner.hide();
             $rootScope.$broadcast('POINTS_ADDED', (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit);
             ViewStack.push({
               template: 'Awarded',
@@ -28,6 +29,7 @@
           };
 
           var error = function (error) {
+            Buildfire.spinner.hide();
             console.log("Error while addimg points:", error);
             WidgetCode.passcodeFailure = true;
             setTimeout(function () {
@@ -35,8 +37,8 @@
               $scope.$digest();
             }, 3000);
           };
-
-          LoyaltyAPI.addLoyaltyPoints('5317c378a6611c6009000001', 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=', 'e22494ec-73ea-44ac-b82b-75f64b8bc535', WidgetCode.passcode, currentView.amount)
+          Buildfire.spinner.show();
+          LoyaltyAPI.addLoyaltyPoints('5317c378a6611c6009000001', WidgetCode.currentLoggedInUser.userToken, '1449814143554-01452660677023232', WidgetCode.passcode, currentView.amount)
             .then(success, error);
         };
 
@@ -52,7 +54,19 @@
             WidgetCode.addPoints();
           };
 
-          LoyaltyAPI.validatePasscode('ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=', 'e22494ec-73ea-44ac-b82b-75f64b8bc535', WidgetCode.passcode).then(success, error);
+          LoyaltyAPI.validatePasscode(WidgetCode.currentLoggedInUser.userToken, '1449814143554-01452660677023232', WidgetCode.passcode).then(success, error);
         };
+
+        /**
+         * Check for current logged in user
+         */
+        buildfire.auth.getCurrentUser(function (err, user) {
+          console.log("_______________________", user);
+          if (user) {
+            WidgetCode.currentLoggedInUser = user;
+            $scope.$digest();
+          }
+        });
+
       }])
-})(window.angular);
+})(window.angular, window.buildfire);
