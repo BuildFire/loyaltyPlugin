@@ -214,14 +214,13 @@
 
           modalInstance.result.then(function (message) {
             if (message === 'yes') {
-              ContentHome.loyaltyRewards.splice(index, 1);  //remove this line of code when API will start working.
+              //ContentHome.loyaltyRewards.splice(index, 1);  //remove this line of code when API will start working.
               buildfire.messaging.sendMessageToWidget({
                 index: index,
                 type: 'RemoveItem'
               });
-
+              //console.log(".................",ContentHome.loyaltyRewards)
               //uncomment it when API will start working
-              /*
                ContentHome.success = function (result){
                ContentHome.loyaltyRewards.splice(index, 1);
                console.log("Reward removed successfully");
@@ -230,11 +229,10 @@
                console.log("Some issue in Reward delete");
                }
                var data = {
-               userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
-               auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
+                   userToken : ContentHome.currentLoggedInUser.userToken,
+                      auth :ContentHome.currentLoggedInUser.auth
                }
-               LoyaltyAPI.getApplication(ContentHome.loyaltyRewards._id,data).then(ContentHome.success, ContentHome.error);
-               */
+               LoyaltyAPI.removeReward(loyaltyId,data).then(ContentHome.success, ContentHome.error);
 
             }
           }, function (data) {
