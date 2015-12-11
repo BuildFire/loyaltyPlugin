@@ -30,6 +30,7 @@
         };
         ContentHome.currentLoggedInUser = null;
         ContentHome.invalidApplicationParameters = false;
+        ContentHome.needToLoginInCP = false;
 
 
         /*buildfire carousel component*/
@@ -119,6 +120,11 @@
                 _data.userToken = ContentHome.currentLoggedInUser.userToken;
                 _data.auth = ContentHome.currentLoggedInUser.auth;
                 LoyaltyAPI.addEditApplication(_data).then(success, error);
+              }else{
+                ContentHome.needToLoginInCP = true;
+                $timeout(function(){
+                  ContentHome.needToLoginInCP = false;
+                },5000);
               }
             }
           };

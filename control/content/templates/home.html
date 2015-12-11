@@ -1,4 +1,12 @@
 <div class="loyalty-plugin">
+  <div class="item clearfix row">
+    <div class="col-xs-12 margin-top-five" ng-if="ContentHome.needToLoginInCP">
+      <div class="alert alert-sm text-center alert-danger">Please make sure
+        you are logged In
+      </div>
+    </div>
+  </div>
+  <br ng-if="ContentHome.needToLoginInCP">
   <div id="carousel"></div>
   <hr class="none">
   <div class="item clearfix row">
