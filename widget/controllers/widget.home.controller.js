@@ -78,8 +78,10 @@
           var errorApplication = function (error) {
             console.info('Error fetching loyalty application');
           };
-          LoyaltyAPI.getApplication('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(successApplication, errorApplication);
-          LoyaltyAPI.getRewards('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(successLoyaltyRewards, errorLoyaltyRewards);
+
+          console.log("$$$$$$$$$$$$$$$$$$$$$$$",buildfire.context);
+          LoyaltyAPI.getApplication('1449814143554-01452660677023232').then(successApplication, errorApplication);
+          LoyaltyAPI.getRewards('1449814143554-01452660677023232').then(successLoyaltyRewards, errorLoyaltyRewards);
         };
 
         /**
@@ -245,7 +247,7 @@
           console.log("_______________________", user);
           if (user) {
             WidgetHome.currentLoggedInUser = user;
-            WidgetHome.getLoyaltyPoints(user._id);
+            WidgetHome.getLoyaltyPoints('5317c378a6611c6009000001');
             $scope.$digest();
           }
         });
