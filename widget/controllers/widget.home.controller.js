@@ -240,8 +240,27 @@
             WidgetHome.view.loadItems([]);
           }
         });
-        $rootScope.$on('REWARD_ADDED', function (e, item) {
+
+        /**
+         * This event listener is bound for "REWARD_ADDED" event broadcast
+         */
+        WidgetHome.listeners['REWARD_ADDED'] = $rootScope.$on('REWARD_ADDED', function (e, item) {
           WidgetHome.loyaltyRewards.unshift(item);
+        });
+
+        /**
+         * This event listener is bound for "APPLICATION_UPDATED" event broadcast
+         */
+        WidgetHome.listeners['APPLICATION_UPDATED'] = $rootScope.$on('APPLICATION_UPDATED', function (e, app) {
+          if (app.image){
+            WidgetHome.carouselImages = app.image;
+            if (WidgetHome.view) {
+              WidgetHome.view.loadItems(WidgetHome.carouselImages);
+            }
+          }
+          if (app.content && app.content.description)
+            WidgetHome.description = app.content.description;
+          RewardCache.setApplication(app);
         });
 
         /**
@@ -264,7 +283,6 @@
             }
           }
         });
-
 
         WidgetHome.showDescription = function (description) {
           return !((description == '<p>&nbsp;<br></p>') || (description == '<p><br data-mce-bogus="1"></p>'));
