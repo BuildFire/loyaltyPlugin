@@ -3,22 +3,20 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal', 'RewardCache', '$location',
-      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache, $location) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal', 'RewardCache', '$location', '$timeout',
+      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache, $location, $timeout) {
         var ContentHome = this;
         var _data = {
-          redemptionPasscode: '',
-          unqiueId: '',
-          externalAppId: '',
-          appId: '',
-          name: '',
+          redemptionPasscode: '12345',
+          unqiueId: buildfire.context.instanceId,
+          externalAppId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
+          appId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
+          name: buildfire.context.pluginId,
           pointsPerVisit: 1,
           pointsPerDollar: 1,
           totalLimit: 5000,
           dailyLimit: 1000,
-          image: "",
-          userToken: '',
-          auth: ''
+          image: []
         };
 
         ContentHome.masterData = null;
@@ -31,6 +29,8 @@
           theme: 'modern'
         };
         ContentHome.currentLoggedInUser = null;
+        ContentHome.invalidApplicationParameters = false;
+
 
         /*buildfire carousel component*/
         // create a new instance of the buildfire carousel editor
@@ -107,29 +107,19 @@
           };
           ContentHome.error = function (err) {
             if (err && err.code == 2100) {
-              console.error('Error while getting application:', err);
+              console.log('Error while getting application:', err);
               var success = function (result) {
                   console.info('Saved data result: ', result);
-                  updateMasterItem(app);
+                  updateMasterItem(_data);
                 }
                 , error = function (err) {
-                  console.error('Error while saving data : ', err);
+                  console.log('Error while saving data : ', err);
                 };
-              var app = {
-                redemptionPasscode: '11111',
-                unqiueId: buildfire.context.instanceId,
-                externalAppId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
-                appId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
-                name: 'Sakshi-Loyalty',
-                pointsPerVisit: 1,
-                pointsPerDollar: 1,
-                totalLimit: 6000,
-                dailyLimit: 500,
-                image: [],
-                userToken: ContentHome.currentLoggedInUser.userToken,
-                auth: ContentHome.currentLoggedInUser.auth
-              };
-              LoyaltyAPI.addEditApplication(app).then(success, error);
+              if (ContentHome.currentLoggedInUser) {
+                _data.userToken = ContentHome.currentLoggedInUser.userToken;
+                _data.auth = ContentHome.currentLoggedInUser.auth;
+                LoyaltyAPI.addEditApplication(_data).then(success, error);
+              }
             }
           };
           ContentHome.successloyaltyRewards = function (result) {
@@ -141,7 +131,7 @@
           };
           ContentHome.errorloyaltyRewards = function (err) {
             if (err && err.code !== STATUS_CODE.NOT_FOUND) {
-              console.error('Error while getting data loyaltyRewards', err);
+              console.log('Error while getting data loyaltyRewards', err);
               if (tmrDelay)clearTimeout(tmrDelay);
             }
           };
@@ -152,7 +142,7 @@
 
         /*SortRewards method declaration*/
         ContentHome.sortRewards = function (data) {
-        // Move this code to successSortRewards callback when API is working
+          // Move this code to successSortRewards callback when API is working
           buildfire.messaging.sendMessageToWidget({
             type: 'ListSorted'
           });
@@ -163,7 +153,7 @@
           };
           ContentHome.errorSortRewards = function (err) {
             if (err && err.code !== STATUS_CODE.NOT_FOUND) {
-              console.error('Error while sorting rewards', err);
+              console.log('Error while sorting rewards', err);
               if (tmrDelay)clearTimeout(tmrDelay);
             }
           };
@@ -182,7 +172,13 @@
               updateMasterItem(newObj);
             }
             , error = function (err) {
-              console.error('Error while saving data : ', err);
+              console.log('Error while updating application : ', err);
+              if (err && err.code == 2000) {
+                ContentHome.invalidApplicationParameters = true;
+                $timeout(function () {
+                  ContentHome.invalidApplicationParameters = false;
+                }, 3000);
+              }
             };
           LoyaltyAPI.addEditApplication(newObj).then(success, error);
         };

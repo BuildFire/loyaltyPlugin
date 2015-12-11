@@ -36,7 +36,6 @@
             deferred.reject(new Error('Undefined app id'));
           }
           $http.get(SERVER.URL + '/api/loyaltyApp/' + id).success(function (response) {
-
             if (response)
               deferred.resolve(response);
             else
@@ -103,7 +102,7 @@
           if (!id) {
             deferred.reject(new Error('Undefined reward id'));
           }
-          $http.delete(SERVER.URL + '/api/loyaltyRewards/' + id, {data: data}).success(function (response) {
+          $http.delete(SERVER.URL + '/api/loyaltyRewards/' + id, data).success(function (response) {
             if (response.statusCode == 200)
               deferred.resolve(response);
             else
@@ -120,7 +119,7 @@
           if (!data.appId) {
             deferred.reject(new Error('Undefined app Id'));
           }
-          $http.post(SERVER.URL + '/api/loyaltyRewardsSort', {data: data}).success(function (response) {
+          $http.post(SERVER.URL + '/api/loyaltyRewardsSort', data).success(function (response) {
             if (response)
               deferred.resolve(response);
             else

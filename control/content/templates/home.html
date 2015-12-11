@@ -68,6 +68,13 @@
   </div>
   <hr>
   <div class="item clearfix row">
+    <div class="col-xs-12 margin-top-five" ng-if="ContentHome.invalidApplicationParameters">
+      <div class="alert alert-sm text-center alert-danger">Please enter valid data.
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="item clearfix row">
     <div class="main col-md-9 pull-right padding-left-zero row">
       <div class="pull-left inner-main col-md-8 padding-zero">
         <a class="btn btn-success stretch" href="#/reward">Add New Reward</a>
