@@ -40,7 +40,6 @@
         ContentHome.editor.onAddItems = function (items) {
           if (!ContentHome.data.image)
             ContentHome.data.image = [];
-
           ContentHome.data.image.push.apply(ContentHome.data.image, items);
           $scope.$digest();
         };
@@ -82,7 +81,7 @@
             var data = {
               appId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
               loyaltyUniqueId: buildfire.context.instanceId,
-              loyaltyRewardId: rewardsId,
+              loyaltyRewardIds: rewardsId,
               userToken: ContentHome.currentLoggedInUser.userToken,
               auth: ContentHome.currentLoggedInUser.auth
             };
@@ -215,7 +214,7 @@
             if (message === 'yes') {
               ContentHome.loyaltyRewards.splice(index, 1);  //remove this line of code when API will start working.
               buildfire.messaging.sendMessageToWidget({
-                index: loyaltyId,
+                index: index,
                 type: 'RemoveItem'
               });
 

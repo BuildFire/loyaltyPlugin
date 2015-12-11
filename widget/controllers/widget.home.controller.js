@@ -239,6 +239,11 @@
             WidgetHome.view.loadItems([]);
           }
         });
+        $rootScope.$on('REWARD_UPDATED', function (e, item) {
+          console.log("----------------",item);
+
+          WidgetHome.getApplicationAndRewards();
+        });
 
         /**
          * Check for current logged in user, if yes fetch its loyalty points
