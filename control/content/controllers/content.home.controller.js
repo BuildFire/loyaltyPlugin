@@ -74,7 +74,7 @@
         /*UI sortable option*/
         ContentHome.rewardsSortableOptions = {
           handle: '> .cursor-grab',
-          update: function (event, ui) {
+          stop: function (event, ui) {
             var rewardsId = $.map(ContentHome.loyaltyRewards, function (reward) {
               return reward._id;
             });
