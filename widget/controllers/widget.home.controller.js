@@ -97,10 +97,9 @@
 
             });
           }
-          else
-            alert("Please login to earn points!")
-
-
+          else {
+            WidgetHome.openLogin();
+          }
         };
 
         /**
