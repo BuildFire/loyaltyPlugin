@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope','$sce',
-      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope,$sce) {
+    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce',
+      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce) {
 
         var WidgetHome = this;
 
@@ -72,7 +72,7 @@
           var successApplication = function (result) {
             if (result.image)
               WidgetHome.carouselImages = result.image;
-              WidgetHome.description = result.content.description;
+            WidgetHome.description = result.content.description;
             RewardCache.setApplication(result);
           };
 
@@ -80,7 +80,7 @@
             console.info('Error fetching loyalty application');
           };
 
-          console.log("$$$$$$$$$$$$$$$$$$$$$$$",buildfire.context);
+          console.log("$$$$$$$$$$$$$$$$$$$$$$$", buildfire.context);
           LoyaltyAPI.getApplication('1449814143554-01452660677023232').then(successApplication, errorApplication);
           LoyaltyAPI.getRewards('1449814143554-01452660677023232').then(successLoyaltyRewards, errorLoyaltyRewards);
         };
@@ -90,7 +90,7 @@
          */
         WidgetHome.openGetPoints = function () {
           console.log(">>>>>>>>>>>>>>");
-          if(WidgetHome.currentLoggedInUser){
+          if (WidgetHome.currentLoggedInUser) {
             ViewStack.push({
               template: 'Amount',
               loyaltyPoints: WidgetHome.loyaltyPoints
@@ -98,7 +98,7 @@
             });
           }
           else
-          alert("Please login to earn points!")
+            alert("Please login to earn points!")
 
 
         };
@@ -240,10 +240,9 @@
             WidgetHome.view.loadItems([]);
           }
         });
-        $rootScope.$on('REWARD_UPDATED', function (e, item) {
-          console.log("----------------",item);
-
-          WidgetHome.getApplicationAndRewards();
+        $rootScope.$on('REWARD_ADDED', function (e, item) {
+          console.log("SOniiiiiiiiiiiiiiiiiii", item);
+          WidgetHome.loyaltyRewards.unshift(item);
         });
 
         /**

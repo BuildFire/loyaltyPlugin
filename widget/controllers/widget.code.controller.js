@@ -1,10 +1,10 @@
 'use strict';
 
-(function (angular,buildfire) {
+(function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetCodeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', '$rootScope',
-      function ($scope, ViewStack, LoyaltyAPI, RewardCache, $rootScope) {
+    .controller('WidgetCodeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', '$rootScope', 'Buildfire',
+      function ($scope, ViewStack, LoyaltyAPI, RewardCache, $rootScope, Buildfire) {
 
         var WidgetCode = this;
         /**

@@ -142,6 +142,7 @@
               template: 'Item_Details',
               totalPoints: msg.data.pointsToRedeem
             });
+            $rootScope.$broadcast("REWARD_ADDED", msg.data);
             $rootScope.$apply();
             break;
 
