@@ -109,7 +109,7 @@
           if (!userId) {
             deferred.reject(new Error('Undefined user Id'));
           }
-          $http.get(SERVER.URL + '/api/loyaltyUser/' + userId + '?userToken=' + userToken + '&loyaltyUnqiueId=' + loyaltyUnqiueId).success(function (response) {
+          $http.get(SERVER.URL + '/api/loyaltyUser/' + userId + '?userToken=' + encodeURIComponent(userToken) + '&loyaltyUnqiueId=' + loyaltyUnqiueId).success(function (response) {
             if (response)
               deferred.resolve(response);
             else
