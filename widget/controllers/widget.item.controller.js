@@ -8,6 +8,9 @@
 
         var WidgetItem = this;
 
+        //create new instance of buildfire carousel viewer
+        WidgetItem.view = null;
+
         /**
          * Initialize variable with current view returned by ViewStack service. In this case it is "Item_Details" view.
          */
@@ -44,5 +47,21 @@
         $rootScope.$on('REWARD_UPDATED', function (e, item) {
           WidgetItem.reward = item;
         });
+
+        /**
+         * This event listener is bound for "Carousel2:LOADED" event broadcast
+         */
+        $rootScope.$on("Carousel2:LOADED", function () {
+          WidgetItem.view = null;
+          if (!WidgetItem.view) {
+            WidgetItem.view = new buildfire.components.carousel.view("#carousel2", [], "WideScreen");
+          }
+          if (WidgetItem.carouselImages) {
+            WidgetItem.view.loadItems(WidgetItem.reward.carouselImage, null, "WideScreen");
+          } else {
+            WidgetItem.view.loadItems([]);
+          }
+        });
+
       }])
 })(window.angular, window);

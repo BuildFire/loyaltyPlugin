@@ -1,26 +1,31 @@
 <div class="holder padding-zero" ng-controller="WidgetItemCtrl as WidgetItem">
-	<div class="loyalty-plugin" ng-if="WidgetItem.reward">
-		<div class="plugin-slider text-center">
-			<div class="plugin-slide">
+  <div class="loyalty-plugin" ng-if="WidgetItem.reward">
+    <div id="carousel2" ng-if="WidgetItem.reward.carouselImage.length"
+         build-fire-carousel2=""></div>
+    <div class="plugin-slider text-center"
+         ng-if="!WidgetItem.reward.carouselImage.length">
+      <div class="plugin-slide">
         <img src="assets/images/16x9.png">
-			</div>
-		</div>
-		<div class="padded">
-			<div class="clearfix row">
-				<div class="col-xs-8 pull-left">
-					<p class="margin-zero ellipsis">{{WidgetItem.reward.title}}</p>
-					<p class="margin-zero ellipsis opacity-seventy">{{WidgetItem.reward.pointsToRedeem}} Points</p>
-				</div>
-				<div class="col-xs-4 pull-right">
-					<a class="btn btn-primary stretch" href="javascript:void(0);"
+      </div>
+    </div>
+    <div class="padded">
+      <div class="clearfix row">
+        <div class="col-xs-8 pull-left">
+          <p class="margin-zero ellipsis">{{WidgetItem.reward.title}}</p>
+
+          <p class="margin-zero ellipsis opacity-seventy">
+            {{WidgetItem.reward.pointsToRedeem}} Points</p>
+        </div>
+        <div class="col-xs-4 pull-right">
+          <a class="btn btn-primary stretch" href="javascript:void(0);"
              ng-click="WidgetItem.confirmCancel()">Redeem</a>
-				</div>
-			</div>
-			<hr class="small">
-			<div class="editor">
+        </div>
+      </div>
+      <hr class="small">
+      <div class="editor">
         <p class="margin-zero"
            ng-bind-html="WidgetItem.safeHtml(WidgetItem.reward.description)"></p>
-			</div>
-		</div>
-	</div>
+      </div>
+    </div>
+  </div>
 </div>

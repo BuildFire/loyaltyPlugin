@@ -51,7 +51,7 @@
                 console.error('Error while getting points data', err);
               }
             };
-          LoyaltyAPI.getLoyaltyPoints(userId, 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=', 'e22494ec-73ea-44ac-b82b-75f64b8bc535').then(success, error);
+          LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, '1449814143554-01452660677023232').then(success, error);
         };
 
         /**
@@ -259,7 +259,6 @@
               WidgetHome.listeners[i]();
             }
           }
-          DataStore.clearListener();
         });
 
 
