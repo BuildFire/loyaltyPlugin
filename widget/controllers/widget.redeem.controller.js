@@ -1,10 +1,10 @@
 'use strict';
 
-(function (angular, window) {
+(function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope',
-      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope) {
+    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope', 'Buildfire',
+      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire) {
 
         var WidgetRedeem = this;
 
@@ -23,6 +23,7 @@
          */
         WidgetRedeem.redeemPoints = function (rewardId) {
           var redeemSuccess = function () {
+            Buildfire.spinner.hide();
             $rootScope.$broadcast('POINTS_REDEEMED', WidgetRedeem.reward.pointsToRedeem);
             ViewStack.push({
               template: 'Success'
@@ -30,7 +31,8 @@
           };
 
           var redeemFailure = function (error) {
-            if (error.code == 2103) {
+            Buildfire.spinner.hide();
+            if (error && error.code == 2103) {
               WidgetRedeem.dailyLimitExceeded = true;
               $timeout(function () {
                 WidgetRedeem.dailyLimitExceeded = false;
@@ -42,8 +44,15 @@
               }, 3000);
             }
           };
+          if(WidgetRedeem.currentLoggedInUser){
+            Buildfire.spinner.show();
+            LoyaltyAPI.redeemPoints('5317c378a6611c6009000001', WidgetRedeem.currentLoggedInUser.userToken, '1449814143554-01452660677023232', rewardId).then(redeemSuccess, redeemFailure);
+          }
+          else{
+            buildfire.auth.login({}, function () {
 
-          LoyaltyAPI.redeemPoints('5317c378a6611c6009000001', 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=', 'e22494ec-73ea-44ac-b82b-75f64b8bc535', rewardId).then(redeemSuccess, redeemFailure);
+            });
+          }
         };
 
         /**
@@ -53,6 +62,32 @@
           ViewStack.pop();
         };
 
+        $rootScope.$on('REWARD_UPDATED', function (e, item) {
+          WidgetRedeem.reward = item;
+        });
+        $rootScope.$on("Carousel3:LOADED", function () {
+          WidgetRedeem.view=null;
+          if (!WidgetRedeem.view) {
+            WidgetRedeem.view = new buildfire.components.carousel.view("#carousel3", [], "WideScreen");
+          }
+          if (WidgetRedeem.reward && WidgetRedeem.reward.carouselImage) {
+            WidgetRedeem.view.loadItems(WidgetRedeem.reward.carouselImage, null, "WideScreen");
+          } else {
+            WidgetRedeem.view.loadItems([]);
+          }
+        });
+
+        /**
+         * Check for current logged in user
+         */
+        buildfire.auth.getCurrentUser(function (err, user) {
+          console.log("_______________________", user);
+          if (user) {
+            WidgetRedeem.currentLoggedInUser = user;
+            $scope.$digest();
+          }
+        });
+
       }])
-})(window.angular, window);
+})(window.angular, window.buildfire);
 

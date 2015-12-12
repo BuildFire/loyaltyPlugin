@@ -24,8 +24,7 @@
         push: function (view) {
           if (viewMap[view.template]) {
             this.pop();
-          }
-          else {
+          } else {
             viewMap[view.template] = 1;
             views.push(view);
             $rootScope.$broadcast('VIEW_CHANGED', 'PUSH', view);
@@ -33,10 +32,10 @@
           return view;
         },
         pop: function () {
-          $rootScope.$broadcast('BEFORE_POP', views[views.length - 1]);
           var view = views.pop();
           delete viewMap[view.template];
           $rootScope.$broadcast('VIEW_CHANGED', 'POP', view);
+
           return view;
         },
         hasViews: function () {
@@ -45,8 +44,8 @@
         getCurrentView: function () {
           return views.length && views[views.length - 1] || {};
         },
-        popAllViews: function () {
-          $rootScope.$broadcast('VIEW_CHANGED', 'POPALL', views);
+        popAllViews: function (noAnimation) {
+          $rootScope.$broadcast('VIEW_CHANGED', 'POPALL', views, noAnimation);
           views = [];
           viewMap = {};
         }
@@ -59,9 +58,7 @@
           if (!app) {
             deferred.reject(new Error('Undefined app data'));
           }
-          $http.post(SERVER.URL + '/api/loyaltyApp', {
-            data: app
-          }).success(function (response) {
+          $http.post(SERVER.URL + '/api/loyaltyApp', app).success(function (response) {
             if (response.statusCode == 200)
               deferred.resolve(response);
             else
@@ -79,16 +76,6 @@
             deferred.reject(new Error('Undefined app id'));
           }
           $http.get(SERVER.URL + '/api/loyaltyApp/' + id).success(function (response) {
-            response.image = [{
-              "action": "noAction",
-              "iconUrl": "https://imagelibserver.s3.amazonaws.com/1441017939845-09614174673333764/3e399340-82aa-11e5-8545-1303965d11a5.jpg",
-              "title": "image"
-            },
-              {
-                "action": "noAction",
-                "iconUrl": "https://imagelibserver.s3.amazonaws.com/1441017939845-09614174673333764/361c1500-8de7-11e5-81a7-bdc8b1a0342d.jpg",
-                "title": "image"
-              }];
             if (response)
               deferred.resolve(response);
             else
@@ -122,7 +109,7 @@
           if (!userId) {
             deferred.reject(new Error('Undefined user Id'));
           }
-          $http.get(SERVER.URL + '/api/loyaltyUser/' + userId + '?userToken=' + userToken + '&loyaltyUnqiueId=' + loyaltyUnqiueId).success(function (response) {
+          $http.get(SERVER.URL + '/api/loyaltyUser/' + userId + '?userToken=' + encodeURIComponent(userToken) + '&loyaltyUnqiueId=' + loyaltyUnqiueId).success(function (response) {
             if (response)
               deferred.resolve(response);
             else
@@ -190,6 +177,7 @@
 
 
         return {
+          addApplication: addApplication,
           getApplication: getApplication,
           getRewards: getRewards,
           getLoyaltyPoints: getLoyaltyPoints,

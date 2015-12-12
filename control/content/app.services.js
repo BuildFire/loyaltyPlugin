@@ -17,9 +17,7 @@
           if (!app) {
             deferred.reject(new Error('Undefined app data'));
           }
-          $http.post(SERVER.URL + '/api/loyaltyApp', {
-            data: app
-          }).success(function (response) {
+          $http.post(SERVER.URL + '/api/loyaltyApp', app).success(function (response) {
             console.log("+++++++++++_+_________+_+_", response);
             if (response)
               deferred.resolve(response);
@@ -38,16 +36,6 @@
             deferred.reject(new Error('Undefined app id'));
           }
           $http.get(SERVER.URL + '/api/loyaltyApp/' + id).success(function (response) {
-            response.image = [{
-              "action": "noAction",
-              "iconUrl": "https://imagelibserver.s3.amazonaws.com/1441017939845-09614174673333764/3e399340-82aa-11e5-8545-1303965d11a5.jpg",
-              "title": "image"
-            },
-              {
-                "action": "noAction",
-                "iconUrl": "https://imagelibserver.s3.amazonaws.com/1441017939845-09614174673333764/361c1500-8de7-11e5-81a7-bdc8b1a0342d.jpg",
-                "title": "image"
-              }];
 
             if (response)
               deferred.resolve(response);
@@ -64,7 +52,7 @@
           if (!data) {
             deferred.reject(new Error('Undefined reward data'));
           }
-          $http.post(SERVER.URL + '/api/loyaltyRewards', {data: data}).success(function (response) {
+          $http.post(SERVER.URL + '/api/loyaltyRewards', data).success(function (response) {
             if (response)
               deferred.resolve(response);
             else
@@ -98,7 +86,7 @@
           if (!data._id) {
             deferred.reject(new Error('Undefined reward id'));
           }
-          $http.post(SERVER.URL + '/api/loyaltyRewards', {data: data}).success(function (response) {
+          $http.post(SERVER.URL + '/api/loyaltyRewards', data).success(function (response) {
             if (response.statusCode == 200)
               deferred.resolve(response);
             else
@@ -115,8 +103,8 @@
           if (!id) {
             deferred.reject(new Error('Undefined reward id'));
           }
-          $http.delete(SERVER.URL + '/api/loyaltyRewards/' + id, {data: data}).success(function (response) {
-            if (response.statusCode == 200)
+          $http.delete(SERVER.URL + '/api/loyaltyRewards/' + id+"?appId=b036ab75-9ddd-11e5-88d3-124798dea82d&userToken=" + data.userToken + "&auth="+encodeURIComponent(data.auth)).success(function (response, status) {
+            if (response)
               deferred.resolve(response);
             else
               deferred.resolve(null);
@@ -132,7 +120,7 @@
           if (!data.appId) {
             deferred.reject(new Error('Undefined app Id'));
           }
-          $http.post(SERVER.URL + '/api/loyaltyRewardsSort', {data: data}).success(function (response) {
+          $http.post(SERVER.URL + '/api/loyaltyRewardsSort', data).success(function (response) {
             if (response)
               deferred.resolve(response);
             else
@@ -154,4 +142,16 @@
           sortRewards: sortRewards
         };
       }])
+    .factory('RewardCache', [function () {
+      var reward = {};
+
+      return {
+        setReward: function (data) {
+          reward = data;
+        },
+        getReward: function () {
+          return reward;
+        }
+      };
+    }])
 })(window.angular, window.buildfire);

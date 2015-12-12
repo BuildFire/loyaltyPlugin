@@ -1,5 +1,17 @@
 <div class="loyalty-plugin">
+  <div class="item clearfix row">
+    <div class="col-xs-12 margin-top-five" ng-if="ContentHome.needToLoginInCP">
+      <div class="alert alert-sm text-center alert-danger">Please make sure
+        you are logged In
+      </div>
+    </div>
+  </div>
+  <br ng-if="ContentHome.needToLoginInCP">
   <div id="carousel"></div>
+  <br ng-if="!ContentHome.data.image.length">
+  <div class="padded" ng-if="!ContentHome.data.image.length">
+    <div class="well text-center">No images found.</div>
+  </div>
   <hr class="none">
   <div class="item clearfix row">
     <div class="labels col-md-3 padding-right-zero pull-left">
@@ -20,7 +32,7 @@
       <span>Points per Purchase</span>
     </div>
     <div class="main col-xs-9 pull-right">
-      <input type="text" class="form-control"
+      <input type="number" class="form-control"
              placeholder="Points per Purchase"
              ng-model="ContentHome.data.pointsPerVisit">
     </div>
@@ -31,7 +43,7 @@
       <span>Points per Dollar</span>
     </div>
     <div class="main col-xs-9 pull-right">
-      <input type="text" class="form-control" placeholder="Points per Dollar"
+      <input type="number" class="form-control" placeholder="Points per Dollar"
              ng-model="ContentHome.data.pointsPerDollar">
     </div>
   </div>
@@ -41,7 +53,7 @@
       <span>Daily Limit</span>
     </div>
     <div class="main col-xs-9 pull-right">
-      <input type="text" class="form-control" placeholder="Daily Limit"
+      <input type="number" class="form-control" placeholder="Daily Limit"
              ng-model="ContentHome.data.dailyLimit">
     </div>
   </div>
@@ -51,7 +63,7 @@
       <span>Total Limit</span>
     </div>
     <div class="main col-xs-9 pull-right">
-      <input type="text" class="form-control" placeholder="Total Limit"
+      <input type="number" class="form-control" placeholder="Total Limit"
              ng-model="ContentHome.data.totalLimit">
     </div>
   </div>
@@ -63,7 +75,14 @@
     <div class="main col-xs-9 pull-right">
       <input type="text" class="form-control"
              placeholder="Add Points Passcode"
-             ng-model="ContentHome.data.redemptionPasscode">
+             ng-model="ContentHome.data.redemptionPasscode" maxlength="5">
+    </div>
+  </div>
+  <hr>
+  <div class="item clearfix row">
+    <div class="col-xs-12 margin-top-five" ng-if="ContentHome.invalidApplicationParameters">
+      <div class="alert alert-sm text-center alert-danger">Please enter valid data.
+      </div>
     </div>
   </div>
   <hr>
@@ -82,26 +101,25 @@
         <div ui-sortable="ContentHome.rewardsSortableOptions"
              ng-model="ContentHome.loyaltyRewards">
           <div class="d-item double-line square-icon clearfix"
-               ng-repeat="rewards in ContentHome.loyaltyRewards">
+               ng-repeat="reward in ContentHome.loyaltyRewards">
             <span class="icon icon-menu pull-left cursor-grab"></span>
-
             <div class="media-holder pull-left">
-              <img ng-src="{{rewards.image | getImageUrl : 60:60}}"
-                   ng-if="rewards.image">
-              <img src="assets/images/1x1.png" ng-if="!rewards.image">
+              <img ng-src="{{reward.listImage | getImageUrl : 60:60}}"
+                   ng-if="reward.listImage">
+              <img src="assets/images/1x1.png" ng-if="!reward.listImage">
             </div>
             <div class="copy pull-right">
               <div class="col-md-7 padding-zero pull-left">
-                <a class="text-primary">
+                <a class="text-primary" href="javascript:void(0);" ng-click="ContentHome.openReward(reward)">
                   <span
-                      class="title ellipsis pull-left">{{rewards.title}}</span>
+                      class="title ellipsis pull-left">{{reward.title}}</span>
                 </a>
-                <span class="title ellipsis pull-left">{{rewards.pointsToRedeem}} Points</span>
+                <span class="title ellipsis pull-left">{{reward.pointsToRedeem}} Points</span>
               </div>
               <div class="pull-right padding-top-fifteen">
                 <span
                     class="btn-icon btn-delete-icon btn-danger transition-third"
-                    ng-click="ContentHome.removeLoyalty(rewards._id, $index)"></span>
+                    ng-click="ContentHome.removeLoyalty(reward._id, $index)"></span>
               </div>
             </div>
           </div>

@@ -3,22 +3,20 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal',
-      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal', 'RewardCache', '$location', '$timeout',
+      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache, $location, $timeout) {
         var ContentHome = this;
         var _data = {
-          redemptionPasscode: '',
-          unqiueId: '',
-          externalAppId: '',
-          appId: '',
-          name: '',
+          redemptionPasscode: '12345',
+          unqiueId: buildfire.context.instanceId,
+          externalAppId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
+          appId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
+          name: buildfire.context.pluginId,
           pointsPerVisit: 1,
           pointsPerDollar: 1,
           totalLimit: 5000,
           dailyLimit: 1000,
-          image: "",
-          userToken: '',
-          auth: ''
+          image: []
         };
 
         ContentHome.masterData = null;
@@ -31,6 +29,9 @@
           theme: 'modern'
         };
         ContentHome.currentLoggedInUser = null;
+        ContentHome.invalidApplicationParameters = false;
+        ContentHome.needToLoginInCP = false;
+
 
         /*buildfire carousel component*/
         // create a new instance of the buildfire carousel editor
@@ -39,7 +40,6 @@
         ContentHome.editor.onAddItems = function (items) {
           if (!ContentHome.data.image)
             ContentHome.data.image = [];
-
           ContentHome.data.image.push.apply(ContentHome.data.image, items);
           $scope.$digest();
         };
@@ -74,18 +74,18 @@
         /*UI sortable option*/
         ContentHome.rewardsSortableOptions = {
           handle: '> .cursor-grab',
-          update: function (event, ui) {
+          stop: function (event, ui) {
             var rewardsId = $.map(ContentHome.loyaltyRewards, function (reward) {
               return reward._id;
             });
             var data = {
-              appId: 15030018,
-              loyaltyUniqueId: 'e22494ec-73ea-44ac-b82b-75f64b8bc535',
-              loyaltyRewardId: rewardsId,
-              userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
-              auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
+              appId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
+              loyaltyUnqiueId: buildfire.context.instanceId,
+              loyaltyRewardIds: rewardsId,
+              userToken: ContentHome.currentLoggedInUser.userToken,
+              auth: ContentHome.currentLoggedInUser.auth
             };
-            // ContentHome.sortRewards(data);  //uncomment it when API will start working
+            ContentHome.sortRewards(data);
             console.log('update', rewardsId);
           }
         };
@@ -106,9 +106,25 @@
             if (tmrDelay)clearTimeout(tmrDelay);
           };
           ContentHome.error = function (err) {
-            if (err && err.code !== STATUS_CODE.NOT_FOUND) {
-              console.error('Error while getting data', err);
-              if (tmrDelay)clearTimeout(tmrDelay);
+            if (err && err.code == 2100) {
+              console.log('Error while getting application:', err);
+              var success = function (result) {
+                  console.info('Saved data result: ', result);
+                  updateMasterItem(_data);
+                }
+                , error = function (err) {
+                  console.log('Error while saving data : ', err);
+                };
+              if (ContentHome.currentLoggedInUser) {
+                _data.userToken = ContentHome.currentLoggedInUser.userToken;
+                _data.auth = ContentHome.currentLoggedInUser.auth;
+                LoyaltyAPI.addEditApplication(_data).then(success, error);
+              } else {
+                ContentHome.needToLoginInCP = true;
+                $timeout(function () {
+                  ContentHome.needToLoginInCP = false;
+                }, 5000);
+              }
             }
           };
           ContentHome.successloyaltyRewards = function (result) {
@@ -120,24 +136,28 @@
           };
           ContentHome.errorloyaltyRewards = function (err) {
             if (err && err.code !== STATUS_CODE.NOT_FOUND) {
-              console.error('Error while getting data loyaltyRewards', err);
+              console.log('Error while getting data loyaltyRewards', err);
               if (tmrDelay)clearTimeout(tmrDelay);
             }
           };
-          LoyaltyAPI.getRewards('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
-          LoyaltyAPI.getApplication('e22494ec-73ea-44ac-b82b-75f64b8bc535').then(ContentHome.success, ContentHome.error);
+          LoyaltyAPI.getRewards(buildfire.context.instanceId).then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
+          LoyaltyAPI.getApplication(buildfire.context.instanceId).then(ContentHome.success, ContentHome.error);
         };
 
 
         /*SortRewards method declaration*/
         ContentHome.sortRewards = function (data) {
+
           ContentHome.successSortRewards = function (result) {
+            buildfire.messaging.sendMessageToWidget({
+              type: 'ListSorted'
+            });
             console.info('Reward list Sorted:', result);
             if (tmrDelay)clearTimeout(tmrDelay);
           };
           ContentHome.errorSortRewards = function (err) {
             if (err && err.code !== STATUS_CODE.NOT_FOUND) {
-              console.error('Error while sorting rewards', err);
+              console.log('Error while sorting rewards', err);
               if (tmrDelay)clearTimeout(tmrDelay);
             }
           };
@@ -154,9 +174,19 @@
           var success = function (result) {
               console.info('Saved data result: ', result);
               updateMasterItem(newObj);
+              buildfire.messaging.sendMessageToWidget({
+                type: 'UpdateApplication',
+                data: newObj
+              });
             }
             , error = function (err) {
-              console.error('Error while saving data : ', err);
+              console.log('Error while updating application : ', err);
+              if (err && err.code == 2000) {
+                ContentHome.invalidApplicationParameters = true;
+                $timeout(function () {
+                  ContentHome.invalidApplicationParameters = false;
+                }, 3000);
+              }
             };
           LoyaltyAPI.addEditApplication(newObj).then(success, error);
         };
@@ -184,10 +214,13 @@
 
           modalInstance.result.then(function (message) {
             if (message === 'yes') {
-              ContentHome.loyaltyRewards.splice(index, 1);  //remove this line of code when API will start working.
-
+              //ContentHome.loyaltyRewards.splice(index, 1);  //remove this line of code when API will start working.
+              buildfire.messaging.sendMessageToWidget({
+                index: index,
+                type: 'RemoveItem'
+              });
+              //console.log(".................",ContentHome.loyaltyRewards)
               //uncomment it when API will start working
-              /*
                ContentHome.success = function (result){
                ContentHome.loyaltyRewards.splice(index, 1);
                console.log("Reward removed successfully");
@@ -196,11 +229,10 @@
                console.log("Some issue in Reward delete");
                }
                var data = {
-               userToken: 'ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170=',
-               auth: "ouOUQF7Sbx9m1pkqkfSUrmfiyRip2YptbcEcEcoX170="
+                   userToken : ContentHome.currentLoggedInUser.userToken,
+                      auth :ContentHome.currentLoggedInUser.auth
                }
-               LoyaltyAPI.getApplication(ContentHome.loyaltyRewards._id,data).then(ContentHome.success, ContentHome.error);
-               */
+               LoyaltyAPI.removeReward(loyaltyId,data).then(ContentHome.success, ContentHome.error);
 
             }
           }, function (data) {
@@ -208,6 +240,11 @@
           });
         };
 
+        ContentHome.openReward = function (data) {
+          RewardCache.setReward(data);
+          $location.path('/reward/' + data._id);
+          //  $scope.$digest();
+        };
         /*
          * create an artificial delay so api isn't called on every character entered
          * */
