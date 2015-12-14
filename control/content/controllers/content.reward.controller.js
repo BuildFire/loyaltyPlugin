@@ -105,6 +105,7 @@
 
         /*Add reward method declaration*/
         ContentReward.addReward = function (newObj) {
+          ContentReward.isInserted = true;
           if (typeof newObj === 'undefined') {
             return;
           }
@@ -212,7 +213,7 @@
               if (ContentReward.isValidReward(ContentReward.item) && !ContentReward.isInserted && !$routeParams.id) {
                 ContentReward.addReward(JSON.parse(angular.toJson(newObj)));
               }
-              if (ContentReward.isValidReward(ContentReward.item) && ContentReward.isInserted) {
+              if (ContentReward.isValidReward(ContentReward.item) && ContentReward.isInserted && newObj._id) {
                 ContentReward.updateReward(JSON.parse(angular.toJson(newObj)));
               }
               //saveData(JSON.parse(angular.toJson(newObj)));
