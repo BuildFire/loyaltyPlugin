@@ -46,12 +46,12 @@
             return $sce.trustAsHtml(html);
         };
 
-        WidgetItem.listeners['REWARD_UPDATED'] =  $rootScope.$on('REWARD_UPDATED', function (e, item) {
+        WidgetItem.listeners['REWARD_UPDATED'] = $rootScope.$on('REWARD_UPDATED', function (e, item) {
 
-          if (item.carouselImage){
-             WidgetItem.reward.carouselImage = item.carouselImage || [];
+          if (item.carouselImage) {
+            WidgetItem.reward.carouselImage = item.carouselImage || [];
             if (WidgetItem.view) {
-             WidgetItem.view.loadItems(WidgetItem.reward.carouselImage, null, "WideScreen");
+              WidgetItem.view.loadItems(WidgetItem.reward.carouselImage, null, "WideScreen");
             }
           }
 
@@ -81,6 +81,10 @@
           }
         });
 
+        WidgetItem.listeners['GOTO_HOME'] = $rootScope.$on('GOTO_HOME', function (e) {
+          ViewStack.popAllViews();
+        });
+
         WidgetItem.listeners['POP'] = $rootScope.$on('BEFORE_POP', function (e, view) {
           if (!view || view.template === "Item_Details") {
             $scope.$destroy();
@@ -89,7 +93,7 @@
 
         $scope.$on("$destroy", function () {
           console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
-          if(WidgetItem.view) {
+          if (WidgetItem.view) {
             WidgetItem.view._destroySlider();
             WidgetItem.view._removeAll();
           }
