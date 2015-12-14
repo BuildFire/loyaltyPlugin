@@ -126,7 +126,7 @@
           if (!loyaltyUnqiueId) {
             deferred.reject(new Error('Undefined application'));
           }
-          $http.get(SERVER.URL + '/api/loyaltyUserAddPoint/' + userId + '?userToken=' + userToken + '&loyaltyUnqiueId=' + loyaltyUnqiueId + '&redemptionPasscode=' + passcode + '&purchaseAmount=' + amount)
+          $http.get(SERVER.URL + '/api/loyaltyUserAddPoint/' + userId + '?userToken=' + encodeURIComponent(userToken) + '&loyaltyUnqiueId=' + loyaltyUnqiueId + '&redemptionPasscode=' + passcode + '&purchaseAmount=' + amount)
             .success(function (response) {
               if (response)
                 deferred.resolve(response);
@@ -144,7 +144,7 @@
           if (!loyaltyUnqiueId) {
             deferred.reject(new Error('Undefined application'));
           }
-          $http.get(SERVER.URL + '/api/loyaltyAppPassCode/' + loyaltyUnqiueId + '?userToken=' + userToken + '&redemptionPasscode=' + passcode)
+          $http.get(SERVER.URL + '/api/loyaltyAppPassCode/' + loyaltyUnqiueId + '?userToken=' + encodeURIComponent(userToken) + '&redemptionPasscode=' + passcode)
             .success(function (response) {
               if (response)
                 deferred.resolve(response);
@@ -162,7 +162,7 @@
           if (!userToken) {
             deferred.reject(new Error('Undefined user'));
           }
-          $http.get(SERVER.URL + '/api/loyaltyUserRedeem/' + userId + '?loyaltyUnqiueId=' + loyaltyUnqiueId + '&userToken=' + userToken + '&redeemId=' + rewardId)
+          $http.get(SERVER.URL + '/api/loyaltyUserRedeem/' + userId + '?loyaltyUnqiueId=' + loyaltyUnqiueId + '&userToken=' + encodeURIComponent(userToken) + '&redeemId=' + rewardId)
             .success(function (response) {
               if (response)
                 deferred.resolve(response);
