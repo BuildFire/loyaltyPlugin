@@ -51,7 +51,7 @@
                 console.error('Error while getting points data', err);
               }
             };
-          LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, '1449814143554-01452660677023232').then(success, error);
+          LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, "1441017939845-09614174673333764").then(success, error);
         };
 
         /**
@@ -81,8 +81,8 @@
           };
 
           console.log("$$$$$$$$$$$$$$$$$$$$$$$", buildfire.context);
-          LoyaltyAPI.getApplication('1449814143554-01452660677023232').then(successApplication, errorApplication);
-          LoyaltyAPI.getRewards('1449814143554-01452660677023232').then(successLoyaltyRewards, errorLoyaltyRewards);
+          LoyaltyAPI.getApplication("1441017939845-09614174673333764").then(successApplication, errorApplication);
+          LoyaltyAPI.getRewards("1441017939845-09614174673333764").then(successLoyaltyRewards, errorLoyaltyRewards);
         };
 
         /**
