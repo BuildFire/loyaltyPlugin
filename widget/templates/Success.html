@@ -1,10 +1,13 @@
 <div class="holder padding-zero" ng-controller="WidgetSuccessCtrl as
      WidgetSuccess">
   <div class="loyalty-plugin">
-    <div class="plugin-slider text-center">
+    <div id="carousel4" ng-if="WidgetSuccess.reward.carouselImage.length"
+         build-fire-carousel4=""></div>
+    <div class="plugin-slider text-center" ng-if="!WidgetSuccess.reward.carouselImage.length">
       <div class="plugin-slide">
         <img src="assets/images/16x9.png">
       </div>
+    </div>
     </div>
     <div class="padded">
       <div class="clearfix row">

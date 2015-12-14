@@ -126,6 +126,14 @@
           }
         };
       }])
+      .directive("buildFireCarousel4", ["$rootScope", function ($rootScope) {
+        return {
+          restrict: 'A',
+          link: function (scope, elem, attrs) {
+            $rootScope.$broadcast("Carousel4:LOADED");
+          }
+        };
+      }])
     .filter('getImageUrl', function () {
       return function (url, width, height, type) {
         if (type == 'resize')
