@@ -45,14 +45,32 @@
         };
 
         $rootScope.$on('REWARD_UPDATED', function (e, item) {
-          WidgetItem.reward = item;
+
+          if (item.carouselImage){
+             WidgetItem.reward.carouselImage = item.carouselImage;
+            if (WidgetItem.view) {
+             WidgetItem.view.loadItems(WidgetItem.reward.carouselImage, null, "WideScreen");
+            }
+          }
+
+          if (item && item.title)
+          {
+            WidgetItem.reward.title = item.title;
+          }
+          if (item && item.description)
+          {
+            WidgetItem.reward.description = item.description;
+          }
+          if (item && item.pointsToRedeem)
+          {
+            WidgetItem.reward.pointsToRedeem = item.pointsToRedeem;
+          }
         });
 
         /**
          * This event listener is bound for "Carousel2:LOADED" event broadcast
          */
         $rootScope.$on("Carousel2:LOADED", function () {
-          WidgetItem.view=null;
           if (!WidgetItem.view) {
             WidgetItem.view = new buildfire.components.carousel.view("#carousel2", [], "WideScreen");
           }
