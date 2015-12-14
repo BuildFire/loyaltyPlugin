@@ -12,13 +12,13 @@
     </div>
     <div class="padded">
       <div class="text-center">
-        <p ng-if="!WidgetHome.currentLoggedInUser"><span
+        <p ng-if="!(WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)"><span
             class="text-primary"><a href="javascript:void(0);"
                                     ng-click="WidgetHome.openLogin()">Log in
           or register</a></span> to
           get points</p>
 
-        <p ng-if="WidgetHome.currentLoggedInUser">
+        <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id">
           You currently have <span
             class="text-primary">{{WidgetHome.loyaltyPoints}}</span> points.
         </p>
