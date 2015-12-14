@@ -28,3 +28,6 @@ node_modules
 
 # bower Dependency directory
 test/assets/bower_components
+
+#IDE related extras
+.idea
