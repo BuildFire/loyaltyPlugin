@@ -269,7 +269,7 @@
           console.log("_______________________", user);
           if (user) {
             WidgetHome.currentLoggedInUser = user;
-            WidgetHome.getLoyaltyPoints('5317c378a6611c6009000001');
+            WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
             $scope.$digest();
           }
         });

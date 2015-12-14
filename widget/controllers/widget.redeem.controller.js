@@ -46,7 +46,7 @@
           };
           if(WidgetRedeem.currentLoggedInUser){
             Buildfire.spinner.show();
-            LoyaltyAPI.redeemPoints('5317c378a6611c6009000001', WidgetRedeem.currentLoggedInUser.userToken, '1449814143554-01452660677023232', rewardId).then(redeemSuccess, redeemFailure);
+            LoyaltyAPI.redeemPoints(WidgetCode.currentLoggedInUser._id, WidgetRedeem.currentLoggedInUser.userToken, '1449814143554-01452660677023232', rewardId).then(redeemSuccess, redeemFailure);
           }
           else{
             buildfire.auth.login({}, function () {

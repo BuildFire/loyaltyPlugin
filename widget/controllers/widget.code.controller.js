@@ -38,7 +38,7 @@
             }, 3000);
           };
           Buildfire.spinner.show();
-          LoyaltyAPI.addLoyaltyPoints('5317c378a6611c6009000001', WidgetCode.currentLoggedInUser.userToken, '1449814143554-01452660677023232', WidgetCode.passcode, currentView.amount)
+          LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, '1449814143554-01452660677023232', WidgetCode.passcode, currentView.amount)
             .then(success, error);
         };
 
