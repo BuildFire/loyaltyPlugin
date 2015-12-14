@@ -248,6 +248,13 @@
         });
 
         /**
+         * This event listener is bound for "GOTO_HOME" event broadcast
+         */
+        WidgetHome.listeners['GOTO_HOME'] = $rootScope.$on('GOTO_HOME', function (e) {
+          WidgetHome.getApplicationAndRewards();
+        });
+
+        /**
          * This event listener is bound for "APPLICATION_UPDATED" event broadcast
          */
         WidgetHome.listeners['APPLICATION_UPDATED'] = $rootScope.$on('APPLICATION_UPDATED', function (e, app) {
