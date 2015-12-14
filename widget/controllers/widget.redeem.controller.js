@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope', 'Buildfire',
-      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire) {
+    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope', 'Buildfire','DEFAULT_UNIQUEID',
+      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire,DEFAULT_UNIQUEID) {
 
         var WidgetRedeem = this;
 
@@ -47,7 +47,7 @@
           };
           if(WidgetRedeem.currentLoggedInUser){
             Buildfire.spinner.show();
-            LoyaltyAPI.redeemPoints(WidgetCode.currentLoggedInUser._id, WidgetRedeem.currentLoggedInUser.userToken, '1449814143554-01452660677023232', rewardId).then(redeemSuccess, redeemFailure);
+            LoyaltyAPI.redeemPoints(WidgetRedeem.currentLoggedInUser._id, WidgetRedeem.currentLoggedInUser.userToken, DEFAULT_UNIQUEID.id, rewardId).then(redeemSuccess, redeemFailure);
           }
           else{
             buildfire.auth.login({}, function () {

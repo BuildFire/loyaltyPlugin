@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce',
-      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce) {
+    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'DEFAULT_UNIQUEID',
+      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, DEFAULT_UNIQUEID) {
 
         var WidgetHome = this;
 
@@ -51,7 +51,7 @@
                 console.error('Error while getting points data', err);
               }
             };
-          LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, "1441017939845-09614174673333764").then(success, error);
+          LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, DEFAULT_UNIQUEID.id).then(success, error);
         };
 
         /**
@@ -81,8 +81,8 @@
           };
 
           console.log("$$$$$$$$$$$$$$$$$$$$$$$", buildfire.context);
-          LoyaltyAPI.getApplication("1441017939845-09614174673333764").then(successApplication, errorApplication);
-          LoyaltyAPI.getRewards("1441017939845-09614174673333764").then(successLoyaltyRewards, errorLoyaltyRewards);
+          LoyaltyAPI.getApplication(DEFAULT_UNIQUEID.id).then(successApplication, errorApplication);
+          LoyaltyAPI.getRewards(DEFAULT_UNIQUEID.id).then(successLoyaltyRewards, errorLoyaltyRewards);
         };
 
         /**
@@ -251,7 +251,7 @@
          * This event listener is bound for "APPLICATION_UPDATED" event broadcast
          */
         WidgetHome.listeners['APPLICATION_UPDATED'] = $rootScope.$on('APPLICATION_UPDATED', function (e, app) {
-          if (app.image){
+          if (app.image) {
             WidgetHome.carouselImages = app.image;
             if (WidgetHome.view) {
               WidgetHome.view.loadItems(WidgetHome.carouselImages);
