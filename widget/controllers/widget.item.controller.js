@@ -8,6 +8,8 @@
 
         var WidgetItem = this;
 
+        WidgetItem.listeners = {};
+
         //create new instance of buildfire carousel viewer
         WidgetItem.view = null;
 
@@ -44,7 +46,7 @@
             return $sce.trustAsHtml(html);
         };
 
-        $rootScope.$on('REWARD_UPDATED', function (e, item) {
+        WidgetItem.listeners['REWARD_UPDATED'] =  $rootScope.$on('REWARD_UPDATED', function (e, item) {
 
           if (item.carouselImage){
              WidgetItem.reward.carouselImage = item.carouselImage;
@@ -70,7 +72,7 @@
         /**
          * This event listener is bound for "Carousel2:LOADED" event broadcast
          */
-        $rootScope.$on("Carousel2:LOADED", function () {
+        WidgetItem.listeners['Carousel2:LOADED'] = $rootScope.$on("Carousel2:LOADED", function () {
           if (!WidgetItem.view) {
             WidgetItem.view = new buildfire.components.carousel.view("#carousel2", [], "WideScreen");
           }
@@ -78,6 +80,15 @@
             WidgetItem.view.loadItems(WidgetItem.reward.carouselImage, null, "WideScreen");
           } else {
             WidgetItem.view.loadItems([]);
+          }
+        });
+
+        $scope.$on("$destroy", function () {
+          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
+          for (var i in WidgetItem.listeners) {
+            if (WidgetItem.listeners.hasOwnProperty(i)) {
+              WidgetItem.listeners[i]();
+            }
           }
         });
 
