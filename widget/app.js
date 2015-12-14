@@ -201,8 +201,13 @@
       };
 
       buildfire.navigation.onBackButtonClick = function () {
-
+        console.log(">???>>?????", ViewStack.getCurrentView());
         if (ViewStack.hasViews()) {
+          if (ViewStack.getCurrentView().template == 'Item_Details') {
+            buildfire.messaging.sendMessageToControl({
+              type: 'BackToHome'
+            });
+          }
           ViewStack.pop();
         } else {
           buildfire.navigation.navigateHome();
