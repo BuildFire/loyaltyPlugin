@@ -199,6 +199,35 @@ describe('Unit : loyaltyPluginWidget design services', function () {
           $httpBackend.flush();
           $rootScope.$digest();
       });
+
+      it('LoyaltyAPI.validatePasscode should return success', function () {
+          LoyaltyAPI.validatePasscode("RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK+5/1Ef07A=",'1450083424880-07702731736935675', 12345);
+          var view = {
+              template:['Item_Details']
+          }
+          $httpBackend
+              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyAppPassCode/1450083424880-07702731736935675?userToken=RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK%2B5%2F1Ef07A%3D&redemptionPasscode=12345', {
+              })
+              .respond(200);
+          $httpBackend.flush();
+          $rootScope.$digest();
+      });
+
+      it('LoyaltyAPI.validatePasscode should return fail', function () {
+          var loyalityUniqueId = null;
+          LoyaltyAPI.validatePasscode("RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK+5/1Ef07A=",null, 12345);
+          var view = {
+              template:['Item_Details']
+          }
+          $httpBackend
+              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyAppPassCode/'+null+'?userToken=RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK%2B5%2F1Ef07A%3D&redemptionPasscode=12345', {
+              })
+              .respond(500, {
+                  status: null
+              });
+          $httpBackend.flush();
+          $rootScope.$digest();
+      });
   });
 });
 

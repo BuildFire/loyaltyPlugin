@@ -385,6 +385,27 @@ describe('Unit: loyaltyPluginWidget widget app', function () {
     });
   });
 
+  describe('calling the buildfire.messaging.onReceivedMessage for AddNewItem condition', function () {
+    var RewardCache, $rootScope;
+    beforeEach(module('loyaltyPluginWidget'));
+    beforeEach(inject(function (_RewardCache_, _$rootScope_) {
+      RewardCache =_RewardCache_;
+      $rootScope = _$rootScope_;
+    }));
+    var msg = {
+      type:'ReturnHome'
+    };
+    it('it should pass when buildfire.messaging.onReceivedMessage', function () {
+      buildfire.messaging.onReceivedMessage(msg)
+      $rootScope.$apply();
+    });
+
+    it('it should pass when buildfire.messaging.onReceivedMessage', function () {
+      RewardCache.setReward();
+      $rootScope.$apply();
+    });
+  });
+
   describe('calling the buildfire.messaging.onReceivedMessage for ListSorted condition', function () {
     var RewardCache, $rootScope;
     beforeEach(module('loyaltyPluginWidget'));
