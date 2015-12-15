@@ -47,10 +47,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
             .respond(200, { data: 'value' });
 
         $httpBackend.flush();
-
-     //   $http.expectGET('http://loyalty.kaleoapps.com/api/loyaltyApp/e22494ec-73ea-44ac-b82b-75f64b8bc535')
-          //  .respond(data,200);
-      $rootScope.$digest();
+        $rootScope.$digest();
     });
 
       it('LoyaltyAPI.getApplication should return success', function () {
@@ -66,9 +63,20 @@ describe('Unit : loyaltyPluginWidget design services', function () {
               });
 
           $httpBackend.flush();
+          $rootScope.$digest();
+      });
 
-          //   $http.expectGET('http://loyalty.kaleoapps.com/api/loyaltyApp/e22494ec-73ea-44ac-b82b-75f64b8bc535')
-          //  .respond(data,200);
+      it('LoyaltyAPI.getApplication should return success', function () {
+          var data =null;
+          LoyaltyAPI.addApplication(data);
+
+          $httpBackend
+              .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyApp')
+              .respond(500, {
+                  status: null
+              });
+
+          $httpBackend.flush();
           $rootScope.$digest();
       });
 
@@ -80,23 +88,114 @@ describe('Unit : loyaltyPluginWidget design services', function () {
         })
             .respond(200, { data: 'value' });
 
-        $httpBackend.flush();
+    $httpBackend.flush();
     $rootScope.$digest();
     });
 
       it('LoyaltyAPI.getApplication should return success', function () {
-          LoyaltyAPI.getApplication('e22494ec-73ea-44ac-b82b-75f64b8bc535');
+          LoyaltyAPI.getApplication('');
+
+          $httpBackend
+              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyApp/', {
+              })
+              .respond(200, { data: 'value' });
+
+          $httpBackend.flush();
+          $rootScope.$digest();
+      });
+
+
+      it('LoyaltyAPI.getRewards should return success', function () {
+          LoyaltyAPI.getRewards('e22494ec-73ea-44ac-b82b-75f64b8bc535');
           var view = {
               template:['Item_Details']
           }
           $httpBackend
-              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyApp/e22494ec-73ea-44ac-b82b-75f64b8bc535', {
+              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyRewards/e22494ec-73ea-44ac-b82b-75f64b8bc535', {
               })
-              .respond(500, null);
+              .respond(200, {
+                  status: "success"
+              });
+          $httpBackend.flush();
+          $rootScope.$digest();
+      });
+
+      it('LoyaltyAPI.getRewards should return fail', function () {
+          LoyaltyAPI.getRewards('');
+          var view = {
+              template:['Item_Details']
+          }
+          $httpBackend
+              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyRewards/', {
+              })
+              .respond(500, {
+                  status: null
+              });
           ViewStack.push(view.template)
           ViewStack.pop()
           ViewStack.getCurrentView()
-          $rootScope.$broadcast('VIEW_CHANGED','POP',view);
+          $httpBackend.flush();
+          $rootScope.$digest();
+      });
+
+      it('LoyaltyAPI.getLoyaltyPoints should return success', function () {
+          LoyaltyAPI.getLoyaltyPoints("557c6567c8faa5ec0f003728","EqrMk/nVWw3Qqwjikn277vxqp2JNTSreFbQdrq+zqEo=",'1450083424880-07702731736935675');
+          var view = {
+              template:['Item_Details']
+          }
+          $httpBackend
+              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyUser/557c6567c8faa5ec0f003728?userToken=EqrMk%2FnVWw3Qqwjikn277vxqp2JNTSreFbQdrq%2BzqEo%3D&loyaltyUnqiueId=1450083424880-07702731736935675', {
+              })
+              .respond(200, {
+                  status: "success"
+              });
+          $httpBackend.flush();
+          $rootScope.$digest();
+      });
+
+      it('LoyaltyAPI.getLoyaltyPoints should return fail', function () {
+          var userid = null;
+          LoyaltyAPI.getLoyaltyPoints(userid,"EqrMk/nVWw3Qqwjikn277vxqp2JNTSreFbQdrq+zqEo=",'1450083424880-07702731736935675');
+          var view = {
+              template:['Item_Details']
+          }
+          $httpBackend
+              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyUser/'+userid+'?userToken=EqrMk%2FnVWw3Qqwjikn277vxqp2JNTSreFbQdrq%2BzqEo%3D&loyaltyUnqiueId=1450083424880-07702731736935675', {
+              })
+              .respond(500, {
+                  status: null
+              });
+          $httpBackend.flush();
+          $rootScope.$digest();
+      });
+
+      it('LoyaltyAPI.addLoyaltyPoints should return success', function () {
+          LoyaltyAPI.addLoyaltyPoints("557c6567c8faa5ec0f003728","RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK+5/1Ef07A=",'1450083424880-07702731736935675', 12345, 1000);
+          var view = {
+              template:['Item_Details']
+          }
+          $httpBackend
+              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyUserAddPoint/557c6567c8faa5ec0f003728?userToken=RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK%2B5%2F1Ef07A%3D&loyaltyUnqiueId=1450083424880-07702731736935675&redemptionPasscode=12345&purchaseAmount=1000', {
+              })
+              .respond(200, {
+                  status: "success"
+              });
+          $httpBackend.flush();
+          $rootScope.$digest();
+      });
+
+      it('LoyaltyAPI.addLoyaltyPoints should return fail', function () {
+          var loyalityUniqueId = null;
+          LoyaltyAPI.addLoyaltyPoints("557c6567c8faa5ec0f003728","RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK+5/1Ef07A=",loyalityUniqueId, 12345, 1000);
+          var view = {
+              template:['Item_Details']
+          }
+          $httpBackend
+              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyUserAddPoint/557c6567c8faa5ec0f003728?userToken=RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK%2B5%2F1Ef07A%3D&loyaltyUnqiueId='+loyalityUniqueId+'&redemptionPasscode=12345&purchaseAmount=1000', {
+              })
+              .respond(500, {
+                  status: null
+              });
           $httpBackend.flush();
           $rootScope.$digest();
       });
