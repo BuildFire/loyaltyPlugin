@@ -32,7 +32,7 @@
                 var _elToRemove = $(elem).find('#' + view.template),
                   _child = _elToRemove.children("div").eq(0);
 
-                _child.addClass("ng-enter ng-enter-active");
+                _child.addClass("ng-leave ng-leave-active");
                 _child.one("webkitTransitionEnd transitionend oTransitionEnd", function (e) {
                   _elToRemove.remove();
                   views--;
@@ -43,7 +43,7 @@
                     _child = _elToRemove.children("div").eq(0);
 
                   if (!noAnimation) {
-                    _child.addClass("ng-enter ng-enter-active");
+                    _child.addClass("ng-leave ng-leave-active");
                     _child.one("webkitTransitionEnd transitionend oTransitionEnd", function (e) {
                       _elToRemove.remove();
                       views--;
