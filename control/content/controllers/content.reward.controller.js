@@ -71,7 +71,8 @@
         /* list image add <end>*/
 
         /* Background image add <start>*/
-        ContentReward.BackgroundImage = new Buildfire.components.images.thumbnail("#background", {title: "Background Image"});
+
+       /* ContentReward.BackgroundImage = new Buildfire.components.images.thumbnail("#background", {title: "Background Image"});
         ContentReward.BackgroundImage.onChange = function (url) {
           ContentReward.item.BackgroundImage = url;
           if (!$scope.$$phase && !$scope.$root.$$phase) {
@@ -84,7 +85,7 @@
           if (!$scope.$$phase && !$scope.$root.$$phase) {
             $scope.$apply();
           }
-        };
+        };*/    //Enable this above code if you want to show the add background option reward add.
 
         /* Background image add <end>*/
 
@@ -189,7 +190,7 @@
           ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: ContentReward.item._id});
           console.log("aaaaaaaaaaaaaaaaaaaaaa", ContentReward.item);
           ContentReward.listImage.loadbackground(ContentReward.item.listImage);
-          ContentReward.BackgroundImage.loadbackground(ContentReward.item.BackgroundImage);
+         /* ContentReward.BackgroundImage.loadbackground(ContentReward.item.BackgroundImage);  */  //enable it when you want to show add background on reward add
           ContentReward.isInserted = true;
           buildfire.messaging.sendMessageToWidget({
             id: $routeParams.id,
