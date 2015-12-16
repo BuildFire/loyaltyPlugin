@@ -253,4 +253,28 @@
         }
       };
     }])
+    .factory('Context', ['$q', function ($q) {
+      var context = null;
+      return {
+        getContext: function (cb) {
+          if (context) {
+            cb && cb(context);
+            return context;
+          }
+          else {
+            buildfire.getContext(function (err, _context) {
+              if (err) {
+                cb && cb(null);
+                return null;
+              }
+              else {
+                context = _context;
+                cb && cb(_context);
+                return context;
+              }
+            });
+          }
+        }
+      };
+    }])
 })(window.angular, window.buildfire);

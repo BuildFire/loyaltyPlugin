@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetCodeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', '$rootScope', 'Buildfire', 'DEFAULT_UNIQUEID',
-      function ($scope, ViewStack, LoyaltyAPI, RewardCache, $rootScope, Buildfire, DEFAULT_UNIQUEID) {
+    .controller('WidgetCodeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', '$rootScope', 'Buildfire', 'Context',
+      function ($scope, ViewStack, LoyaltyAPI, RewardCache, $rootScope, Buildfire, Context) {
 
         var WidgetCode = this;
         /**
@@ -13,6 +13,8 @@
         var currentView = ViewStack.getCurrentView();
 
         WidgetCode.passcodeFailure = false;
+
+        WidgetCode.context = Context.getContext();
 
         if (RewardCache.getApplication()) {
           WidgetCode.application = RewardCache.getApplication();
@@ -33,7 +35,7 @@
             console.log("Error while adding points:", error);
           };
           Buildfire.spinner.show();
-          LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, DEFAULT_UNIQUEID.id, WidgetCode.passcode, currentView.amount)
+          LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode, currentView.amount)
             .then(success, error);
         };
 
@@ -53,7 +55,7 @@
             }, 3000);
           };
 
-          LoyaltyAPI.validatePasscode(WidgetCode.currentLoggedInUser.userToken, DEFAULT_UNIQUEID.id, WidgetCode.passcode).then(success, error);
+          LoyaltyAPI.validatePasscode(WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode).then(success, error);
         };
 
         /**

@@ -9,17 +9,32 @@
         .when('/', {
           templateUrl: 'templates/home.html',
           controllerAs: 'ContentHome',
-          controller: 'ContentHomeCtrl'
+          controller: 'ContentHomeCtrl',
+          resolve: {
+            context: function (Context) {
+              return Context.getContext();
+            }
+          }
         })
         .when('/reward', {
           templateUrl: 'templates/reward.html',
           controllerAs: 'ContentReward',
-          controller: 'ContentRewardCtrl'
+          controller: 'ContentRewardCtrl',
+          resolve: {
+            context: function (Context) {
+              return Context.getContext();
+            }
+          }
         })
         .when('/reward/:id', {
           templateUrl: 'templates/reward.html',
           controllerAs: 'ContentReward',
-          controller: 'ContentRewardCtrl'
+          controller: 'ContentRewardCtrl',
+          resolve: {
+            context: function (Context) {
+              return Context.getContext();
+            }
+          }
         })
         .otherwise('/');
     }]).filter('getImageUrl', function () {

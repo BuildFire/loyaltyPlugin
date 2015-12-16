@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'DEFAULT_UNIQUEID',
-      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, DEFAULT_UNIQUEID) {
+    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'Context',
+      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, Context) {
 
         var WidgetHome = this;
 
@@ -51,7 +51,7 @@
                 console.error('Error while getting points data', err);
               }
             };
-          LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, DEFAULT_UNIQUEID.id).then(success, error);
+          LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, WidgetHome.context.instanceId).then(success, error);
         };
 
         /**
@@ -80,9 +80,9 @@
             console.info('Error fetching loyalty application');
           };
 
-          console.log("$$$$$$$$$$$$$$$$$$$$$$$", buildfire.context);
-          LoyaltyAPI.getApplication(DEFAULT_UNIQUEID.id).then(successApplication, errorApplication);
-          LoyaltyAPI.getRewards(DEFAULT_UNIQUEID.id).then(successLoyaltyRewards, errorLoyaltyRewards);
+          console.log("$$$$$$$$$$$$$$$$$$$$$$$", WidgetHome.context);
+          LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
+          LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
         };
 
         /**
@@ -276,8 +276,16 @@
           console.log("_______________________", user);
           if (user) {
             WidgetHome.currentLoggedInUser = user;
-            WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
-            $scope.$digest();
+            if(!WidgetHome.context) {
+              Context.getContext(function(ctx) {
+                WidgetHome.context = ctx;
+                WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
+                $scope.$digest();
+              });
+            } else {
+              WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
+              $scope.$digest();
+            }
           }
         });
 
@@ -302,7 +310,10 @@
             return $sce.trustAsHtml(html);
         };
 
-        init();
+        Context.getContext(function(ctx) {
+          WidgetHome.context = ctx;
+          init();
+        });
 
       }]);
 })(window.angular, window.buildfire);
