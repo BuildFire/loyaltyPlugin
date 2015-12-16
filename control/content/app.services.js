@@ -103,7 +103,7 @@
           if (!id) {
             deferred.reject(new Error('Undefined reward id'));
           }
-          $http.delete(SERVER.URL + '/api/loyaltyRewards/' + id+"?appId=b036ab75-9ddd-11e5-88d3-124798dea82d&userToken=" + data.userToken + "&auth="+encodeURIComponent(data.auth)).success(function (response, status) {
+          $http.delete(SERVER.URL + '/api/loyaltyRewards/' + id + "?appId=b036ab75-9ddd-11e5-88d3-124798dea82d&userToken=" + data.userToken + "&auth=" + encodeURIComponent(data.auth)).success(function (response, status) {
             if (response)
               deferred.resolve(response);
             else
@@ -151,6 +151,19 @@
         },
         getReward: function () {
           return reward;
+        }
+      };
+    }])
+    .factory('Context', ['$q', function ($q) {
+      return {
+        getContext: function () {
+          var deferred = $q.defer();
+          buildfire.getContext(function (err, context) {
+            if (err)
+              deferred.resolve(null);
+            else deferred.resolve(context);
+          });
+          return deferred.promise;
         }
       };
     }])

@@ -148,70 +148,72 @@
           });
       }
     })
-    .run(['Location', '$location', '$rootScope', 'RewardCache', 'ViewStack', function (Location, $location, $rootScope, RewardCache, ViewStack) {
-      buildfire.messaging.onReceivedMessage = function (msg) {
-        switch (msg.type) {
-          case 'AddNewItem':
-            RewardCache.setReward(msg.data);
-            ViewStack.popAllViews(true);
-            ViewStack.push({
-              template: 'Item_Details',
-              totalPoints: msg.data.pointsToRedeem
-            });
-            $rootScope.$broadcast("REWARD_ADDED", msg.data);
-            $rootScope.$apply();
-            break;
+    .run(['Location', '$location', '$rootScope', 'RewardCache', 'ViewStack', 'Context',
+      function (Location, $location, $rootScope, RewardCache, ViewStack, Context) {
+        buildfire.messaging.onReceivedMessage = function (msg) {
+          switch (msg.type) {
+            case 'AddNewItem':
+              RewardCache.setReward(msg.data);
+              ViewStack.popAllViews(true);
+              ViewStack.push({
+                template: 'Item_Details',
+                totalPoints: msg.data.pointsToRedeem
+              });
+              $rootScope.$broadcast("REWARD_ADDED", msg.data);
+              $rootScope.$apply();
+              break;
 
-          case 'OpenItem':
-            RewardCache.setReward(msg.data);
-            ViewStack.popAllViews(true);
-            ViewStack.push({
-              template: 'Item_Details',
-              totalPoints: msg.data.pointsToRedeem
-            });
-            $rootScope.$apply();
-            break;
+            case 'OpenItem':
+              RewardCache.setReward(msg.data);
+              ViewStack.popAllViews(true);
+              ViewStack.push({
+                template: 'Item_Details',
+                totalPoints: msg.data.pointsToRedeem
+              });
+              $rootScope.$apply();
+              break;
 
-          case 'UpdateItem':
-            RewardCache.setReward(msg.data);
-            $rootScope.$broadcast("REWARD_UPDATED", msg.data);
-            $rootScope.$apply();
-            break;
+            case 'UpdateItem':
+              RewardCache.setReward(msg.data);
+              $rootScope.$broadcast("REWARD_UPDATED", msg.data);
+              $rootScope.$apply();
+              break;
 
-          case 'RemoveItem':
-            $rootScope.$broadcast("REWARD_DELETED", msg.index);
-            $rootScope.$apply();
-            break;
+            case 'RemoveItem':
+              $rootScope.$broadcast("REWARD_DELETED", msg.index);
+              $rootScope.$apply();
+              break;
 
-          case 'ListSorted':
-            $rootScope.$broadcast("REWARDS_SORTED");
-            $rootScope.$apply();
-            break;
+            case 'ListSorted':
+              $rootScope.$broadcast("REWARDS_SORTED");
+              $rootScope.$apply();
+              break;
 
-          case 'UpdateApplication':
-            $rootScope.$broadcast("APPLICATION_UPDATED", msg.data);
-            $rootScope.$apply();
-            break;
+            case 'UpdateApplication':
+              $rootScope.$broadcast("APPLICATION_UPDATED", msg.data);
+              $rootScope.$apply();
+              break;
 
-          case 'ReturnHome':
-            $rootScope.$broadcast("GOTO_HOME");
-            $rootScope.$apply();
-            break;
-        }
-      };
-
-      buildfire.navigation.onBackButtonClick = function () {
-        console.log(">???>>?????", ViewStack.getCurrentView());
-        if (ViewStack.hasViews()) {
-          if (ViewStack.getCurrentView().template == 'Item_Details') {
-            buildfire.messaging.sendMessageToControl({
-              type: 'BackToHome'
-            });
+            case 'ReturnHome':
+              $rootScope.$broadcast("GOTO_HOME");
+              $rootScope.$apply();
+              break;
           }
-          ViewStack.pop();
-        } else {
-          buildfire.navigation.navigateHome();
-        }
-      };
-    }])
+        };
+
+        buildfire.navigation.onBackButtonClick = function () {
+          console.log(">???>>?????", ViewStack.getCurrentView());
+          if (ViewStack.hasViews()) {
+            if (ViewStack.getCurrentView().template == 'Item_Details') {
+              buildfire.messaging.sendMessageToControl({
+                type: 'BackToHome'
+              });
+            }
+            ViewStack.pop();
+          } else {
+            buildfire.navigation.navigateHome();
+          }
+        };
+
+      }])
 })(window.angular, window.buildfire);

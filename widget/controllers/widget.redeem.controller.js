@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope', 'Buildfire','DEFAULT_UNIQUEID',
-      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire,DEFAULT_UNIQUEID) {
+    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope', 'Buildfire','Context',
+      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire,Context) {
 
         var WidgetRedeem = this;
 
@@ -13,6 +13,7 @@
          */
         WidgetRedeem.redeemFail = false;
         WidgetRedeem.dailyLimitExceeded = false;
+        WidgetRedeem.context = Context.getContext();
 
         if (RewardCache.getReward()) {
           WidgetRedeem.reward = RewardCache.getReward();
@@ -25,7 +26,7 @@
         WidgetRedeem.redeemPoints = function (rewardId) {
           var redeemSuccess = function () {
             Buildfire.spinner.hide();
-            WidgetRedeem.listeners['POINTS_REDEEMED']=    $rootScope.$broadcast('POINTS_REDEEMED', WidgetRedeem.reward.pointsToRedeem);
+            $rootScope.$broadcast('POINTS_REDEEMED', WidgetRedeem.reward.pointsToRedeem);
             ViewStack.push({
               template: 'Success'
             });
@@ -47,7 +48,7 @@
           };
           if(WidgetRedeem.currentLoggedInUser){
             Buildfire.spinner.show();
-            LoyaltyAPI.redeemPoints(WidgetRedeem.currentLoggedInUser._id, WidgetRedeem.currentLoggedInUser.userToken, DEFAULT_UNIQUEID.id, rewardId).then(redeemSuccess, redeemFailure);
+            LoyaltyAPI.redeemPoints(WidgetRedeem.currentLoggedInUser._id, WidgetRedeem.currentLoggedInUser.userToken, WidgetRedeem.context.instanceId, rewardId).then(redeemSuccess, redeemFailure);
           }
           else{
             buildfire.auth.login({}, function () {

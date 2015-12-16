@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentRewardCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$location', '$routeParams', 'RewardCache',
-      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $location, $routeParams, RewardCache) {
+    .controller('ContentRewardCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$location', '$routeParams', 'RewardCache', 'context',
+      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $location, $routeParams, RewardCache, context) {
         var ContentReward = this;
         ContentReward.item = {
           title: "",
@@ -72,20 +72,20 @@
 
         /* Background image add <start>*/
 
-       /* ContentReward.BackgroundImage = new Buildfire.components.images.thumbnail("#background", {title: "Background Image"});
-        ContentReward.BackgroundImage.onChange = function (url) {
-          ContentReward.item.BackgroundImage = url;
-          if (!$scope.$$phase && !$scope.$root.$$phase) {
-            $scope.$apply();
-          }
-        };
+        /* ContentReward.BackgroundImage = new Buildfire.components.images.thumbnail("#background", {title: "Background Image"});
+         ContentReward.BackgroundImage.onChange = function (url) {
+         ContentReward.item.BackgroundImage = url;
+         if (!$scope.$$phase && !$scope.$root.$$phase) {
+         $scope.$apply();
+         }
+         };
 
-        ContentReward.BackgroundImage.onDelete = function (url) {
-          ContentReward.item.BackgroundImage = "";
-          if (!$scope.$$phase && !$scope.$root.$$phase) {
-            $scope.$apply();
-          }
-        };*/    //Enable this above code if you want to show the add background option reward add.
+         ContentReward.BackgroundImage.onDelete = function (url) {
+         ContentReward.item.BackgroundImage = "";
+         if (!$scope.$$phase && !$scope.$root.$$phase) {
+         $scope.$apply();
+         }
+         };*/    //Enable this above code if you want to show the add background option reward add.
 
         /* Background image add <end>*/
 
@@ -112,7 +112,7 @@
           }
           var data = newObj;
           data.appId = 'b036ab75-9ddd-11e5-88d3-124798dea82d';
-          data.loyaltyUnqiueId = buildfire.context.instanceId;
+          data.loyaltyUnqiueId = context.instanceId;
           data.userToken = ContentReward.currentLoggedInUser.userToken;
           data.auth = ContentReward.currentLoggedInUser.auth;
           var success = function (result) {
@@ -145,7 +145,7 @@
           updateMasterItem(newObj);
           var data = newObj;
           data.appId = 'b036ab75-9ddd-11e5-88d3-124798dea82d';
-          data.loyaltyUnqiueId = buildfire.context.instanceId;
+          data.loyaltyUnqiueId = context.instanceId;
           data.userToken = ContentReward.currentLoggedInUser.userToken;
           data.auth = ContentReward.currentLoggedInUser.auth;
           buildfire.messaging.sendMessageToWidget({
@@ -190,7 +190,7 @@
           ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: ContentReward.item._id});
           console.log("aaaaaaaaaaaaaaaaaaaaaa", ContentReward.item);
           ContentReward.listImage.loadbackground(ContentReward.item.listImage);
-         /* ContentReward.BackgroundImage.loadbackground(ContentReward.item.BackgroundImage);  */  //enable it when you want to show add background on reward add
+          /* ContentReward.BackgroundImage.loadbackground(ContentReward.item.BackgroundImage);  */  //enable it when you want to show add background on reward add
           ContentReward.isInserted = true;
           buildfire.messaging.sendMessageToWidget({
             id: $routeParams.id,

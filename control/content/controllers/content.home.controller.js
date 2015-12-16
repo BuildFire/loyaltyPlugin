@@ -3,15 +3,16 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal', 'RewardCache', '$location', '$timeout',
-      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache, $location, $timeout) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal', 'RewardCache', '$location', '$timeout', 'context',
+      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache, $location, $timeout, context) {
+        console.log("---------------------", context);
         var ContentHome = this;
         var _data = {
           redemptionPasscode: '12345',
-          unqiueId: buildfire.context.instanceId,
+          unqiueId: context.instanceId,
           externalAppId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
           appId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
-          name: buildfire.context.pluginId,
+          name: context.pluginId,
           pointsPerVisit: 1,
           pointsPerDollar: 1,
           totalLimit: 5000,
@@ -80,7 +81,7 @@
             });
             var data = {
               appId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
-              loyaltyUnqiueId: buildfire.context.instanceId,
+              loyaltyUnqiueId: context.instanceId,
               loyaltyRewardIds: rewardsId,
               userToken: ContentHome.currentLoggedInUser.userToken,
               auth: ContentHome.currentLoggedInUser.auth
@@ -140,8 +141,8 @@
               if (tmrDelay)clearTimeout(tmrDelay);
             }
           };
-          LoyaltyAPI.getRewards(buildfire.context.instanceId).then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
-          LoyaltyAPI.getApplication(buildfire.context.instanceId).then(ContentHome.success, ContentHome.error);
+          LoyaltyAPI.getRewards(context.instanceId).then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
+          LoyaltyAPI.getApplication(context.instanceId).then(ContentHome.success, ContentHome.error);
         };
 
 
@@ -221,18 +222,18 @@
               });
               //console.log(".................",ContentHome.loyaltyRewards)
               //uncomment it when API will start working
-               ContentHome.success = function (result){
-               ContentHome.loyaltyRewards.splice(index, 1);
-               console.log("Reward removed successfully");
-               }
-               ContentHome.error = function(err){
-               console.log("Some issue in Reward delete");
-               }
-               var data = {
-                   userToken : ContentHome.currentLoggedInUser.userToken,
-                      auth :ContentHome.currentLoggedInUser.auth
-               }
-               LoyaltyAPI.removeReward(loyaltyId,data).then(ContentHome.success, ContentHome.error);
+              ContentHome.success = function (result) {
+                ContentHome.loyaltyRewards.splice(index, 1);
+                console.log("Reward removed successfully");
+              }
+              ContentHome.error = function (err) {
+                console.log("Some issue in Reward delete");
+              }
+              var data = {
+                userToken: ContentHome.currentLoggedInUser.userToken,
+                auth: ContentHome.currentLoggedInUser.auth
+              }
+              LoyaltyAPI.removeReward(loyaltyId, data).then(ContentHome.success, ContentHome.error);
 
             }
           }, function (data) {
@@ -275,7 +276,7 @@
 
         buildfire.auth.getCurrentUser(function (err, user) {
           console.log("!!!!!!!!!!User!!!!!!!!!!!!", user);
-          console.log("!!!!!!!!!!Buildfire Context!!!!!!!!!!!!!!!", buildfire.context);
+          console.log("!!!!!!!!!!Buildfire Context!!!!!!!!!!!!!!!", context);
           if (user) {
             ContentHome.currentLoggedInUser = user;
             $scope.$digest();
