@@ -111,7 +111,7 @@
             return;
           }
           var data = newObj;
-          data.appId = 'b036ab75-9ddd-11e5-88d3-124798dea82d';
+          data.appId = context.appId;
           data.loyaltyUnqiueId = context.instanceId;
           data.userToken = ContentReward.currentLoggedInUser.userToken;
           data.auth = ContentReward.currentLoggedInUser.auth;
@@ -144,7 +144,7 @@
           }
           updateMasterItem(newObj);
           var data = newObj;
-          data.appId = 'b036ab75-9ddd-11e5-88d3-124798dea82d';
+          data.appId = context.appId;
           data.loyaltyUnqiueId = context.instanceId;
           data.userToken = ContentReward.currentLoggedInUser.userToken;
           data.auth = ContentReward.currentLoggedInUser.auth;

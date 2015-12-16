@@ -10,8 +10,8 @@
         var _data = {
           redemptionPasscode: '12345',
           unqiueId: context.instanceId,
-          externalAppId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
-          appId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
+          externalAppId: context.appId,
+          appId: context.appId,
           name: context.pluginId,
           pointsPerVisit: 1,
           pointsPerDollar: 1,
@@ -80,7 +80,7 @@
               return reward._id;
             });
             var data = {
-              appId: 'b036ab75-9ddd-11e5-88d3-124798dea82d',
+              appId: context.appId,
               loyaltyUnqiueId: context.instanceId,
               loyaltyRewardIds: rewardsId,
               userToken: ContentHome.currentLoggedInUser.userToken,
@@ -225,14 +225,15 @@
               ContentHome.success = function (result) {
                 ContentHome.loyaltyRewards.splice(index, 1);
                 console.log("Reward removed successfully");
-              }
+              };
               ContentHome.error = function (err) {
                 console.log("Some issue in Reward delete");
-              }
+              };
               var data = {
                 userToken: ContentHome.currentLoggedInUser.userToken,
-                auth: ContentHome.currentLoggedInUser.auth
-              }
+                auth: ContentHome.currentLoggedInUser.auth,
+                appId: context.appId
+              };
               LoyaltyAPI.removeReward(loyaltyId, data).then(ContentHome.success, ContentHome.error);
 
             }
