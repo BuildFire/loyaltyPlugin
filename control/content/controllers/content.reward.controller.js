@@ -71,7 +71,8 @@
         /* list image add <end>*/
 
         /* Background image add <start>*/
-        ContentReward.BackgroundImage = new Buildfire.components.images.thumbnail("#background", {title: "Background Image"});
+
+       /* ContentReward.BackgroundImage = new Buildfire.components.images.thumbnail("#background", {title: "Background Image"});
         ContentReward.BackgroundImage.onChange = function (url) {
           ContentReward.item.BackgroundImage = url;
           if (!$scope.$$phase && !$scope.$root.$$phase) {
@@ -84,7 +85,7 @@
           if (!$scope.$$phase && !$scope.$root.$$phase) {
             $scope.$apply();
           }
-        };
+        };*/    //Enable this above code if you want to show the add background option reward add.
 
         /* Background image add <end>*/
 
@@ -105,34 +106,35 @@
 
         /*Add reward method declaration*/
         ContentReward.addReward = function (newObj) {
+          ContentReward.isInserted = true;
           if (typeof newObj === 'undefined') {
             return;
           }
           var data = newObj;
-          data.appId =  'b036ab75-9ddd-11e5-88d3-124798dea82d';
+          data.appId = 'b036ab75-9ddd-11e5-88d3-124798dea82d';
           data.loyaltyUnqiueId = buildfire.context.instanceId;
           data.userToken = ContentReward.currentLoggedInUser.userToken;
           data.auth = ContentReward.currentLoggedInUser.auth;
-           var success = function (result) {
-               console.info('Saved data result: ', result);
-          updateMasterItem(newObj);
-          ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: result._id});
-          ContentReward.item = Object.assign(ContentReward.item, result);
-          ContentReward.isInserted = true;
-          if (ContentReward.item._id) {
-            buildfire.messaging.sendMessageToWidget({
-              id: ContentReward.item._id,
-              type: 'AddNewItem',
-              data: ContentReward.item
-            });
-          }
-           $scope.$digest();
-           }
-           , error = function (err) {
-           ContentReward.isInserted = false;
+          var success = function (result) {
+              console.info('Saved data result: ', result);
+              updateMasterItem(newObj);
+              ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: result._id});
+              ContentReward.item = Object.assign(ContentReward.item, result);
+              ContentReward.isInserted = true;
+              if (ContentReward.item._id) {
+                buildfire.messaging.sendMessageToWidget({
+                  id: ContentReward.item._id,
+                  type: 'AddNewItem',
+                  data: ContentReward.item
+                });
+              }
+              $scope.$digest();
+            }
+            , error = function (err) {
+              ContentReward.isInserted = false;
               console.error('Error while saving data : ', err);
             };
-            LoyaltyAPI.addReward(data).then(success, error);
+          LoyaltyAPI.addReward(data).then(success, error);
         };
 
         /*Update reward method declaration*/
@@ -142,23 +144,23 @@
           }
           updateMasterItem(newObj);
           var data = newObj;
-          data.appId =  'b036ab75-9ddd-11e5-88d3-124798dea82d';
+          data.appId = 'b036ab75-9ddd-11e5-88d3-124798dea82d';
           data.loyaltyUnqiueId = buildfire.context.instanceId;
           data.userToken = ContentReward.currentLoggedInUser.userToken;
           data.auth = ContentReward.currentLoggedInUser.auth;
-           buildfire.messaging.sendMessageToWidget({
+          buildfire.messaging.sendMessageToWidget({
             id: $routeParams.id,
             type: 'UpdateItem',
             data: ContentReward.item
           });
           $scope.$digest();
-           var success = function (result) {
-               console.info('Saved data result: ', result);
-           }
-           , error = function (err) {
+          var success = function (result) {
+              console.info('Saved data result: ', result);
+            }
+            , error = function (err) {
               console.error('Error while saving data : ', err);
             };
-            LoyaltyAPI.updateReward(data).then(success, error);
+          LoyaltyAPI.updateReward(data).then(success, error);
         };
 
         /*validate the required fields whether its there or not */
@@ -177,17 +179,20 @@
 
         /*Go back to home on done button click*/
         ContentReward.gotToHome = function () {
+          buildfire.messaging.sendMessageToWidget({
+            type: 'ReturnHome'
+          });
           $location.path('#/');
         };
 
         if ($routeParams.id && RewardCache.getReward()) {
           ContentReward.item = RewardCache.getReward();
-          ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: ContentReward.item ._id});
-          console.log("aaaaaaaaaaaaaaaaaaaaaa",ContentReward.item)
+          ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: ContentReward.item._id});
+          console.log("aaaaaaaaaaaaaaaaaaaaaa", ContentReward.item);
           ContentReward.listImage.loadbackground(ContentReward.item.listImage);
-          ContentReward.BackgroundImage.loadbackground(ContentReward.item.BackgroundImage);
+         /* ContentReward.BackgroundImage.loadbackground(ContentReward.item.BackgroundImage);  */  //enable it when you want to show add background on reward add
           ContentReward.isInserted = true;
-           buildfire.messaging.sendMessageToWidget({
+          buildfire.messaging.sendMessageToWidget({
             id: $routeParams.id,
             type: 'OpenItem',
             data: ContentReward.item
@@ -212,7 +217,7 @@
               if (ContentReward.isValidReward(ContentReward.item) && !ContentReward.isInserted && !$routeParams.id) {
                 ContentReward.addReward(JSON.parse(angular.toJson(newObj)));
               }
-              if (ContentReward.isValidReward(ContentReward.item) && ContentReward.isInserted) {
+              if (ContentReward.isValidReward(ContentReward.item) && ContentReward.isInserted && newObj._id) {
                 ContentReward.updateReward(JSON.parse(angular.toJson(newObj)));
               }
               //saveData(JSON.parse(angular.toJson(newObj)));

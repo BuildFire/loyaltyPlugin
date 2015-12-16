@@ -32,7 +32,7 @@
                 var _elToRemove = $(elem).find('#' + view.template),
                   _child = _elToRemove.children("div").eq(0);
 
-                _child.addClass("ng-enter ng-enter-active");
+                _child.addClass("ng-leave ng-leave-active");
                 _child.one("webkitTransitionEnd transitionend oTransitionEnd", function (e) {
                   _elToRemove.remove();
                   views--;
@@ -42,8 +42,8 @@
                   var _elToRemove = $(elem).find('#' + value.template),
                     _child = _elToRemove.children("div").eq(0);
 
-                  if(!noAnimation) {
-                    _child.addClass("ng-enter ng-enter-active");
+                  if (!noAnimation) {
+                    _child.addClass("ng-leave ng-leave-active");
                     _child.one("webkitTransitionEnd transitionend oTransitionEnd", function (e) {
                       _elToRemove.remove();
                       views--;
@@ -118,14 +118,22 @@
         }
       };
     }])
-      .directive("buildFireCarousel3", ["$rootScope", function ($rootScope) {
-        return {
-          restrict: 'A',
-          link: function (scope, elem, attrs) {
-            $rootScope.$broadcast("Carousel3:LOADED");
-          }
-        };
-      }])
+    .directive("buildFireCarousel3", ["$rootScope", function ($rootScope) {
+      return {
+        restrict: 'A',
+        link: function (scope, elem, attrs) {
+          $rootScope.$broadcast("Carousel3:LOADED");
+        }
+      };
+    }])
+    .directive("buildFireCarousel4", ["$rootScope", function ($rootScope) {
+      return {
+        restrict: 'A',
+        link: function (scope, elem, attrs) {
+          $rootScope.$broadcast("Carousel4:LOADED");
+        }
+      };
+    }])
     .filter('getImageUrl', function () {
       return function (url, width, height, type) {
         if (type == 'resize')
@@ -184,12 +192,22 @@
             $rootScope.$broadcast("APPLICATION_UPDATED", msg.data);
             $rootScope.$apply();
             break;
+
+          case 'ReturnHome':
+            $rootScope.$broadcast("GOTO_HOME");
+            $rootScope.$apply();
+            break;
         }
       };
 
       buildfire.navigation.onBackButtonClick = function () {
-
+        console.log(">???>>?????", ViewStack.getCurrentView());
         if (ViewStack.hasViews()) {
+          if (ViewStack.getCurrentView().template == 'Item_Details') {
+            buildfire.messaging.sendMessageToControl({
+              type: 'BackToHome'
+            });
+          }
           ViewStack.pop();
         } else {
           buildfire.navigation.navigateHome();

@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce',
-      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce) {
+    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'DEFAULT_UNIQUEID',
+      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, DEFAULT_UNIQUEID) {
 
         var WidgetHome = this;
 
@@ -51,7 +51,7 @@
                 console.error('Error while getting points data', err);
               }
             };
-          LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, '1449814143554-01452660677023232').then(success, error);
+          LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, DEFAULT_UNIQUEID.id).then(success, error);
         };
 
         /**
@@ -81,8 +81,8 @@
           };
 
           console.log("$$$$$$$$$$$$$$$$$$$$$$$", buildfire.context);
-          LoyaltyAPI.getApplication('1449814143554-01452660677023232').then(successApplication, errorApplication);
-          LoyaltyAPI.getRewards('1449814143554-01452660677023232').then(successLoyaltyRewards, errorLoyaltyRewards);
+          LoyaltyAPI.getApplication(DEFAULT_UNIQUEID.id).then(successApplication, errorApplication);
+          LoyaltyAPI.getRewards(DEFAULT_UNIQUEID.id).then(successLoyaltyRewards, errorLoyaltyRewards);
         };
 
         /**
@@ -248,10 +248,17 @@
         });
 
         /**
+         * This event listener is bound for "GOTO_HOME" event broadcast
+         */
+        WidgetHome.listeners['GOTO_HOME'] = $rootScope.$on('GOTO_HOME', function (e) {
+          WidgetHome.getApplicationAndRewards();
+        });
+
+        /**
          * This event listener is bound for "APPLICATION_UPDATED" event broadcast
          */
         WidgetHome.listeners['APPLICATION_UPDATED'] = $rootScope.$on('APPLICATION_UPDATED', function (e, app) {
-          if (app.image){
+          if (app.image) {
             WidgetHome.carouselImages = app.image;
             if (WidgetHome.view) {
               WidgetHome.view.loadItems(WidgetHome.carouselImages);
@@ -269,7 +276,7 @@
           console.log("_______________________", user);
           if (user) {
             WidgetHome.currentLoggedInUser = user;
-            WidgetHome.getLoyaltyPoints('5317c378a6611c6009000001');
+            WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
             $scope.$digest();
           }
         });

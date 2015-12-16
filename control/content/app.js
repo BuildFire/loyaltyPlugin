@@ -44,6 +44,10 @@
             $location.path('/reward/' + msg.data._id);
             $rootScope.$apply();
             break;
+          case 'BackToHome':
+            $location.path('/');
+            $rootScope.$apply();
+            break;
         }
       };
     }])

@@ -31,5 +31,8 @@
         {name: "List_Layout_2"},
         {name: "List_Layout_3"}
       ]
+    })
+    .constant('DEFAULT_UNIQUEID', {
+      id: '1440042127221-02689074052032083'
     });
 })(window.angular);

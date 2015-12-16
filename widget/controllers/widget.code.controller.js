@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetCodeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', '$rootScope', 'Buildfire',
-      function ($scope, ViewStack, LoyaltyAPI, RewardCache, $rootScope, Buildfire) {
+    .controller('WidgetCodeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', '$rootScope', 'Buildfire', 'DEFAULT_UNIQUEID',
+      function ($scope, ViewStack, LoyaltyAPI, RewardCache, $rootScope, Buildfire, DEFAULT_UNIQUEID) {
 
         var WidgetCode = this;
         /**
@@ -30,15 +30,10 @@
 
           var error = function (error) {
             Buildfire.spinner.hide();
-            console.log("Error while addimg points:", error);
-            WidgetCode.passcodeFailure = true;
-            setTimeout(function () {
-              WidgetCode.passcodeFailure = false;
-              $scope.$digest();
-            }, 3000);
+            console.log("Error while adding points:", error);
           };
           Buildfire.spinner.show();
-          LoyaltyAPI.addLoyaltyPoints('5317c378a6611c6009000001', WidgetCode.currentLoggedInUser.userToken, '1449814143554-01452660677023232', WidgetCode.passcode, currentView.amount)
+          LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, DEFAULT_UNIQUEID.id, WidgetCode.passcode, currentView.amount)
             .then(success, error);
         };
 
@@ -50,11 +45,15 @@
           };
 
           var error = function () {
-            console.log("Invalid passcode");
-            WidgetCode.addPoints();
+            console.log("Error: Invalid passcode");
+            WidgetCode.passcodeFailure = true;
+            setTimeout(function () {
+              WidgetCode.passcodeFailure = false;
+              $scope.$digest();
+            }, 3000);
           };
 
-          LoyaltyAPI.validatePasscode(WidgetCode.currentLoggedInUser.userToken, '1449814143554-01452660677023232', WidgetCode.passcode).then(success, error);
+          LoyaltyAPI.validatePasscode(WidgetCode.currentLoggedInUser.userToken, DEFAULT_UNIQUEID.id, WidgetCode.passcode).then(success, error);
         };
 
         /**

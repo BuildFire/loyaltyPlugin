@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope', 'Buildfire',
-      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire) {
+    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope', 'Buildfire','DEFAULT_UNIQUEID',
+      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire,DEFAULT_UNIQUEID) {
 
         var WidgetRedeem = this;
 
@@ -18,13 +18,14 @@
           WidgetRedeem.reward = RewardCache.getReward();
         }
 
+        WidgetRedeem.listeners ={};
         /**
          * Method to redeem points from user's account using Loyalty api. Redirect to success page if redeemed successfully.
          */
         WidgetRedeem.redeemPoints = function (rewardId) {
           var redeemSuccess = function () {
             Buildfire.spinner.hide();
-            $rootScope.$broadcast('POINTS_REDEEMED', WidgetRedeem.reward.pointsToRedeem);
+            WidgetRedeem.listeners['POINTS_REDEEMED']=    $rootScope.$broadcast('POINTS_REDEEMED', WidgetRedeem.reward.pointsToRedeem);
             ViewStack.push({
               template: 'Success'
             });
@@ -46,7 +47,7 @@
           };
           if(WidgetRedeem.currentLoggedInUser){
             Buildfire.spinner.show();
-            LoyaltyAPI.redeemPoints('5317c378a6611c6009000001', WidgetRedeem.currentLoggedInUser.userToken, '1449814143554-01452660677023232', rewardId).then(redeemSuccess, redeemFailure);
+            LoyaltyAPI.redeemPoints(WidgetRedeem.currentLoggedInUser._id, WidgetRedeem.currentLoggedInUser.userToken, DEFAULT_UNIQUEID.id, rewardId).then(redeemSuccess, redeemFailure);
           }
           else{
             buildfire.auth.login({}, function () {
@@ -62,10 +63,25 @@
           ViewStack.pop();
         };
 
-        $rootScope.$on('REWARD_UPDATED', function (e, item) {
-          WidgetRedeem.reward = item;
+        WidgetRedeem.listeners['REWARD_UPDATED']= $rootScope.$on('REWARD_UPDATED', function (e, item) {
+          if (item.carouselImage){
+            WidgetRedeem.reward.carouselImage = item.carouselImage || [];
+            if (WidgetRedeem.view) {
+              WidgetRedeem.view.loadItems(WidgetRedeem.reward.carouselImage, null, "WideScreen");
+            }
+          }
+
+          if (item && item.title) {
+            WidgetRedeem.reward.title = item.title;
+          }
+          if (item && item.description) {
+            WidgetRedeem.reward.description = item.description;
+          }
+          if (item && item.pointsToRedeem) {
+            WidgetRedeem.reward.pointsToRedeem = item.pointsToRedeem;
+          }
         });
-        $rootScope.$on("Carousel3:LOADED", function () {
+        WidgetRedeem.listeners['Carousel3:LOADED']= $rootScope.$on("Carousel3:LOADED", function () {
           WidgetRedeem.view=null;
           if (!WidgetRedeem.view) {
             WidgetRedeem.view = new buildfire.components.carousel.view("#carousel3", [], "WideScreen");
@@ -85,6 +101,25 @@
           if (user) {
             WidgetRedeem.currentLoggedInUser = user;
             $scope.$digest();
+          }
+        });
+
+        WidgetRedeem.listeners['POP'] = $rootScope.$on('BEFORE_POP', function (e, view) {
+          if (!view || view.template === "Confirm_Cancel") {
+            $scope.$destroy();
+          }
+        });
+
+        $scope.$on("$destroy", function () {
+          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
+          if(WidgetRedeem.view) {
+            WidgetRedeem.view._destroySlider();
+            WidgetRedeem.view._removeAll();
+          }
+          for (var i in WidgetRedeem.listeners) {
+            if (WidgetRedeem.listeners.hasOwnProperty(i)) {
+              WidgetRedeem.listeners[i]();
+            }
           }
         });
 
