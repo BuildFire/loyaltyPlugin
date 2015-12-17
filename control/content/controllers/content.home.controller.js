@@ -20,6 +20,9 @@
           image: []
         };
 
+        //Scroll current view to top when page loaded.
+        buildfire.navigation.scrollTop();
+
         ContentHome.masterData = null;
         ContentHome.data = angular.copy(_data);
         ContentHome.loyaltyRewards = [];
@@ -200,6 +203,9 @@
             err = function (err) {
               console.log(err)
             };
+
+          buildfire.navigation.scrollTop();
+
           var modalInstance = $modal.open({
             templateUrl: 'templates/modals/remove-loyalty.html',
             controller: 'RemoveLoyaltyPopupCtrl',
