@@ -202,7 +202,6 @@
         };
 
         buildfire.navigation.onBackButtonClick = function () {
-          console.log(">???>>?????", ViewStack.getCurrentView());
           if (ViewStack.hasViews()) {
             if (ViewStack.getCurrentView().template == 'Item_Details') {
               buildfire.messaging.sendMessageToControl({
