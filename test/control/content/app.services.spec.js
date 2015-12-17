@@ -1,7 +1,12 @@
 describe('Unit : loyaltyPluginContent content services', function () {
   describe('Unit: Buildfire Provider', function () {
-    var Buildfire;
-    beforeEach(module('loyaltyPluginContent'));
+
+    var DataStore, Buildfire, $rootScope, TAG_NAMES, STATUS_MESSAGES, STATUS_CODE, q, LoyaltyAPI, $http, $httpBackend, ViewStack, RewardCache, Context;
+    beforeEach(module('loyaltyPluginContent', function ($provide) {
+      $provide.service('Buildfire', function () {
+        this.LoyaltyAPI = jasmine.createSpyObj('LoyaltyAPI', ['addEditApplication','getApplication', 'getRewards','getLoyaltyPoints','addLoyaltyPoints','validatePasscode','redeemPoints']);
+      });
+    }));
 
     beforeEach(inject(function (_Buildfire_) {
       Buildfire = _Buildfire_;
@@ -10,23 +15,57 @@ describe('Unit : loyaltyPluginContent content services', function () {
     it('Buildfire should exist and be an object', function () {
       expect(typeof Buildfire).toEqual('object');
     });
-  });
-  describe('Unit : DataStore Factory', function () {
-    var Buildfire, STATUS_MESSAGES, STATUS_CODE, q;
-    beforeEach(module('loyaltyPluginContent'));
-    beforeEach(inject(function (_STATUS_CODE_, _STATUS_MESSAGES_) {
-       STATUS_CODE = _STATUS_CODE_;
-      STATUS_MESSAGES = _STATUS_MESSAGES_;
-      Buildfire = {
-        datastore: {}
-      };
-      Buildfire.datastore = jasmine.createSpyObj('Buildfire', ['LoyaltyAPI']);
+
+    beforeEach(inject(function (_$rootScope_, _Buildfire_, _LoyaltyAPI_, _$httpBackend_, _$http_,_RewardCache_, _Context_) {
+      $rootScope = _$rootScope_;
+      Buildfire = _Buildfire_;
+      LoyaltyAPI = _LoyaltyAPI_;
+      $httpBackend = _$httpBackend_;
+      RewardCache = _RewardCache_;
+      Context = _Context_;
     }));
 
-    it('Buildfire should exist and be an object', function () {
-      expect(typeof Buildfire).toEqual('object');
-    });
+    it('LoyaltyAPI.addEditApplication should return success', function () {
+      var data ={
+    data:"data"
+      }
 
+      LoyaltyAPI.addEditApplication(data);
+
+      $httpBackend
+          .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyApp')
+          .respond(200, {
+            status: "success"
+          });
+      $httpBackend.flush();
+      $rootScope.$digest();
+
+      expect(typeof LoyaltyAPI.addEditApplication).toEqual('function')
+
+      spyOn(LoyaltyAPI, "addEditApplication").and.callThrough();;
+      LoyaltyAPI.addEditApplication(data);
+      expect(LoyaltyAPI.addEditApplication).toHaveBeenCalled();
+    });
+    it('LoyaltyAPI.addEditApplication should return success', function () {
+      var data =null;
+      LoyaltyAPI.addEditApplication(data);
+
+      $httpBackend
+          .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyApp')
+          .respond(500, {
+            status: null
+          });
+
+      $httpBackend.flush();
+      $rootScope.$digest();
+
+      expect(typeof LoyaltyAPI.addEditApplication).toEqual('function')
+
+      spyOn(LoyaltyAPI, "addEditApplication").and.callThrough();;
+      LoyaltyAPI.addEditApplication(data);
+      expect(LoyaltyAPI.addEditApplication).toHaveBeenCalled();
+
+    });
   });
 });
 
