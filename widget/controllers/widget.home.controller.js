@@ -72,7 +72,8 @@
           var successApplication = function (result) {
             if (result.image)
               WidgetHome.carouselImages = result.image;
-            WidgetHome.description = result.content.description;
+            if (result.content && result.content.description)
+              WidgetHome.description = result.content.description;
             RewardCache.setApplication(result);
           };
 
@@ -276,8 +277,8 @@
           console.log("_______________________", user);
           if (user) {
             WidgetHome.currentLoggedInUser = user;
-            if(!WidgetHome.context) {
-              Context.getContext(function(ctx) {
+            if (!WidgetHome.context) {
+              Context.getContext(function (ctx) {
                 WidgetHome.context = ctx;
                 WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
                 $scope.$digest();
@@ -310,7 +311,7 @@
             return $sce.trustAsHtml(html);
         };
 
-        Context.getContext(function(ctx) {
+        Context.getContext(function (ctx) {
           WidgetHome.context = ctx;
           init();
         });
