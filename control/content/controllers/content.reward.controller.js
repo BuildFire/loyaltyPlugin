@@ -23,6 +23,9 @@
           theme: 'modern'
         };
 
+        //Scroll current view to top when page loaded.
+        buildfire.navigation.scrollTop();
+
         /*buildfire carousel component*/
 
         // create a new instance of the buildfire carousel editor

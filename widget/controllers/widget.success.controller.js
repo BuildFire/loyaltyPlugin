@@ -1,6 +1,6 @@
 'use strict';
 
-(function (angular, window) {
+(function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
     .controller('WidgetSuccessCtrl', ['$scope', 'ViewStack', 'RewardCache', '$sce','$rootScope',
@@ -16,6 +16,9 @@
          * Method to return to home page
          */
         WidgetSuccess.goToHome = function () {
+          buildfire.messaging.sendMessageToControl({
+            type: 'BackToHome'
+          });
           ViewStack.popAllViews();
         };
 
@@ -77,4 +80,4 @@
           }
         });
       }])
-})(window.angular, window);
+})(window.angular, window.buildfire);

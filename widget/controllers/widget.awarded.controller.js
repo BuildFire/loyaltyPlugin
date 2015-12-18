@@ -1,6 +1,6 @@
 'use strict';
 
-(function (angular, window) {
+(function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
     .controller('WidgetAwardedCtrl', ['$scope', 'ViewStack',
@@ -23,4 +23,4 @@
         };
 
       }])
-})(window.angular, window);
+})(window.angular, window.buildfire);
