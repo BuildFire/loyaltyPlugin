@@ -215,7 +215,7 @@
          * This event listener is bound for "REWARD_DELETED" event broadcast
          */
         WidgetHome.listeners['REWARD_DELETED'] = $rootScope.$on('REWARD_DELETED', function (e, index) {
-          if (index)
+          if (index != -1)
             WidgetHome.loyaltyRewards.splice(index, 1);
         });
 
