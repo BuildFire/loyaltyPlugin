@@ -5,7 +5,7 @@
       <p class="text-center">Enter the Purchase Amount</p>
 
       <div class="enter-price clearfix border-bottom-grey">
-        <span class="currency">$</span>
+        <span class="currency" ng-bind-html="WidgetAmount.safeHtml(WidgetAmount.data.settings.currency.symbol ||'$')"></span>
         <input type="text" placeholder="100"
                class="form-control text-right border-none"
                ng-model="WidgetAmount.amount">
