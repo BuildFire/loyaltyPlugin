@@ -134,6 +134,11 @@
         }
       };
     }])
+    .directive('getFocus', [function () {
+      return function (scope, element, attrs) {
+        $(element).focus();
+      };
+    }])
     .filter('getImageUrl', function () {
       return function (url, width, height, type) {
         if (type == 'resize')
