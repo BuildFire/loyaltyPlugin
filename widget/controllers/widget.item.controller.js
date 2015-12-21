@@ -3,12 +3,13 @@
 (function (angular, window) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetItemCtrl', ['$scope', 'ViewStack', 'RewardCache', '$sce', '$rootScope',
-      function ($scope, ViewStack, RewardCache, $sce, $rootScope) {
+    .controller('WidgetItemCtrl', ['$scope', 'ViewStack', 'RewardCache', '$sce', '$rootScope', '$timeout',
+      function ($scope, ViewStack, RewardCache, $sce, $rootScope, $timeout) {
 
         var WidgetItem = this;
 
         WidgetItem.listeners = {};
+        WidgetItem.insufficientPoints = false;
 
         //create new instance of buildfire carousel viewer
         WidgetItem.view = null;
@@ -34,7 +35,10 @@
               template: 'Confirm_Cancel'
             });
           } else {
-            alert("Not Enough Points. Please earn more points in order to redeem this reward.");
+            WidgetItem.insufficientPoints = true;
+            $timeout(function () {
+              WidgetItem.insufficientPoints = false;
+            }, 3000);
           }
         };
 

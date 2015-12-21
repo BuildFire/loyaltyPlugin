@@ -30,7 +30,7 @@
           RewardCache.setReward(reward);
           ViewStack.push({
             template: 'Item_Details',
-            totalPoints: WidgetHome.loyaltyPoints
+            totalPoints: $rootScope.loyaltyPoints
           });
           buildfire.messaging.sendMessageToControl({
             type: 'OpenItem',
@@ -44,7 +44,7 @@
         WidgetHome.getLoyaltyPoints = function (userId) {
           var success = function (result) {
               console.info('Points>>>>>>>>>>>>>>>.', result);
-              WidgetHome.loyaltyPoints = result.totalPoints;
+              $rootScope.loyaltyPoints = result.totalPoints;
             }
             , error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
@@ -94,7 +94,7 @@
           if (WidgetHome.currentLoggedInUser) {
             ViewStack.push({
               template: 'Amount',
-              loyaltyPoints: WidgetHome.loyaltyPoints
+              loyaltyPoints: $rootScope.loyaltyPoints
 
             });
           }
@@ -200,7 +200,7 @@
          */
         WidgetHome.listeners['POINTS_REDEEMED'] = $rootScope.$on('POINTS_REDEEMED', function (e, points) {
           if (points)
-            WidgetHome.loyaltyPoints = WidgetHome.loyaltyPoints - points;
+            $rootScope.loyaltyPoints = $rootScope.loyaltyPoints - points;
         });
 
         /**
@@ -208,7 +208,7 @@
          */
         WidgetHome.listeners['POINTS_ADDED'] = $rootScope.$on('POINTS_ADDED', function (e, points) {
           if (points)
-            WidgetHome.loyaltyPoints = WidgetHome.loyaltyPoints + points;
+            $rootScope.loyaltyPoints = $rootScope.loyaltyPoints + points;
         });
 
         /**

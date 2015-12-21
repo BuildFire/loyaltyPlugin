@@ -25,7 +25,7 @@
         WidgetAmount.init = function () {
           WidgetAmount.success = function (result) {
                     WidgetAmount.data = result.data;
-              }
+              };
           WidgetAmount.error = function (err) {
                 console.error('Error while getting data', err);
               };

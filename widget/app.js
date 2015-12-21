@@ -157,7 +157,7 @@
               ViewStack.popAllViews(true);
               ViewStack.push({
                 template: 'Item_Details',
-                totalPoints: msg.data.pointsToRedeem
+                totalPoints: $rootScope.loyaltyPoints
               });
               $rootScope.$broadcast("REWARD_ADDED", msg.data);
               $rootScope.$apply();
@@ -168,7 +168,7 @@
               ViewStack.popAllViews(true);
               ViewStack.push({
                 template: 'Item_Details',
-                totalPoints: msg.data.pointsToRedeem
+                totalPoints: $rootScope.loyaltyPoints
               });
               $rootScope.$apply();
               break;
