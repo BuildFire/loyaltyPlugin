@@ -245,7 +245,6 @@
           return reward;
         },
         setApplication: function (data) {
-          data.totalPoints = 3000;
           application = data;
         },
         getApplication: function () {
