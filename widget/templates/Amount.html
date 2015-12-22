@@ -3,17 +3,19 @@
   <div class="loyalty-plugin amount">
     <div class="purchase-amount padded margin-top-ten">
       <p class="text-center">Enter the Purchase Amount</p>
-
-      <div class="enter-price clearfix border-bottom-grey">
-        <span class="currency" ng-bind-html="WidgetAmount.safeHtml(WidgetAmount.data.settings.currency.symbol ||'$')"></span>
-        <input type="number" placeholder="0"
-               class="form-control text-right border-none"
-               ng-model="WidgetAmount.amount">
-      </div>
+      <form name="myform">
+        <div class="enter-price clearfix border-bottom-grey">
+          <span class="currency"
+                ng-bind-html="WidgetAmount.safeHtml(WidgetAmount.data.settings.currency.symbol ||'$')"></span>
+          <input type="number" placeholder="0"
+                 class="form-control text-right border-none"
+                 ng-model="WidgetAmount.amount">
+        </div>
+      </form>
       <div class="next-btn margin-top-twenty">
         <button class="btn btn-primary stretch margin-top"
                 href="javascript:void(0);" ng-click="WidgetAmount.confirmCode()"
-                ng-disabled="!WidgetAmount.amount"
+                ng-disabled="!WidgetAmount.amount || !myform.$valid"
             >Next
         </button>
       </div>
