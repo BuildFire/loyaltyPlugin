@@ -1,6 +1,6 @@
 'use strict';
 
-(function (angular, buildfire,window) {
+(function (angular, buildfire, window) {
   angular
     .module('loyaltyPluginWidget', ['ngRoute', 'ngAnimate'])
     .config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
@@ -24,7 +24,7 @@
                 console.log("VIEW_CHANGED>>>>>>>>");
                 currentView = ViewStack.getPreviousView();
 
-                $('#'+ currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function() {
+                $('#' + currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function () {
                   $(this).attr("disabled", "disabled");
                 });
 
@@ -44,6 +44,11 @@
                   _elToRemove.remove();
                   views--;
                 });
+
+                currentView = ViewStack.getCurrentView();
+                $('#' + currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function () {
+                  $(this).removeAttr("disabled");
+                });
               } else if (type === 'POPALL') {
                 angular.forEach(view, function (value, key) {
                   var _elToRemove = $(elem).find('#' + value.template),
@@ -60,12 +65,6 @@
                     views--;
                   }
                 });
-
-                currentView = ViewStack.getCurrentView();
-                $('#'+ currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function() {
-                  $(this).removeAttr("disabled");
-                });
-
               }
               manageDisplay();
             });
