@@ -60,11 +60,14 @@
          */
         WidgetAmount.init();
         WidgetAmount.confirmCode = function () {
-          console.log("IIIIIIIIIIIIIIIII", WidgetAmount.amount);
-          console.log("IIIIIIIIIIIIIIIII", WidgetAmount.application.pointsPerDollar);
-          console.log("IIIIIIIIIIIIIIIII", WidgetAmount.application.pointsPerVisit);
-          console.log("IIIIIIIIIIIIIIIII", currentView.loyaltyPoints);
+          console.log("IIIIIIIIIIIIIIIII", WidgetAmount.amount, typeof WidgetAmount.amount);
+          console.log("IIIIIIIIIIIIIIIII", WidgetAmount.application.pointsPerDollar, typeof WidgetAmount.application.pointsPerDollar);
+          console.log("IIIIIIIIIIIIIIIII", WidgetAmount.application.pointsPerVisit, typeof WidgetAmount.application.pointsPerVisit);
+          console.log("IIIIIIIIIIIIIIIII", currentView.loyaltyPoints, typeof currentView.loyaltyPoints);
+          console.log("IIIIIIIIIIIIIIIII", WidgetAmount.application.totalPoints, typeof WidgetAmount.application.totalPoints);
           var calculatedPoints = (WidgetAmount.amount * WidgetAmount.application.pointsPerDollar) + WidgetAmount.application.pointsPerVisit + currentView.loyaltyPoints;
+          console.log("IIIIIIIIIIIIIIIII", calculatedPoints, typeof calculatedPoints);
+          console.log("IIIIIIIIIIIIIIIII", WidgetAmount.application.totalPoints <= calculatedPoints);
           if (WidgetAmount.application.totalPoints <= calculatedPoints) {
             WidgetAmount.totalLimitExceeded = true;
             setTimeout(function () {
