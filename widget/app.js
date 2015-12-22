@@ -16,11 +16,18 @@
         return {
           restrict: 'AE',
           link: function (scope, elem, attrs) {
-            var views = 0;
+            var views = 0,
+              currentView = null;
             manageDisplay();
             $rootScope.$on('VIEW_CHANGED', function (e, type, view, noAnimation) {
               if (type === 'PUSH') {
                 console.log("VIEW_CHANGED>>>>>>>>");
+                currentView = ViewStack.getPreviousView();
+
+                $('#'+ currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function() {
+                  $(this).attr("disabled", "disabled");
+                });
+
                 var newScope = $rootScope.$new();
                 var _newView = '<div  id="' + view.template + '" ><div class="slide content" data-back-img="{{itemDetailsBackgroundImage}}" ng-include="\'templates/' + view.template + '.html\'"></div></div>';
                 var parTpl = $compile(_newView)(newScope);
@@ -52,6 +59,11 @@
                     _elToRemove.remove();
                     views--;
                   }
+                });
+
+                currentView = ViewStack.getCurrentView();
+                $('#'+ currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function() {
+                  $(this).removeAttr("disabled");
                 });
 
               }
