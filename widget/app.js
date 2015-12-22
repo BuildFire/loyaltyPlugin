@@ -1,6 +1,6 @@
 'use strict';
 
-(function (angular, buildfire) {
+(function (angular, buildfire,window) {
   angular
     .module('loyaltyPluginWidget', ['ngRoute', 'ngAnimate'])
     .config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
@@ -137,6 +137,11 @@
     .directive('getFocus', [function () {
       return function (scope, element, attrs) {
         $(element).focus();
+
+        //open keyboard manually
+        if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+          window.cordova.plugins.Keyboard.show();
+        }
       };
     }])
     .filter('getImageUrl', function () {
@@ -220,4 +225,4 @@
         };
 
       }])
-})(window.angular, window.buildfire);
+})(window.angular, window.buildfire, window);
