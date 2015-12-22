@@ -61,7 +61,7 @@
         WidgetAmount.init();
         WidgetAmount.confirmCode = function () {
           var calculatedPoints = (WidgetAmount.amount * WidgetAmount.application.pointsPerDollar) + WidgetAmount.application.pointsPerVisit + currentView.loyaltyPoints;
-          if (WidgetAmount.application.totalPoints <= calculatedPoints) {
+          if (WidgetAmount.application.totalLimit <= calculatedPoints) {
             WidgetAmount.totalLimitExceeded = true;
             setTimeout(function () {
               WidgetAmount.totalLimitExceeded = false;
