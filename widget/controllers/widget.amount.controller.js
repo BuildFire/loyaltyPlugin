@@ -3,7 +3,7 @@
 (function (angular) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetAmountCtrl', ['$scope', 'ViewStack', 'RewardCache', 'TAG_NAMES','DataStore', '$sce',
+    .controller('WidgetAmountCtrl', ['$scope', 'ViewStack', 'RewardCache', 'TAG_NAMES', 'DataStore', '$sce',
       function ($scope, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce) {
 
         var WidgetAmount = this;
@@ -24,11 +24,11 @@
         /*Get application data*/
         WidgetAmount.init = function () {
           WidgetAmount.success = function (result) {
-                    WidgetAmount.data = result.data;
-              };
+            WidgetAmount.data = result.data;
+          };
           WidgetAmount.error = function (err) {
-                console.error('Error while getting data', err);
-              };
+            console.error('Error while getting data', err);
+          };
           DataStore.get(TAG_NAMES.LOYALTY_INFO).then(WidgetAmount.success, WidgetAmount.error);
         };
 
@@ -60,6 +60,10 @@
          */
         WidgetAmount.init();
         WidgetAmount.confirmCode = function () {
+          console.log("IIIIIIIIIIIIIIIII", WidgetAmount.amount);
+          console.log("IIIIIIIIIIIIIIIII", WidgetAmount.application.pointsPerDollar);
+          console.log("IIIIIIIIIIIIIIIII", WidgetAmount.application.pointsPerVisit);
+          console.log("IIIIIIIIIIIIIIIII", currentView.loyaltyPoints);
           var calculatedPoints = (WidgetAmount.amount * WidgetAmount.application.pointsPerDollar) + WidgetAmount.application.pointsPerVisit + currentView.loyaltyPoints;
           if (WidgetAmount.application.totalPoints <= calculatedPoints) {
             WidgetAmount.totalLimitExceeded = true;
