@@ -51,6 +51,11 @@
           }, 0);
         };
 
+        WidgetAmount.preventClickBehavior = function (event) {
+          console.log("**********", event);
+          event.stopPropagation();
+        };
+
         /**
          * DataStore.onUpdate() is bound to listen any changes in datastore
          */
