@@ -145,15 +145,31 @@
         }
       };
     }])
-    .directive('getFocus', [function () {
-      return function (scope, element, attrs) {
-        $(element).focus();
+    .directive('getFocus', ["$timeout", function ($timeout) {
+      return {
+        link: function (scope, element, attrs) {
+          $(element).parents(".slide").eq(0).on("webkitTransitionEnd transitionend oTransitionEnd", function(){
+            $timeout(function() {
+              $(element).focus();
+            },300);
+            //open keyboard manually
+            if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+              window.cordova.plugins.Keyboard.show();
+            }
 
-        //open keyboard manually
-        if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-          window.cordova.plugins.Keyboard.show();
+            $(element).on('blur', function () {
+              //open keyboard manually
+              if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+                window.cordova.plugins.Keyboard.hide();
+              }
+            });
+          });
+
+          scope.$on("$destroy", function() {
+            $(element).parents(".slide").eq(0).off("webkitTransitionEnd transitionend oTransitionEnd", "**");
+          });
         }
-      };
+      }
     }])
     .filter('getImageUrl', function () {
       return function (url, width, height, type) {
