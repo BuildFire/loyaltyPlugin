@@ -7,7 +7,7 @@
       <div class="enter-price clearfix border-bottom-grey">
         <input type="password" placeholder="Enter Code"
                class="form-control text-center border-none"
-               ng-model="WidgetCode.passcode" maxlength="5">
+               ng-model="WidgetCode.passcode" maxlength="5" get-focus ng-click="WidgetCode.preventClickBehavior($event)">
       </div>
       <div class="next-btn margin-top-twenty">
         <button class="btn btn-success stretch" href="javascript:void(0);"

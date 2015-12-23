@@ -27,5 +27,10 @@
            ng-bind-html="WidgetItem.safeHtml(WidgetItem.reward.description)"></p>
       </div>
     </div>
+    <div class="col-xs-12 margin-top-five" ng-if="WidgetItem.insufficientPoints">
+      <div class="alert alert-sm text-center alert-danger">You have
+        insufficient points.Please get points to redeem awards.
+      </div>
+    </div>
   </div>
 </div>

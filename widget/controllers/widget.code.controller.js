@@ -69,5 +69,11 @@
           }
         });
 
+
+        WidgetCode.preventClickBehavior = function (event) {
+          console.log("#############", event);
+          event.preventDefault();
+        };
+
       }])
 })(window.angular, window.buildfire);

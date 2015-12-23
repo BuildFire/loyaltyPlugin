@@ -71,11 +71,13 @@
                     });
                 };
                 SettingsHome.changeCurrency = function(currency){
-                    if(!SettingsHome.data.settings)
+                    if(!SettingsHome.data.settings) {
                         SettingsHome.data.settings = {};
-                    SettingsHome.data.settings.currency = currency;
+                    }else {
+                        SettingsHome.data.settings.currency = currency;
+                    }
                 };
-                var saveData = function (newObj, tag) {
+                SettingsHome.saveData = function (newObj, tag) {
                     if (typeof newObj === 'undefined') {
                         return;
                     }
@@ -92,7 +94,7 @@
                 SettingsHome.convertHtml=function(html){
                     return $sce.trustAsHtml(html)
                 };
-                var saveDataWithDelay = function (newObj) {
+                SettingsHome.saveDataWithDelay = function (newObj) {
                     if (newObj) {
                         if (isUnchanged(newObj)) {
                             return;
@@ -101,13 +103,13 @@
                             clearTimeout(tmrDelay);
                         }
                         tmrDelay = setTimeout(function () {
-                            saveData(JSON.parse(angular.toJson(newObj)), TAG_NAMES.LOYALTY_INFO);
+                            SettingsHome.saveData(JSON.parse(angular.toJson(newObj)), TAG_NAMES.LOYALTY_INFO);
                         }, 500);
                     }
                 };
                 $scope.$watch(function () {
                     return SettingsHome.data;
-                }, saveDataWithDelay, true);
+                }, SettingsHome.saveDataWithDelay, true);
 
                 init();
 

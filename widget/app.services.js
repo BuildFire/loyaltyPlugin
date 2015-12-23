@@ -42,6 +42,9 @@
         hasViews: function () {
           return !!views.length;
         },
+        getPreviousView: function() {
+          return views.length && views[views.length - 2] || {};
+        },
         getCurrentView: function () {
           return views.length && views[views.length - 1] || {};
         },
@@ -245,7 +248,6 @@
           return reward;
         },
         setApplication: function (data) {
-          data.totalPoints = 3000;
           application = data;
         },
         getApplication: function () {

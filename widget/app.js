@@ -1,6 +1,6 @@
 'use strict';
 
-(function (angular, buildfire) {
+(function (angular, buildfire, window) {
   angular
     .module('loyaltyPluginWidget', ['ngRoute', 'ngAnimate'])
     .config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
@@ -16,11 +16,18 @@
         return {
           restrict: 'AE',
           link: function (scope, elem, attrs) {
-            var views = 0;
+            var views = 0,
+              currentView = null;
             manageDisplay();
             $rootScope.$on('VIEW_CHANGED', function (e, type, view, noAnimation) {
               if (type === 'PUSH') {
                 console.log("VIEW_CHANGED>>>>>>>>");
+                currentView = ViewStack.getPreviousView();
+
+                $('#' + currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function () {
+                  $(this).attr("disabled", "disabled");
+                });
+
                 var newScope = $rootScope.$new();
                 var _newView = '<div  id="' + view.template + '" ><div class="slide content" data-back-img="{{itemDetailsBackgroundImage}}" ng-include="\'templates/' + view.template + '.html\'"></div></div>';
                 var parTpl = $compile(_newView)(newScope);
@@ -36,6 +43,11 @@
                 _child.one("webkitTransitionEnd transitionend oTransitionEnd", function (e) {
                   _elToRemove.remove();
                   views--;
+                });
+
+                currentView = ViewStack.getCurrentView();
+                $('#' + currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function () {
+                  $(this).removeAttr("disabled");
                 });
               } else if (type === 'POPALL') {
                 angular.forEach(view, function (value, key) {
@@ -53,7 +65,6 @@
                     views--;
                   }
                 });
-
               }
               manageDisplay();
             });
@@ -134,6 +145,32 @@
         }
       };
     }])
+    .directive('getFocus', ["$timeout", function ($timeout) {
+      return {
+        link: function (scope, element, attrs) {
+          $(element).parents(".slide").eq(0).on("webkitTransitionEnd transitionend oTransitionEnd", function(){
+            $timeout(function() {
+              $(element).focus();
+            },300);
+            //open keyboard manually
+            if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+              window.cordova.plugins.Keyboard.show();
+            }
+
+            $(element).on('blur', function () {
+              //open keyboard manually
+              if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+                window.cordova.plugins.Keyboard.hide();
+              }
+            });
+          });
+
+          scope.$on("$destroy", function() {
+            $(element).parents(".slide").eq(0).off("webkitTransitionEnd transitionend oTransitionEnd", "**");
+          });
+        }
+      }
+    }])
     .filter('getImageUrl', function () {
       return function (url, width, height, type) {
         if (type == 'resize')
@@ -157,7 +194,7 @@
               ViewStack.popAllViews(true);
               ViewStack.push({
                 template: 'Item_Details',
-                totalPoints: msg.data.pointsToRedeem
+                totalPoints: $rootScope.loyaltyPoints
               });
               $rootScope.$broadcast("REWARD_ADDED", msg.data);
               $rootScope.$apply();
@@ -168,7 +205,7 @@
               ViewStack.popAllViews(true);
               ViewStack.push({
                 template: 'Item_Details',
-                totalPoints: msg.data.pointsToRedeem
+                totalPoints: $rootScope.loyaltyPoints
               });
               $rootScope.$apply();
               break;
@@ -215,4 +252,4 @@
         };
 
       }])
-})(window.angular, window.buildfire);
+})(window.angular, window.buildfire, window);
