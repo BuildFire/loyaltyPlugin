@@ -112,6 +112,93 @@
           });
         };
 
+        /**
+         * This event listener is bound for "POINTS_REDEEMED" event broadcast
+         */
+        WidgetHome.listeners['POINTS_REDEEMED'] = $rootScope.$on('POINTS_REDEEMED', function (e, points) {
+          if (points)
+            $rootScope.loyaltyPoints = $rootScope.loyaltyPoints - points;
+        });
+
+        /**
+         * This event listener is bound for "POINTS_ADDED" event broadcast
+         */
+        WidgetHome.listeners['POINTS_ADDED'] = $rootScope.$on('POINTS_ADDED', function (e, points) {
+          if (points)
+            $rootScope.loyaltyPoints = $rootScope.loyaltyPoints + points;
+        });
+
+        /**
+         * This event listener is bound for "REWARD_DELETED" event broadcast
+         */
+        WidgetHome.listeners['REWARD_DELETED'] = $rootScope.$on('REWARD_DELETED', function (e, index) {
+          if (index != -1)
+            WidgetHome.loyaltyRewards.splice(index, 1);
+        });
+
+        /**
+         * This event listener is bound for "REWARDS_SORTED" event broadcast
+         */
+        WidgetHome.listeners['REWARDS_SORTED'] = $rootScope.$on('REWARDS_SORTED', function (e) {
+          WidgetHome.getApplicationAndRewards();
+        });
+
+        /**
+         * This event listener is bound for "Carousel:LOADED" event broadcast
+         */
+        WidgetHome.listeners['Carousel:LOADED'] = $rootScope.$on("Carousel:LOADED", function () {
+          WidgetHome.view = null;
+          if (!WidgetHome.view) {
+            WidgetHome.view = new buildfire.components.carousel.view("#carousel", [], "WideScreen");
+          }
+          if (WidgetHome.carouselImages) {
+            WidgetHome.view.loadItems(WidgetHome.carouselImages, null, "WideScreen");
+          } else {
+            WidgetHome.view.loadItems([]);
+          }
+        });
+
+        /**
+         * This event listener is bound for "REWARD_ADDED" event broadcast
+         */
+        WidgetHome.listeners['REWARD_ADDED'] = $rootScope.$on('REWARD_ADDED', function (e, item) {
+          WidgetHome.loyaltyRewards.unshift(item);
+        });
+
+        /**
+         * This event listener is bound for "GOTO_HOME" event broadcast
+         */
+        WidgetHome.listeners['GOTO_HOME'] = $rootScope.$on('GOTO_HOME', function (e) {
+          WidgetHome.getApplicationAndRewards();
+        });
+
+        /**
+         * This event listener is bound for "APPLICATION_UPDATED" event broadcast
+         */
+        WidgetHome.listeners['APPLICATION_UPDATED'] = $rootScope.$on('APPLICATION_UPDATED', function (e, app) {
+          if (app.image) {
+            WidgetHome.carouselImages = app.image;
+            if (WidgetHome.view) {
+              WidgetHome.view.loadItems(WidgetHome.carouselImages);
+            }
+          }
+          if (app.content && app.content.description)
+            WidgetHome.description = app.content.description;
+          RewardCache.setApplication(app);
+        });
+
+        WidgetHome.showDescription = function (description) {
+          return !((description == '<p>&nbsp;<br></p>') || (description == '<p><br data-mce-bogus="1"></p>'));
+        };
+
+        /**
+         * Method to parse and show description in html format
+         */
+        WidgetHome.safeHtml = function (html) {
+          if (html)
+            return $sce.trustAsHtml(html);
+        };
+
         /*
          * Fetch user's data from datastore
          */
@@ -196,81 +283,6 @@
         buildfire.auth.onLogin(loginCallback);
 
         /**
-         * This event listener is bound for "POINTS_REDEEMED" event broadcast
-         */
-        WidgetHome.listeners['POINTS_REDEEMED'] = $rootScope.$on('POINTS_REDEEMED', function (e, points) {
-          if (points)
-            $rootScope.loyaltyPoints = $rootScope.loyaltyPoints - points;
-        });
-
-        /**
-         * This event listener is bound for "POINTS_ADDED" event broadcast
-         */
-        WidgetHome.listeners['POINTS_ADDED'] = $rootScope.$on('POINTS_ADDED', function (e, points) {
-          if (points)
-            $rootScope.loyaltyPoints = $rootScope.loyaltyPoints + points;
-        });
-
-        /**
-         * This event listener is bound for "REWARD_DELETED" event broadcast
-         */
-        WidgetHome.listeners['REWARD_DELETED'] = $rootScope.$on('REWARD_DELETED', function (e, index) {
-          if (index != -1)
-            WidgetHome.loyaltyRewards.splice(index, 1);
-        });
-
-        /**
-         * This event listener is bound for "REWARDS_SORTED" event broadcast
-         */
-        WidgetHome.listeners['REWARDS_SORTED'] = $rootScope.$on('REWARDS_SORTED', function (e) {
-          WidgetHome.getApplicationAndRewards();
-        });
-
-        /**
-         * This event listener is bound for "Carousel:LOADED" event broadcast
-         */
-        WidgetHome.listeners['Carousel:LOADED'] = $rootScope.$on("Carousel:LOADED", function () {
-          WidgetHome.view = null;
-          if (!WidgetHome.view) {
-            WidgetHome.view = new buildfire.components.carousel.view("#carousel", [], "WideScreen");
-          }
-          if (WidgetHome.carouselImages) {
-            WidgetHome.view.loadItems(WidgetHome.carouselImages, null, "WideScreen");
-          } else {
-            WidgetHome.view.loadItems([]);
-          }
-        });
-
-        /**
-         * This event listener is bound for "REWARD_ADDED" event broadcast
-         */
-        WidgetHome.listeners['REWARD_ADDED'] = $rootScope.$on('REWARD_ADDED', function (e, item) {
-          WidgetHome.loyaltyRewards.unshift(item);
-        });
-
-        /**
-         * This event listener is bound for "GOTO_HOME" event broadcast
-         */
-        WidgetHome.listeners['GOTO_HOME'] = $rootScope.$on('GOTO_HOME', function (e) {
-          WidgetHome.getApplicationAndRewards();
-        });
-
-        /**
-         * This event listener is bound for "APPLICATION_UPDATED" event broadcast
-         */
-        WidgetHome.listeners['APPLICATION_UPDATED'] = $rootScope.$on('APPLICATION_UPDATED', function (e, app) {
-          if (app.image) {
-            WidgetHome.carouselImages = app.image;
-            if (WidgetHome.view) {
-              WidgetHome.view.loadItems(WidgetHome.carouselImages);
-            }
-          }
-          if (app.content && app.content.description)
-            WidgetHome.description = app.content.description;
-          RewardCache.setApplication(app);
-        });
-
-        /**
          * Check for current logged in user, if yes fetch its loyalty points
          */
         buildfire.auth.getCurrentUser(function (err, user) {
@@ -298,18 +310,6 @@
             }
           }
         });
-
-        WidgetHome.showDescription = function (description) {
-          return !((description == '<p>&nbsp;<br></p>') || (description == '<p><br data-mce-bogus="1"></p>'));
-        };
-
-        /**
-         * Method to parse and show description in html format
-         */
-        WidgetHome.safeHtml = function (html) {
-          if (html)
-            return $sce.trustAsHtml(html);
-        };
 
         Context.getContext(function (ctx) {
           WidgetHome.context = ctx;

@@ -14,12 +14,12 @@
         WidgetRedeem.redeemFail = false;
         WidgetRedeem.dailyLimitExceeded = false;
         WidgetRedeem.context = Context.getContext();
+        WidgetRedeem.listeners ={};
 
         if (RewardCache.getReward()) {
           WidgetRedeem.reward = RewardCache.getReward();
         }
 
-        WidgetRedeem.listeners ={};
         /**
          * Method to redeem points from user's account using Loyalty api. Redirect to success page if redeemed successfully.
          */
@@ -82,6 +82,7 @@
             WidgetRedeem.reward.pointsToRedeem = item.pointsToRedeem;
           }
         });
+
         WidgetRedeem.listeners['Carousel3:LOADED']= $rootScope.$on("Carousel3:LOADED", function () {
           WidgetRedeem.view=null;
           if (!WidgetRedeem.view) {
@@ -94,6 +95,12 @@
           }
         });
 
+        WidgetRedeem.listeners['POP'] = $rootScope.$on('BEFORE_POP', function (e, view) {
+          if (!view || view.template === "Confirm_Cancel") {
+            $scope.$destroy();
+          }
+        });
+
         /**
          * Check for current logged in user
          */
@@ -102,12 +109,6 @@
           if (user) {
             WidgetRedeem.currentLoggedInUser = user;
             $scope.$digest();
-          }
-        });
-
-        WidgetRedeem.listeners['POP'] = $rootScope.$on('BEFORE_POP', function (e, view) {
-          if (!view || view.template === "Confirm_Cancel") {
-            $scope.$destroy();
           }
         });
 
