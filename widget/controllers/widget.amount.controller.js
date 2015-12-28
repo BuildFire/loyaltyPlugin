@@ -57,13 +57,10 @@
         };
 
         /**
-         * DataStore.onUpdate() is bound to listen any changes in datastore
-         */
-        DataStore.onUpdate().then(null, null, WidgetAmount.onUpdateCallback);
-        /**
          * Method to check if user has exceeded the total points limit.
          */
         WidgetAmount.init();
+
         WidgetAmount.confirmCode = function () {
           var calculatedPoints = (WidgetAmount.amount * WidgetAmount.application.pointsPerDollar) + WidgetAmount.application.pointsPerVisit + currentView.loyaltyPoints;
           if (WidgetAmount.application.totalLimit <= calculatedPoints) {
@@ -80,6 +77,11 @@
             });
           }
         };
+
+        /**
+         * DataStore.onUpdate() is bound to listen any changes in datastore
+         */
+        DataStore.onUpdate().then(null, null, WidgetAmount.onUpdateCallback);
 
       }]);
 })(window.angular);

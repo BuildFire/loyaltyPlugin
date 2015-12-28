@@ -58,6 +58,11 @@
           LoyaltyAPI.validatePasscode(WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode).then(success, error);
         };
 
+        WidgetCode.preventClickBehavior = function (event) {
+          console.log("#############", event);
+          event.preventDefault();
+        };
+
         /**
          * Check for current logged in user
          */
@@ -68,12 +73,6 @@
             $scope.$digest();
           }
         });
-
-
-        WidgetCode.preventClickBehavior = function (event) {
-          console.log("#############", event);
-          event.preventDefault();
-        };
 
       }])
 })(window.angular, window.buildfire);

@@ -12,6 +12,8 @@
           WidgetSuccess.reward = RewardCache.getReward();
         }
 
+        WidgetSuccess.listeners =  {};
+
         /**
          * Method to return to home page
          */
@@ -22,7 +24,6 @@
           ViewStack.popAllViews();
         };
 
-        WidgetSuccess.listeners =  {};
         /**
          * Method to parse and show reward's description in html format
          */
@@ -30,7 +31,6 @@
           if (html)
             return $sce.trustAsHtml(html);
         };
-
 
         WidgetSuccess.listeners['REWARD_UPDATED']= $rootScope.$on('REWARD_UPDATED', function (e, item) {
           if (item.carouselImage){
