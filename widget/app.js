@@ -178,6 +178,21 @@
         }
       }
     }])
+    .directive("loadImage", [function () {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+          element.attr("src","assets/images/" + attrs.loadImage + ".png");
+
+          var elem = $("<img>");
+          elem[0].onload = function () {
+            element.attr("src", attrs.finalSrc);
+            elem.remove();
+          };
+          elem.attr("src", attrs.finalSrc);
+        }
+      };
+    }])
     .filter('getImageUrl', function () {
       return function (url, width, height, type) {
         if (type == 'resize')
