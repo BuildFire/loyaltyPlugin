@@ -24,11 +24,11 @@
                 console.log("VIEW_CHANGED>>>>>>>>");
                 currentView = ViewStack.getPreviousView();
 
-                $('#' + currentView.template).find("p").eq(0).focus();
-
                 $('#' + currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function () {
                   $(this).attr("disabled", "disabled");
                 });
+
+                document.activeElement.blur();
 
                 var newScope = $rootScope.$new();
                 var _newView = '<div  id="' + view.template + '" ><div class="slide content" data-back-img="{{itemDetailsBackgroundImage}}" ng-include="\'templates/' + view.template + '.html\'"></div></div>';
