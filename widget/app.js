@@ -24,11 +24,17 @@
                 console.log("VIEW_CHANGED>>>>>>>>");
                 currentView = ViewStack.getPreviousView();
 
-                $('#' + currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function () {
+                var _el = $("<img/>").attr("href", "javascript:void(0)"),
+                  oldTemplate = $('#' + currentView.template);
+
+                oldTemplate.append(_el);
+
+                oldTemplate.find("input[type=number], input[type=password], input[type=text]").each(function () {
                   $(this).attr("disabled", "disabled");
                 });
 
                 document.activeElement.blur();
+                _el.focus();
 
                 var newScope = $rootScope.$new();
                 var _newView = '<div  id="' + view.template + '" ><div class="slide content" data-back-img="{{itemDetailsBackgroundImage}}" ng-include="\'templates/' + view.template + '.html\'"></div></div>';
@@ -36,7 +42,6 @@
 
                 $(elem).append(parTpl);
                 views++;
-
               } else if (type === 'POP') {
                 var _elToRemove = $(elem).find('#' + view.template),
                   _child = _elToRemove.children("div").eq(0);
