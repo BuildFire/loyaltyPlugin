@@ -30,10 +30,10 @@
                 oldTemplate.append(_el);
 
                 oldTemplate.find("input[type=number], input[type=password], input[type=text]").each(function () {
-                  $(this).attr("disabled", "disabled");
+                  $(this).blur().addClass("ng-hide").attr("disabled", "disabled");
                 });
 
-                document.activeElement.blur();
+                $(document.activeElement).blur();
                 _el.focus();
 
                 var newScope = $rootScope.$new();
@@ -42,7 +42,9 @@
 
                 $(elem).append(parTpl);
                 views++;
+
               } else if (type === 'POP') {
+
                 var _elToRemove = $(elem).find('#' + view.template),
                   _child = _elToRemove.children("div").eq(0);
 
@@ -54,8 +56,9 @@
 
                 currentView = ViewStack.getCurrentView();
                 $('#' + currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function () {
-                  $(this).removeAttr("disabled");
+                  $(this).removeClass("ng-hide").removeAttr("disabled");
                 });
+
               } else if (type === 'POPALL') {
                 angular.forEach(view, function (value, key) {
                   var _elToRemove = $(elem).find('#' + value.template),
