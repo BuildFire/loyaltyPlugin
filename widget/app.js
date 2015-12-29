@@ -24,7 +24,7 @@
                 console.log("VIEW_CHANGED>>>>>>>>");
                 currentView = ViewStack.getPreviousView();
 
-                var _el = $("<img/>").attr("href", "javascript:void(0)"),
+                var _el = $("<a/>").attr("href", "javascript:void(0)"),
                   oldTemplate = $('#' + currentView.template);
 
                 oldTemplate.append(_el);
