@@ -24,6 +24,8 @@
                 console.log("VIEW_CHANGED>>>>>>>>");
                 currentView = ViewStack.getPreviousView();
 
+                $('#' + currentView.template).find("p").eq(0).focus();
+
                 $('#' + currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function () {
                   $(this).attr("disabled", "disabled");
                 });
@@ -148,10 +150,10 @@
     .directive('getFocus', ["$timeout", function ($timeout) {
       return {
         link: function (scope, element, attrs) {
-          $(element).parents(".slide").eq(0).on("webkitTransitionEnd transitionend oTransitionEnd", function(){
-            $timeout(function() {
+          $(element).parents(".slide").eq(0).on("webkitTransitionEnd transitionend oTransitionEnd", function () {
+            $timeout(function () {
               $(element).focus();
-            },300);
+            }, 300);
             //open keyboard manually
             if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
               window.cordova.plugins.Keyboard.show();
@@ -165,7 +167,7 @@
             });
           });
 
-          scope.$on("$destroy", function() {
+          scope.$on("$destroy", function () {
             $(element).parents(".slide").eq(0).off("webkitTransitionEnd transitionend oTransitionEnd", "**");
           });
         }
