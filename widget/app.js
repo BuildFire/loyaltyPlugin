@@ -30,7 +30,7 @@
                 oldTemplate.append(_el);
 
                 oldTemplate.find("input[type=number], input[type=password], input[type=text]").each(function () {
-                  $(this).blur().addClass("ng-hide").attr("disabled", "disabled");
+                  $(this).blur().attr("disabled", "disabled");
                 });
 
                 $(document.activeElement).blur();
@@ -56,7 +56,7 @@
 
                 currentView = ViewStack.getCurrentView();
                 $('#' + currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function () {
-                  $(this).removeClass("ng-hide").removeAttr("disabled");
+                  $(this).removeAttr("disabled");
                 });
 
               } else if (type === 'POPALL') {
