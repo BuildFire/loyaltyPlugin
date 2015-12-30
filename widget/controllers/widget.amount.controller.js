@@ -8,7 +8,6 @@
 
         var WidgetAmount = this;
 
-        WidgetAmount.dailyLimitExceeded = false;
         WidgetAmount.totalLimitExceeded = false;
         WidgetAmount.data = [];
 

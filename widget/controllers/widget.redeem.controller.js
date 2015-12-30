@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope', 'Buildfire','Context',
-      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire,Context) {
+    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope', 'Buildfire', 'Context',
+      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire, Context) {
 
         var WidgetRedeem = this;
 
@@ -14,10 +14,17 @@
         WidgetRedeem.redeemFail = false;
         WidgetRedeem.dailyLimitExceeded = false;
         WidgetRedeem.context = Context.getContext();
-        WidgetRedeem.listeners ={};
+        WidgetRedeem.listeners = {};
 
         if (RewardCache.getReward()) {
           WidgetRedeem.reward = RewardCache.getReward();
+        }
+
+        /**
+         * Initialize WidgetRedeem.application with current loyalty app details set in home controller
+         */
+        if (RewardCache.getApplication()) {
+          WidgetRedeem.application = RewardCache.getApplication();
         }
 
         /**
@@ -46,11 +53,19 @@
               }, 3000);
             }
           };
-          if(WidgetRedeem.currentLoggedInUser){
-            Buildfire.spinner.show();
-            LoyaltyAPI.redeemPoints(WidgetRedeem.currentLoggedInUser._id, WidgetRedeem.currentLoggedInUser.userToken, WidgetRedeem.context.instanceId, rewardId).then(redeemSuccess, redeemFailure);
+          if (WidgetRedeem.currentLoggedInUser) {
+            if (WidgetRedeem.application.dailyLimit > WidgetRedeem.reward.pointsToRedeem) {
+              Buildfire.spinner.show();
+              LoyaltyAPI.redeemPoints(WidgetRedeem.currentLoggedInUser._id, WidgetRedeem.currentLoggedInUser.userToken, WidgetRedeem.context.instanceId, rewardId).then(redeemSuccess, redeemFailure);
+            }
+            else {
+              WidgetRedeem.dailyLimitExceeded = true;
+              $timeout(function () {
+                WidgetRedeem.dailyLimitExceeded = false;
+              }, 3000);
+            }
           }
-          else{
+          else {
             buildfire.auth.login({}, function () {
 
             });
@@ -64,8 +79,8 @@
           ViewStack.pop();
         };
 
-        WidgetRedeem.listeners['REWARD_UPDATED']= $rootScope.$on('REWARD_UPDATED', function (e, item) {
-          if (item.carouselImage){
+        WidgetRedeem.listeners['REWARD_UPDATED'] = $rootScope.$on('REWARD_UPDATED', function (e, item) {
+          if (item.carouselImage) {
             WidgetRedeem.reward.carouselImage = item.carouselImage || [];
             if (WidgetRedeem.view) {
               WidgetRedeem.view.loadItems(WidgetRedeem.reward.carouselImage, null, "WideScreen");
@@ -83,8 +98,8 @@
           }
         });
 
-        WidgetRedeem.listeners['Carousel3:LOADED']= $rootScope.$on("Carousel3:LOADED", function () {
-          WidgetRedeem.view=null;
+        WidgetRedeem.listeners['Carousel3:LOADED'] = $rootScope.$on("Carousel3:LOADED", function () {
+          WidgetRedeem.view = null;
           if (!WidgetRedeem.view) {
             WidgetRedeem.view = new buildfire.components.carousel.view("#carousel3", [], "WideScreen");
           }
@@ -114,7 +129,7 @@
 
         $scope.$on("$destroy", function () {
           console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
-          if(WidgetRedeem.view) {
+          if (WidgetRedeem.view) {
             WidgetRedeem.view._destroySlider();
             WidgetRedeem.view._removeAll();
           }
