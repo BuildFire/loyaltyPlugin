@@ -260,6 +260,11 @@
               $rootScope.$broadcast("GOTO_HOME");
               $rootScope.$apply();
               break;
+
+            case 'AppCreated':
+              $rootScope.$broadcast("REFRESH_APP");
+              $rootScope.$apply();
+              break;
           }
         };
 
