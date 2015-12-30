@@ -24,9 +24,17 @@
                 console.log("VIEW_CHANGED>>>>>>>>");
                 currentView = ViewStack.getPreviousView();
 
-                $('#' + currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function () {
-                  $(this).attr("disabled", "disabled");
+                var _el = $("<a/>").attr("href", "javascript:void(0)"),
+                  oldTemplate = $('#' + currentView.template);
+
+                oldTemplate.append(_el);
+
+                oldTemplate.find("input[type=number], input[type=password], input[type=text]").each(function () {
+                  $(this).blur().attr("disabled", "disabled");
                 });
+
+                $(document.activeElement).blur();
+                _el.focus();
 
                 var newScope = $rootScope.$new();
                 var _newView = '<div  id="' + view.template + '" ><div class="slide content" data-back-img="{{itemDetailsBackgroundImage}}" ng-include="\'templates/' + view.template + '.html\'"></div></div>';
@@ -36,6 +44,7 @@
                 views++;
 
               } else if (type === 'POP') {
+
                 var _elToRemove = $(elem).find('#' + view.template),
                   _child = _elToRemove.children("div").eq(0);
 
@@ -49,6 +58,7 @@
                 $('#' + currentView.template).find("input[type=number], input[type=password], input[type=text]").each(function () {
                   $(this).removeAttr("disabled");
                 });
+
               } else if (type === 'POPALL') {
                 angular.forEach(view, function (value, key) {
                   var _elToRemove = $(elem).find('#' + value.template),
@@ -148,10 +158,10 @@
     .directive('getFocus', ["$timeout", function ($timeout) {
       return {
         link: function (scope, element, attrs) {
-          $(element).parents(".slide").eq(0).on("webkitTransitionEnd transitionend oTransitionEnd", function(){
-            $timeout(function() {
+          $(element).parents(".slide").eq(0).on("webkitTransitionEnd transitionend oTransitionEnd", function () {
+            $timeout(function () {
               $(element).focus();
-            },300);
+            }, 300);
             //open keyboard manually
             if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
               window.cordova.plugins.Keyboard.show();
@@ -165,11 +175,26 @@
             });
           });
 
-          scope.$on("$destroy", function() {
+          scope.$on("$destroy", function () {
             $(element).parents(".slide").eq(0).off("webkitTransitionEnd transitionend oTransitionEnd", "**");
           });
         }
       }
+    }])
+    .directive("loadImage", [function () {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+          element.attr("src","assets/images/" + attrs.loadImage + ".png");
+
+          var elem = $("<img>");
+          elem[0].onload = function () {
+            element.attr("src", attrs.finalSrc);
+            elem.remove();
+          };
+          elem.attr("src", attrs.finalSrc);
+        }
+      };
     }])
     .filter('getImageUrl', function () {
       return function (url, width, height, type) {
@@ -233,6 +258,11 @@
 
             case 'ReturnHome':
               $rootScope.$broadcast("GOTO_HOME");
+              $rootScope.$apply();
+              break;
+
+            case 'AppCreated':
+              $rootScope.$broadcast("REFRESH_APP");
               $rootScope.$apply();
               break;
           }

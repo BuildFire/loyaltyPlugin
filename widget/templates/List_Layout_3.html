@@ -35,7 +35,8 @@
         <div class="list-item-media text-left overflow-hidden">
           <div class="list-media-holder pull-left"
                ng-click="WidgetHome.openReward(reward)">
-            <img ng-src="{{reward.listImage | getImageUrl : 110:60}}"
+            <img load-image="16x9"
+                 data-final-src="{{reward.listImage | getImageUrl : 110:60}}"
                  ng-if="reward.listImage">
             <img src="assets/images/16x9.png" ng-if="!reward.listImage">
           </div>

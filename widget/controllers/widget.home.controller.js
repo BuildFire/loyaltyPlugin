@@ -187,6 +187,13 @@
           RewardCache.setApplication(app);
         });
 
+        /**
+         * This event listener is bound for "REFRESH_APP" event broadcast
+         */
+        WidgetHome.listeners['REFRESH_APP'] = $rootScope.$on('REFRESH_APP', function (e) {
+          WidgetHome.getApplicationAndRewards();
+        });
+
         WidgetHome.showDescription = function (description) {
           return !((description == '<p>&nbsp;<br></p>') || (description == '<p><br data-mce-bogus="1"></p>'));
         };

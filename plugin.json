@@ -1,7 +1,7 @@
 {
   "author":"Daniel Hindi"
 ,"pluginName":"Loyalty Plugin"
-,"pluginDescription":"Loyalty Plugin Description."
+,"pluginDescription":"Loyalty Plugin provides point-based loyalty application,with ability to create multiple point-based rewards for customers."
 ,"supportEmail":"[Your support Email]"
 ,"control":{
   "content":{
