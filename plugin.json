@@ -1,7 +1,7 @@
 {
-  "author":"Daniel Hindi"
-,"pluginName":"Loyalty Plugin"
-,"pluginDescription":"Loyalty Plugin provides point-based loyalty application,with ability to create multiple point-based rewards for customers."
+  "author":"BuildFire"
+,"pluginName":"Loyalty"
+,"pluginDescription":"Unlike the 'punch card' methodology which limits what you can offer, our loyalty program allows users to accumulate points and then redeem them for rewards at whatever point value you'd like to offer them."
 ,"supportEmail":"[Your support Email]"
 ,"control":{
   "content":{
