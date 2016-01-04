@@ -90,5 +90,20 @@ describe('Unit : loyaltyPlugin Plugin settings.home.controller.js', function () 
             SettingsHome.convertHtml(html);
         });
     });
+
+    describe("Test the inner methods call", function() {
+
+
+        it("Should pass if saveDataWithDelay called", function() {
+            var tmrDelay= true, newObj = 'undefined';
+            var x = function(a, b){
+            console.log(";;;;;;;;;;;;>>>>>>>>>>>",a)
+            }
+                    buildfire.datastore.get(TAG_NAMES.LOYALTY_INFO,x)
+            SettingsHome.saveDataWithDelay(newObj);
+            SettingsHome.saveData(newObj,TAG_NAMES.LOYALTY_INFO)
+            buildfire.datastore.save()
+        });
+    });
 })
 ;
