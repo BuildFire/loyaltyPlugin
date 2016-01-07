@@ -13,6 +13,7 @@
         var currentView = ViewStack.getCurrentView();
 
         WidgetCode.passcodeFailure = false;
+        WidgetCode.dailyLimitExceeded = false;
 
         WidgetCode.context = Context.getContext();
 
@@ -33,6 +34,14 @@
           var error = function (error) {
             Buildfire.spinner.hide();
             console.log("Error while adding points:", error);
+            if (error.code == 2103) {
+              WidgetCode.dailyLimitExceeded = true;
+              setTimeout(function () {
+                WidgetCode.dailyLimitExceeded = false;
+                $scope.$digest();
+              }, 3000);
+            }
+
           };
           Buildfire.spinner.show();
           LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode, currentView.amount)
@@ -41,12 +50,14 @@
 
         WidgetCode.confirmPasscode = function () {
           var success = function (result) {
+            Buildfire.spinner.hide();
             console.log("Passcode valid");
             console.log(result);
             WidgetCode.addPoints();
           };
 
           var error = function () {
+            Buildfire.spinner.hide();
             console.log("Error: Invalid passcode");
             WidgetCode.passcodeFailure = true;
             setTimeout(function () {
@@ -54,7 +65,7 @@
               $scope.$digest();
             }, 3000);
           };
-
+          Buildfire.spinner.show();
           LoyaltyAPI.validatePasscode(WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode).then(success, error);
         };
 
