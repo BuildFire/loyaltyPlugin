@@ -2,12 +2,6 @@
   <div class="loyalty-plugin">
     <div id="carousel" ng-if="WidgetHome.carouselImages.length"
          build-fire-carousel=""></div>
-    <div class="plugin-slider text-center"
-         ng-if="!WidgetHome.carouselImages.length">
-      <div class="plugin-slide">
-        <img src="assets/images/16x9.png">
-      </div>
-    </div>
     <div class="padded padding-bottom-zero"
          ng-if="WidgetHome.showDescription(WidgetHome.description)">
       <p ng-bind-html='WidgetHome.safeHtml(WidgetHome.description)'></p>
