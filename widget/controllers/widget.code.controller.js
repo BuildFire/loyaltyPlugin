@@ -41,12 +41,14 @@
 
         WidgetCode.confirmPasscode = function () {
           var success = function (result) {
+            Buildfire.spinner.hide();
             console.log("Passcode valid");
             console.log(result);
             WidgetCode.addPoints();
           };
 
           var error = function () {
+            Buildfire.spinner.hide();
             console.log("Error: Invalid passcode");
             WidgetCode.passcodeFailure = true;
             setTimeout(function () {
@@ -54,7 +56,7 @@
               $scope.$digest();
             }, 3000);
           };
-
+          Buildfire.spinner.show();
           LoyaltyAPI.validatePasscode(WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode).then(success, error);
         };
 
