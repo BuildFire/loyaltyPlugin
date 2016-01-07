@@ -168,6 +168,14 @@ describe('Unit : loyaltyPluginWidget Plugin widget.home.controller.js', function
       }
       WidgetHome.openGetPoints();
     });
+    it('should invoke when WidgetHome.openGetPoints get called with null user', function () {
+      var userId = "123";
+      WidgetHome.currentLoggedInUser=null
+      WidgetHome.context = {
+        instanceId:"123"
+      }
+      WidgetHome.openGetPoints();
+    });
   });
 
   describe('Test the WidgetHome.listeners calls', function () {
@@ -222,10 +230,13 @@ describe('Unit : loyaltyPluginWidget Plugin widget.home.controller.js', function
 
     it('should invoke APPLICATION_UPDATED when app.content are passed', function () {
       var points = 5, callback = function(e, data){
+
       }
+
       var app={
           content :{
-            description:"sss"
+            description:"sss",
+            image : "aaa"
           }
           }
       WidgetHome.context = {
