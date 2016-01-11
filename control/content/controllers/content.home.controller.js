@@ -114,7 +114,11 @@
               console.log('Error while getting application:', err);
               var success = function (result) {
                   console.info('Saved data result: ', result);
-                  updateMasterItem(_data);
+                  ContentHome.data = result;
+                  updateMasterItem(result);
+                  buildfire.messaging.sendMessageToWidget({
+                    type: 'AppCreated'
+                  });
                 }
                 , error = function (err) {
                   console.log('Error while saving data : ', err);
