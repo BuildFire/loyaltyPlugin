@@ -37,7 +37,6 @@
 </head>
 <body class="body-scroll slide no-scroll">
 <div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content" data-back-img="{{itemListbackgroundImage}}">
-  {{WidgetHome.data.design.listLayout}}
   <div ng-if="WidgetHome.data.design.listLayout" ng-include="'templates/' + WidgetHome.data.design.listLayout + '.html'">
   </div>
 </div>
