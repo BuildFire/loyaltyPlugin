@@ -212,6 +212,7 @@
 
         var init = function () {
           var success = function (result) {
+                console.log('Get Loyalty info --------------success----------------',result);
               WidgetHome.data = result.data;
               if (!WidgetHome.data.design)
                 WidgetHome.data.design = {};
@@ -233,7 +234,9 @@
             }
             , error = function (err) {
               console.error('Error while getting data', err);
-            };
+                console.log('Get Loyalty info --------------Error----------------',err);
+
+              };
           DataStore.get(TAG_NAMES.LOYALTY_INFO).then(success, error);
           WidgetHome.getApplicationAndRewards();
         };
