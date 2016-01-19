@@ -196,10 +196,14 @@
         get: function (_tagName) {
           var deferred = $q.defer();
           Buildfire.datastore.get(_tagName, function (err, result) {
+            console.error('console log----------------------------------------- get Data Store Api-------------',err,'Result-------',result);
             if (err) {
               return deferred.reject(err);
             } else if (result) {
               return deferred.resolve(result);
+            }
+            else{
+              return deferred.reject(new Error('Result Not Found'));
             }
           });
           return deferred.promise;
