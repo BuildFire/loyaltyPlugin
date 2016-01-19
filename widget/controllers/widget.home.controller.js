@@ -43,12 +43,12 @@
          */
         WidgetHome.getLoyaltyPoints = function (userId) {
           var success = function (result) {
-              console.info('Points>>>>>>>>>>>>>>>.', result);
+              console.info('Points>>>>>>>>>>>>>>>.---------------------------------', result);
               $rootScope.loyaltyPoints = result.totalPoints;
             }
             , error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
-                console.error('Error while getting points data', err);
+                console.error('Error while getting points data----------------------------------', err);
               }
             };
           LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, WidgetHome.context.instanceId).then(success, error);
@@ -62,11 +62,11 @@
               WidgetHome.loyaltyRewards = result;
               if (!WidgetHome.loyaltyRewards)
                 WidgetHome.loyaltyRewards = [];
-              console.info('Rewards>>>>>>>>>>>>>>.:', result);
+              console.info('Rewards>>>>>>>>>>>>>>.:------------------------------', result);
             }
             , errorLoyaltyRewards = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
-                console.error('Error while getting data loyaltyRewards', err);
+                console.error('Error while getting data loyaltyRewards-----------------------', err);
               }
             };
           var successApplication = function (result) {
@@ -78,7 +78,7 @@
           };
 
           var errorApplication = function (error) {
-            console.info('Error fetching loyalty application');
+            console.info('Error fetching loyalty application-----------------------------');
           };
 
           console.log("$$$$$$$$$$$$$$$$$$$$$$$", WidgetHome.context);
@@ -90,7 +90,7 @@
          * Method to show amount page where user can fill in the amount they have made purchase of.
          */
         WidgetHome.openGetPoints = function () {
-          console.log(">>>>>>>>>>>>>>");
+          console.log(">>>>>>>>>>>>>>-----------------------");
           if (WidgetHome.currentLoggedInUser) {
             ViewStack.push({
               template: 'Amount',
@@ -212,7 +212,7 @@
 
         var init = function () {
           var success = function (result) {
-                console.log('Get Loyalty info --------------success----------------',result);
+                console.log('Get Loyalty info --------------success---------------------------------------',result);
               WidgetHome.data = result.data;
               if (!WidgetHome.data.design)
                 WidgetHome.data.design = {};
@@ -235,7 +235,7 @@
             , error = function (err) {
                 WidgetHome.data={design:{listLayout:LAYOUTS.listLayout[0].name}};
               console.error('Error while getting data', err);
-                console.log('Get Loyalty info --------------Error----------------',err);
+                console.log('Get Loyalty info --------------Error----------------------------------------------------------------------',err);
               };
           DataStore.get(TAG_NAMES.LOYALTY_INFO).then(success, error);
           WidgetHome.getApplicationAndRewards();
@@ -301,6 +301,7 @@
             WidgetHome.currentLoggedInUser = user;
             if (!WidgetHome.context) {
               Context.getContext(function (ctx) {
+                console.log('Context     ==============================================================',ctx);
                 WidgetHome.context = ctx;
                 WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
                 $scope.$digest();
