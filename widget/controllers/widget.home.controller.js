@@ -217,6 +217,7 @@
           var success = function (result) {
                 console.error('Get Loyalty info -----from datastore--------------------------success---------------------------------------',result);
                 if(result && result.data){
+                  console.log('BUILDFIRE GET--------------------------LOYALTY---------RESULT',result);
                   WidgetHome.data = result.data;
                 }
                 else{
