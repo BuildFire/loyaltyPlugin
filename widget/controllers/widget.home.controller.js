@@ -216,7 +216,16 @@
         var init = function () {
           var success = function (result) {
                 console.error('Get Loyalty info -----from datastore--------------------------success---------------------------------------',result);
-              WidgetHome.data = result.data;
+                if(result && result.data){
+                  WidgetHome.data = result.data;
+                }
+                else{
+                  WidgetHome.data={
+                    design:{
+                      listLayout:LAYOUTS.listLayout[0].name
+                    }
+                  };
+                }
               if (!WidgetHome.data.design)
                 WidgetHome.data.design = {};
               if (!WidgetHome.data.settings)
