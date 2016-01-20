@@ -1,28 +1,59 @@
 'use strict';
 
 (function (angular, buildfire, window) {
-  angular
-    .module('loyaltyPluginWidget', ['ngRoute', 'ngAnimate'])
-    .config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
+    angular
+        .module('loyaltyPluginWidget', ['ngRoute', 'ngAnimate'])
+        .config(['$routeProvider', '$httpProvider', '$compileProvider', function ($routeProvider, $httpProvider, $compileProvider) {
 
       /**
        * To make href urls safe on mobile
        */
       $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|cdvfile|file):/);
 
-    }])
-    .directive("viewSwitcher", ["ViewStack", "$rootScope", '$compile',
-      function (ViewStack, $rootScope, $compile) {
-        return {
-          restrict: 'AE',
-          link: function (scope, elem, attrs) {
-            var views = 0,
-              currentView = null;
-            manageDisplay();
-            $rootScope.$on('VIEW_CHANGED', function (e, type, view, noAnimation) {
-              if (type === 'PUSH') {
-                console.log("VIEW_CHANGED>>>>>>>>");
-                currentView = ViewStack.getPreviousView();
+            var interceptor = ['$q', function ($q) {
+                var counter = 0;
+                return {
+                    request: function (config) {
+                        console.log('Showing spinner-----------------------------------------------------------------------');
+                        buildfire.spinner.show();
+                        counter++;
+                        return config;
+                    },
+                    response: function (response) {
+                        counter--;
+                        if (counter === 0) {
+                            console.log('Hiding spinner-----------------------------Success------------------------------------------');
+                            buildfire.spinner.hide();
+                        }
+                        return response;
+                    },
+                    responseError: function (rejection) {
+                        counter--;
+                        if (counter === 0) {
+                            console.log('Hiding spinner-----------------------Rejection------------------------------------------------');
+                            buildfire.spinner.hide();
+                        }
+
+                        return $q.reject(rejection);
+                    }
+                };
+            }];
+
+            $httpProvider.interceptors.push(interceptor);
+
+        }])
+        .directive("viewSwitcher", ["ViewStack", "$rootScope", '$compile',
+            function (ViewStack, $rootScope, $compile) {
+                return {
+                    restrict: 'AE',
+                    link: function (scope, elem, attrs) {
+                        var views = 0,
+                            currentView = null;
+                        manageDisplay();
+                        $rootScope.$on('VIEW_CHANGED', function (e, type, view, noAnimation) {
+                            if (type === 'PUSH') {
+                                console.log("VIEW_CHANGED>>>>>>>>");
+                                currentView = ViewStack.getPreviousView();
 
                 var _el = $("<a/>").attr("href", "javascript:void(0)"),
                   oldTemplate = $('#' + currentView.template);
