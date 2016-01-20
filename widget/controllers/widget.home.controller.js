@@ -85,8 +85,19 @@
           };
 
           console.error("$$$$$$$$$$$$$$$$$$$$$$$---------------context----------------------------------------------", WidgetHome.context);
-          LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
-          LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
+          if(WidgetHome.context && WidgetHome.context.instanceId){
+            LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
+            LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
+          }
+          else{
+            Context.getContext(function (ctx) {
+              console.log('COntext got successfully-----------------' +
+                  '');
+              WidgetHome.context = ctx;
+              LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
+              LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
+            });
+          }
         };
 
         /**
@@ -336,9 +347,11 @@
         });
 
         Context.getContext(function (ctx) {
+          console.log('COntext got successfully-----------------' +
+              '');
           WidgetHome.context = ctx;
-          init();
         });
+        init();
 
       }]);
 })(window.angular, window.buildfire);
