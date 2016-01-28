@@ -308,7 +308,7 @@
             }
             ViewStack.pop();
           } else {
-            buildfire.navigation.navigateHome();
+              buildfire.navigation._goBackOne();
           }
         };
 
