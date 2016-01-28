@@ -85,8 +85,19 @@
           };
 
           console.error("$$$$$$$$$$$$$$$$$$$$$$$---------------context----------------------------------------------", WidgetHome.context);
-          LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
-          LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
+          if(WidgetHome.context && WidgetHome.context.instanceId){
+            LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
+            LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
+          }
+          else{
+            Context.getContext(function (ctx) {
+              console.log('COntext got successfully-----------------' +
+                  '');
+              WidgetHome.context = ctx;
+              LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
+              LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
+            });
+          }
         };
 
         /**
@@ -216,7 +227,17 @@
         var init = function () {
           var success = function (result) {
                 console.error('Get Loyalty info -----from datastore--------------------------success---------------------------------------',result);
-              WidgetHome.data = result.data;
+                if(result && result.data){
+                  console.log('BUILDFIRE GET--------------------------LOYALTY---------RESULT',result);
+                  WidgetHome.data = result.data;
+                }
+                else{
+                  WidgetHome.data={
+                    design:{
+                      listLayout:LAYOUTS.listLayout[0].name
+                    }
+                  };
+                }
               if (!WidgetHome.data.design)
                 WidgetHome.data.design = {};
               if (!WidgetHome.data.settings)
@@ -326,9 +347,11 @@
         });
 
         Context.getContext(function (ctx) {
+          console.log('COntext got successfully-----------------' +
+              '');
           WidgetHome.context = ctx;
-          init();
         });
+        init();
 
       }]);
 })(window.angular, window.buildfire);
