@@ -216,7 +216,7 @@
       return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-          element.attr("src","assets/images/" + attrs.loadImage + ".png");
+          element.attr("src","assets/.images/" + attrs.loadImage + ".png");
 
           var elem = $("<img>");
           elem[0].onload = function () {
