@@ -49,7 +49,8 @@
                 console.error('Error while getting points data----------------------------------------', err);
               }
             };
-          LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, WidgetHome.context.instanceId).then(success, error);
+            if (userId)
+                LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, WidgetHome.context.instanceId).then(success, error);
         };
 
         /**
@@ -62,7 +63,6 @@
                 WidgetHome.loyaltyRewards = [];
             }
             , errorLoyaltyRewards = function (err) {
-                console.error('Error while getting data loyaltyRewards--------------------------------------', err);
                 if (err && err.code !== STATUS_CODE.NOT_FOUND) {
                 console.error('Error while getting data loyaltyRewards--------------------------------------', err);
               }
