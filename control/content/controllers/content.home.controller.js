@@ -196,7 +196,8 @@
                 }, 3000);
               }
             };
-          LoyaltyAPI.addEditApplication(newObj).then(success, error);
+            if (newObj && newObj.auth)
+                LoyaltyAPI.addEditApplication(newObj).then(success, error);
         };
 
         /*Delete the loyalty*/
