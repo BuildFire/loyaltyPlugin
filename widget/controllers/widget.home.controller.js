@@ -5,8 +5,6 @@
     .module('loyaltyPluginWidget')
     .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'Context',
       function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, Context) {
-        console.error('Loyalty----------WidgetHomeCtrl--------------------------Loaded----------------------------');
-
         var WidgetHome = this;
 
         $rootScope.deviceHeight = window.innerHeight;
@@ -44,7 +42,6 @@
          */
         WidgetHome.getLoyaltyPoints = function (userId) {
           var success = function (result) {
-              console.error('Points>>>>>>>>>>>>>>>.---------------------------------------------------', result);
               $rootScope.loyaltyPoints = result.totalPoints;
             }
             , error = function (err) {
@@ -52,7 +49,8 @@
                 console.error('Error while getting points data----------------------------------------', err);
               }
             };
-          LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, WidgetHome.context.instanceId).then(success, error);
+            if (userId)
+                LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, WidgetHome.context.instanceId).then(success, error);
         };
 
         /**
@@ -63,16 +61,13 @@
               WidgetHome.loyaltyRewards = result;
               if (!WidgetHome.loyaltyRewards)
                 WidgetHome.loyaltyRewards = [];
-              console.error('Rewards> got successfully>>>>>>>>>>>>>.:--------------------------------------', result);
             }
             , errorLoyaltyRewards = function (err) {
-                console.error('Error while getting data loyaltyRewards--------------------------------------', err);
                 if (err && err.code !== STATUS_CODE.NOT_FOUND) {
                 console.error('Error while getting data loyaltyRewards--------------------------------------', err);
               }
             };
           var successApplication = function (result) {
-            console.error('Successfully got application----------------------------------------------------------------------',result);
             if (result.image)
               WidgetHome.carouselImages = result.image;
             if (result.content && result.content.description)
@@ -84,7 +79,6 @@
             console.error('Error fetching loyalty application---------------------------------------------------',error);
           };
 
-          console.error("$$$$$$$$$$$$$$$$$$$$$$$---------------context----------------------------------------------", WidgetHome.context);
           if(WidgetHome.context && WidgetHome.context.instanceId){
             LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
             LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
@@ -226,7 +220,6 @@
 
         var init = function () {
           var success = function (result) {
-                console.error('Get Loyalty info -----from datastore--------------------------success---------------------------------------',result);
                 if(result && result.data){
                   console.log('BUILDFIRE GET--------------------------LOYALTY---------RESULT',result);
                   WidgetHome.data = result.data;
@@ -259,7 +252,6 @@
             , error = function (err) {
                 WidgetHome.data={design:{listLayout:LAYOUTS.listLayout[0].name}};
               console.error('Error while getting data', err);
-                console.error('Get Loyalty info -----from datastore---------Error-----------------------------------------------------------------------------------',err);
               };
           DataStore.get(TAG_NAMES.LOYALTY_INFO).then(success, error);
           WidgetHome.getApplicationAndRewards();
