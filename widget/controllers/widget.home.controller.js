@@ -210,8 +210,16 @@
          * Method to parse and show description in html format
          */
         WidgetHome.safeHtml = function (html) {
-          if (html)
-            return $sce.trustAsHtml(html);
+            if (html) {
+                var $html = $('<div />', {html: html});
+                $html.find('iframe').each(function (index, element) {
+                    var src = element.src;
+                    console.log('element is: ', src, src.indexOf('http'));
+                    src = src && src.indexOf('file://') != -1 ? src.replace('file://', 'http://') : src;
+                    element.src = src && src.indexOf('http') != -1 ? src : 'http:' + src;
+                });
+                return $sce.trustAsHtml($html.html());
+            }
         };
 
         /*
