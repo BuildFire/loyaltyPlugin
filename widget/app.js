@@ -311,6 +311,11 @@
               buildfire.navigation._goBackOne();
           }
         };
-
+          buildfire.history.onPop(function(data, err){
+              if(data.label !=  "Reward" ){
+                  ViewStack.pop();
+              }
+          })
       }])
+
 })(window.angular, window.buildfire, window);
