@@ -1,11 +1,11 @@
 <div class="holder padding-zero" ng-controller="WidgetItemCtrl as WidgetItem">
   <div class="loyalty-plugin" ng-if="WidgetItem.reward">
     <div id="carousel2" ng-if="WidgetItem.reward.carouselImage.length"
-         build-fire-carousel2=""></div>
+         build-fire-carousel2="" ng-style="WidgetItem.reward.carouselImage.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
     <div class="plugin-slider text-center"
          ng-if="!WidgetItem.reward.carouselImage.length">
       <div class="plugin-slide">
-        <img src="assets/.images/16x9.png">
+        <img src="../../../styles/media/holder-16x9.png">
       </div>
     </div>
     <div class="padded">
