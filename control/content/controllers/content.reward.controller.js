@@ -13,7 +13,6 @@
           listImage: "",
           BackgroundImage: ""
         };
-        buildfire.history.push('Reward', { elementToShow: 'Reward' });
         ContentReward.isInserted = false;
         ContentReward.masterData = null;
         updateMasterItem(ContentReward.item);
