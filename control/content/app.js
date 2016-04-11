@@ -75,17 +75,10 @@
                         $rootScope.$apply();
                         break;
                     case 'BackToHome':
-                        buildfire.history.pop();
                         $location.path('/');
                         $rootScope.$apply();
                         break;
                 }
             };
-            buildfire.history.onPop(function (data, err) {
-                if (data.label != "Reward") {
-                    $location.path('/');
-                    $rootScope.$apply();
-                }
-            })
         }])
 })(window.angular, window.buildfire);
