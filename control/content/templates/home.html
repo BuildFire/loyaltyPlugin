@@ -104,9 +104,9 @@
                ng-repeat="reward in ContentHome.loyaltyRewards">
             <span class="icon icon-menu pull-left cursor-grab"></span>
             <div class="media-holder pull-left">
-              <img ng-src="{{reward.listImage | getImageUrl : 60:60}}"
+              <img load-image="1x1" data-final-src="{{reward.listImage | getImageUrl : 60:60}}"
                    ng-if="reward.listImage">
-              <img src="assets/images/1x1.png" ng-if="!reward.listImage">
+              <img src="../../../../styles/media/holder-1x1.png" ng-if="!reward.listImage">
             </div>
             <div class="copy pull-right">
               <div class="col-md-7 padding-zero pull-left">

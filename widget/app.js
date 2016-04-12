@@ -216,7 +216,7 @@
       return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-          element.attr("src","assets/.images/" + attrs.loadImage + ".png");
+            element.attr("src", "../../../styles/media/holder-" + attrs.loadImage + ".gif");
 
           var elem = $("<img>");
           elem[0].onload = function () {
@@ -258,12 +258,14 @@
 
             case 'OpenItem':
               RewardCache.setReward(msg.data);
-              ViewStack.popAllViews(true);
-              ViewStack.push({
-                template: 'Item_Details',
-                totalPoints: $rootScope.loyaltyPoints
-              });
-              $rootScope.$apply();
+              if(ViewStack.getCurrentView() && ViewStack.getCurrentView().template != 'Item_Details') {
+                  ViewStack.popAllViews(true);
+                  ViewStack.push({
+                      template: 'Item_Details',
+                      totalPoints: $rootScope.loyaltyPoints
+                  });
+                  $rootScope.$apply();
+              }
               break;
 
             case 'UpdateItem':
@@ -311,11 +313,6 @@
               buildfire.navigation._goBackOne();
           }
         };
-          buildfire.history.onPop(function(data, err){
-              if(data.label !=  "Reward" ){
-                  ViewStack.pop();
-              }
-          })
       }])
 
 })(window.angular, window.buildfire, window);

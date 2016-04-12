@@ -2,12 +2,12 @@
   <div class="loyalty-plugin">
     <div id="carousel" ng-if="WidgetHome.carouselImages.length"
          build-fire-carousel=""
-         ng-style="WidgetHome.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>></div>
+         ng-style="WidgetHome.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
     <div class="padded padding-bottom-zero"
          ng-if="WidgetHome.showDescription(WidgetHome.description)">
       <p ng-bind-html='WidgetHome.safeHtml(WidgetHome.description)'></p>
     </div>
-    <div class="padded">
+    <div class="padded" ng-if="WidgetHome.data">
       <div class="text-center">
         <p ng-if="!(WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)"><span
             class="text-primary"><a href="javascript:void(0);"
@@ -33,7 +33,7 @@
             <img load-image="16x9"
                  data-final-src="{{reward.listImage | getImageUrl : 110:60}}"
                  ng-if="reward.listImage">
-            <img src="assets/.images/16x9.png" ng-if="!reward.listImage">
+            <img src="../../../styles/media/holder-16x9.png" ng-if="!reward.listImage">
           </div>
           <div
               class="list-item-copy text-left padding-left-ten padding-right-ten">

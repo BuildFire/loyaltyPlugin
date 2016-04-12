@@ -2,11 +2,11 @@
 <div class="holder padding-zero layout3">
 	<div class="loyalty-plugin">
     <div id="carousel" ng-if="WidgetHome.carouselImages.length" build-fire-carousel=""
-         ng-style="WidgetHome.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>></div>
+         ng-style="WidgetHome.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
     <div class="padded padding-bottom-zero" ng-if="WidgetHome.showDescription(WidgetHome.description)">
       <p ng-bind-html='WidgetHome.safeHtml(WidgetHome.description)'></p>
     </div>
-		<div class="padded">
+		<div class="padded" ng-if="WidgetHome.data">
 			<div class="text-center">
         <p ng-if="!(WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)"><span
             class="text-primary"><a href="javascript:void(0);" ng-click="WidgetHome.openLogin()">Log in
@@ -29,7 +29,7 @@
             <img load-image="1x1"
                  data-final-src="{{reward.listImage | getImageUrl : 60:60}}"
                  ng-if="reward.listImage">
-            <img src="assets/.images/1x1.png" ng-if="!reward.listImage">
+            <img src="../../../styles/media/holder-1x1.png" ng-if="!reward.listImage">
 					</div>
 					<div class="list-item-copy text-left padding-left-ten padding-right-ten">
 						<p class="ellipsis margin-zero text-primary margin-top-ten"><a
