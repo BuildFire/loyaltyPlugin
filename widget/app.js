@@ -258,12 +258,14 @@
 
             case 'OpenItem':
               RewardCache.setReward(msg.data);
-              ViewStack.popAllViews(true);
-              ViewStack.push({
-                template: 'Item_Details',
-                totalPoints: $rootScope.loyaltyPoints
-              });
-              $rootScope.$apply();
+              if(ViewStack.getCurrentView() && ViewStack.getCurrentView().template != 'Item_Details') {
+                  ViewStack.popAllViews(true);
+                  ViewStack.push({
+                      template: 'Item_Details',
+                      totalPoints: $rootScope.loyaltyPoints
+                  });
+                  $rootScope.$apply();
+              }
               break;
 
             case 'UpdateItem':
