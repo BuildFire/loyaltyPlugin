@@ -14,7 +14,7 @@
 
         </div>
         <div class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
-          <a ng-repeat="layout in DesignHome.layouts.listLayout"
+          <a ng-repeat="layout in DesignHome.layouts.listLayout" data-number="{{$index + 1}}"
              class="layouticon border-radius-three default-background-hover text-center" ng-click="DesignHome.changeListLayout(layout.name)">
             <img ng-src="assets/images/{{layout.name}}.png">
           </a>
