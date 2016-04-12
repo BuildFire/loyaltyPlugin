@@ -7,7 +7,7 @@
          ng-if="WidgetHome.showDescription(WidgetHome.description)">
       <p ng-bind-html='WidgetHome.safeHtml(WidgetHome.description)'></p>
     </div>
-    <div class="padded" ng-if="WidgetHome.data">
+    <div class="padded" ng-if="WidgetHome.carouselImages && WidgetHome.loyaltyRewards">
       <div class="text-center">
         <p ng-if="!(WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)"><span
             class="text-primary"><a href="javascript:void(0);"
@@ -25,7 +25,7 @@
             >Get More Points</a>
       </div>
     </div>
-    <div class="list-layout">
+    <div class="list-layout" ng-if="WidgetHome.loyaltyRewards && WidgetHome.carouselImages">
       <div class="group-row">
         <div class="list-item col-xs-6 padding-zero has-info-bar pull-left"
              ng-repeat="reward in WidgetHome.loyaltyRewards">

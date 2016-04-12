@@ -223,13 +223,6 @@
             element.attr("src", attrs.finalSrc);
             elem.remove();
           };
-            function changeSrc(info) {
-                element.attr("src", attrs.finalSrc);
-                elem.remove();
-            }
-            scope.$watch(function(val){
-                return attrs.finalSrc;
-            }, changeSrc, true);
           elem.attr("src", attrs.finalSrc);
         }
       };

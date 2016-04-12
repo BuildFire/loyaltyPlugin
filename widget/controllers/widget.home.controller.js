@@ -70,6 +70,8 @@
           var successApplication = function (result) {
             if (result.image)
               WidgetHome.carouselImages = result.image;
+              else
+            WidgetHome.carouselImages = [];
             if (result.content && result.content.description)
               WidgetHome.description = result.content.description;
             RewardCache.setApplication(result);
