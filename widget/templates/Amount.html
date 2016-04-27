@@ -15,7 +15,7 @@
       <div class="next-btn margin-top-twenty">
         <button class="btn btn-primary stretch margin-top"
                 href="javascript:void(0);" ng-click="WidgetAmount.confirmCode()"
-                ng-disabled="!WidgetAmount.amount || !myform.$valid"
+                ng-disabled="!(WidgetAmount.amount > 0) || !myform.$valid"
             >Next
         </button>
       </div>
