@@ -33,7 +33,7 @@
             <img load-image="16x9"
                  data-final-src="{{reward.listImage | getImageUrl : 110:60}}"
                  ng-if="reward.listImage">
-            <img src="../../../styles/media/holder-16x9.png" width="110px" height="60px" ng-if="!reward.listImage">
+            <img src="../../../styles/media/holder-16x9.png" width="{{WidgetHome.PlaceHolderImageWidth3}}" height="{{ WidgetHome.PlaceHolderImageHeight3}}"  ng-if="!reward.listImage">
           </div>
           <div
               class="list-item-copy text-left padding-left-ten padding-right-ten">
