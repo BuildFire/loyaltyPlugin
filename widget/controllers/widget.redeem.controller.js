@@ -91,6 +91,7 @@
          */
         WidgetRedeem.backToHome = function () {
           ViewStack.pop();
+          buildfire.history.pop();
         };
 
         WidgetRedeem.listeners['REWARD_UPDATED'] = $rootScope.$on('REWARD_UPDATED', function (e, item) {

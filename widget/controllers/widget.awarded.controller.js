@@ -33,6 +33,15 @@
          */
         WidgetAwarded.goToHome = function () {
           ViewStack.popAllViews();
+            buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
+                if (result && result.length) {
+                    result.forEach(function (breadCrumb) {
+                        if (breadCrumb.options && breadCrumb.options.elementToShow) {
+                            buildfire.history.pop();
+                        }
+                    });
+                }
+            });
         };
 
       }])
