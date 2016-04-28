@@ -7,10 +7,24 @@
       function ($scope, ViewStack, LoyaltyAPI, RewardCache, $rootScope, Buildfire, Context) {
 
         var WidgetCode = this;
+        var breadCrumbFlag = true;
         /**
          * Initialize variable with current view returned by ViewStack service. In this case it is "Item_Details" view.
          */
         var currentView = ViewStack.getCurrentView();
+
+          buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
+              if(result && result.length) {
+                  result.forEach(function(breadCrumb) {
+                      if(breadCrumb.label == 'Confirm') {
+                          breadCrumbFlag = false;
+                      }
+                  });
+              }
+              if(breadCrumbFlag) {
+                  buildfire.history.push('Confirm', { elementToShow: 'Confirm' });
+              }
+          });
 
         WidgetCode.passcodeFailure = false;
         WidgetCode.dailyLimitExceeded = false;

@@ -7,10 +7,22 @@
       function ($scope, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce) {
 
         var WidgetAmount = this;
+        var breadCrumbFlag = true;
 
         WidgetAmount.totalLimitExceeded = false;
         WidgetAmount.data = [];
-
+          buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
+              if(result && result.length) {
+                  result.forEach(function(breadCrumb) {
+                      if(breadCrumb.label == 'Amount') {
+                          breadCrumbFlag = false;
+                      }
+                  });
+              }
+              if(breadCrumbFlag) {
+                  buildfire.history.push('Amount', { elementToShow: 'Amount' });
+              }
+          });
         /**
          * Initialize variable with current view returned by ViewStack service. In this case it is "Item_Details" view.
          */
