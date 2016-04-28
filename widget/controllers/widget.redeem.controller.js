@@ -90,7 +90,6 @@
          * Method to go back to previous page
          */
         WidgetRedeem.backToHome = function () {
-          ViewStack.pop();
           buildfire.history.pop();
         };
 
