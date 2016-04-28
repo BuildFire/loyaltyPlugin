@@ -32,7 +32,7 @@
          * Method to return to home page
          */
         WidgetAwarded.goToHome = function () {
-          ViewStack.popAllViews();
+//          ViewStack.popAllViews();
             buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
                 if (result && result.length) {
                     result.forEach(function (breadCrumb) {

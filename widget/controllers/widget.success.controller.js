@@ -35,7 +35,7 @@
           buildfire.messaging.sendMessageToControl({
             type: 'BackToHome'
           });
-          ViewStack.popAllViews();
+//          ViewStack.popAllViews();
           buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
               if (result && result.length) {
                   result.forEach(function (breadCrumb) {
