@@ -16,7 +16,11 @@
         WidgetHome.view = null;
 
         WidgetHome.listeners = {};
-
+        $rootScope.deviceratio = window.devicePixelRatio;
+        WidgetHome.PlaceHolderImageWidth = 60*window.devicePixelRatio + 'px';
+        WidgetHome.PlaceHolderImageHeight = 60*window.devicePixelRatio + 'px';
+        WidgetHome.PlaceHolderImageWidth3 = 110*window.devicePixelRatio + 'px';
+        WidgetHome.PlaceHolderImageHeight3 = 60*window.devicePixelRatio + 'px';
         /**
          * Initialize current logged in user as null. This field is re-initialized if user is already logged in or user login user auth api.
          */
@@ -354,28 +358,7 @@
           WidgetHome.context = ctx;
         });
         init();
-        var getDevice = function(error, data){
-          if(data) {
-            WidgetHome.device = data.device;
-            if (WidgetHome.device && WidgetHome.device.platform == 'web') {
-              console.log("-----------------",WidgetHome.device.platform)
-              WidgetHome.PlaceHolderImageWidth2 = '60px';
-              WidgetHome.PlaceHolderImageHeight2 = '60px';
-              WidgetHome.PlaceHolderImageWidth3 = '110px';
-              WidgetHome.PlaceHolderImageHeight3 = '60px';
-            }
-            else {
-              console.log("-----------------",WidgetHome.device.platform)
-              WidgetHome.PlaceHolderImageHeight2 = '120px';
-              WidgetHome.PlaceHolderImageWidth2 = '120px';
-              WidgetHome.PlaceHolderImageHeight3 = '120px';
-              WidgetHome.PlaceHolderImageWidth3 = '220px';
-            }
-          }
-          else
-            console.log("Error while getting the device context data", error)
-        }
-        buildfire.getContext(getDevice);
+
 
 
       }]);
