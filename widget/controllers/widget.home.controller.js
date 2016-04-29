@@ -282,6 +282,17 @@
           });
         };
 
+        var logoutCallback = function () {
+          buildfire.auth.getCurrentUser(function (err, user) {
+            console.log("_______________________", user);
+           // if (user) {
+              WidgetHome.currentLoggedInUser = null;
+             // WidgetHome.getLoyaltyPoints(user._id);
+              $scope.$digest();
+           // }
+          });
+        };
+
         var onUpdateCallback = function (event) {
           console.log("++++++++++++++++++++++++++", event);
           setTimeout(function () {
@@ -321,6 +332,7 @@
          * onLogin() listens when user logins using buildfire.auth api.
          */
         buildfire.auth.onLogin(loginCallback);
+        buildfire.auth.onLogout(logoutCallback);
 
         /**
          * Check for current logged in user, if yes fetch its loyalty points
