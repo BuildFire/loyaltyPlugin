@@ -25,15 +25,12 @@
             >Get More Points</a>
       </div>
     </div>
-    <div class="list-layout" ng-if="WidgetHome.loyaltyRewards && WidgetHome.carouselImages">
+    <div class="list-layout layout1" ng-if="WidgetHome.loyaltyRewards && WidgetHome.carouselImages">
       <div class="group-row">
-        <div class="list-item col-xs-6 padding-zero has-info-bar pull-left"
-             ng-repeat="reward in WidgetHome.loyaltyRewards">
+        <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="reward in WidgetHome.loyaltyRewards">
           <div class="list-item-media text-center" ng-click="WidgetHome.openReward(reward)">
             <div class="list-media-holder">
-              <img load-image="1x1"
-                   data-final-src="{{reward.listImage| getImageUrl : 171:171}}"
-                   ng-if="reward.listImage">
+              <img load-image="1x1" data-final-src="{{reward.listImage| getImageUrl : 380:380}}" ng-if="reward.listImage">
               <img src="../../../styles/media/holder-1x1.png" ng-if="!reward.listImage">
             </div>
             <div class="info-bar bg-primary">
