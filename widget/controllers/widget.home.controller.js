@@ -12,6 +12,10 @@
         $rootScope.itemListbackgroundImage = "";
         $rootScope.itemDetailsBackgroundImage = "";
 
+        $scope.setWidth = function () {
+            $rootScope.deviceWidth = window.innerWidth;
+        };
+
         //create new instance of buildfire carousel viewer
         WidgetHome.view = null;
 
