@@ -1,5 +1,5 @@
 <div class="holder padding-zero layout3">
-  <div class="loyalty-plugin">
+  <div class="loyalty-plugin"  data-ng-init="setWidth()">
     <div id="carousel" ng-if="WidgetHome.carouselImages.length"
          build-fire-carousel=""
          ng-style="WidgetHome.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
@@ -33,7 +33,7 @@
             <img load-image="16x9"
                  data-final-src="{{reward.listImage | getImageUrl : 110:60}}"
                  ng-if="reward.listImage">
-            <img src="../../../styles/media/holder-16x9.png" ng-if="!reward.listImage">
+            <img src="../../../styles/media/holder-16x9.png" width="{{WidgetHome.PlaceHolderImageWidth3}}" height="{{ WidgetHome.PlaceHolderImageHeight3}}"  ng-if="!reward.listImage">
           </div>
           <div
               class="list-item-copy text-left padding-left-ten padding-right-ten">

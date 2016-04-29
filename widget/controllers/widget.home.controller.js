@@ -12,11 +12,19 @@
         $rootScope.itemListbackgroundImage = "";
         $rootScope.itemDetailsBackgroundImage = "";
 
+        $scope.setWidth = function () {
+            $rootScope.deviceWidth = window.innerWidth;
+        };
+
         //create new instance of buildfire carousel viewer
         WidgetHome.view = null;
 
         WidgetHome.listeners = {};
-
+        $rootScope.deviceratio = window.devicePixelRatio;
+        WidgetHome.PlaceHolderImageWidth = 60*window.devicePixelRatio + 'px';
+        WidgetHome.PlaceHolderImageHeight = 60*window.devicePixelRatio + 'px';
+        WidgetHome.PlaceHolderImageWidth3 = 110*window.devicePixelRatio + 'px';
+        WidgetHome.PlaceHolderImageHeight3 = 60*window.devicePixelRatio + 'px';
         /**
          * Initialize current logged in user as null. This field is re-initialized if user is already logged in or user login user auth api.
          */
@@ -278,6 +286,17 @@
           });
         };
 
+        var logoutCallback = function () {
+          buildfire.auth.getCurrentUser(function (err, user) {
+            console.log("_______________________", user);
+           // if (user) {
+              WidgetHome.currentLoggedInUser = null;
+             // WidgetHome.getLoyaltyPoints(user._id);
+              $scope.$digest();
+           // }
+          });
+        };
+
         var onUpdateCallback = function (event) {
           console.log("++++++++++++++++++++++++++", event);
           setTimeout(function () {
@@ -317,6 +336,7 @@
          * onLogin() listens when user logins using buildfire.auth api.
          */
         buildfire.auth.onLogin(loginCallback);
+        buildfire.auth.onLogout(logoutCallback);
 
         /**
          * Check for current logged in user, if yes fetch its loyalty points
@@ -354,6 +374,8 @@
           WidgetHome.context = ctx;
         });
         init();
+
+
 
       }]);
 })(window.angular, window.buildfire);

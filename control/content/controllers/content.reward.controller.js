@@ -49,9 +49,22 @@
         };
         // this method will be called when you change the order of items
         ContentReward.editor.onOrderChange = function (item, oldIndex, newIndex) {
-          var temp = ContentReward.item.carouselImage[oldIndex];
-          ContentReward.item.carouselImage[oldIndex] = ContentReward.item.carouselImage[newIndex];
-          ContentReward.item.carouselImage[newIndex] = temp;
+          var items = ContentReward.item.carouselImage;
+
+          var tmp = items[oldIndex];
+
+          if (oldIndex < newIndex) {
+            for (var i = oldIndex + 1; i <= newIndex; i++) {
+              items[i - 1] = items[i];
+            }
+          } else {
+            for (var i = oldIndex - 1; i >= newIndex; i--) {
+              items[i + 1] = items[i];
+            }
+          }
+          items[newIndex] = tmp;
+
+          ContentReward.item.carouselImage = items;
           $scope.$digest();
         };
 

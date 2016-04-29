@@ -7,7 +7,7 @@
         <div class="enter-price clearfix border-bottom-grey">
           <span class="currency"
                 ng-bind-html="WidgetAmount.safeHtml(WidgetAmount.data.settings.currency.symbol ||'$')"></span>
-          <input type="number" placeholder="0"
+          <input min="0" type="number" placeholder="0"
                  class="form-control text-right border-none"
                  ng-model="WidgetAmount.amount" get-focus ng-click="WidgetAmount.preventClickBehavior($event)">
         </div>
@@ -15,7 +15,7 @@
       <div class="next-btn margin-top-twenty">
         <button class="btn btn-primary stretch margin-top"
                 href="javascript:void(0);" ng-click="WidgetAmount.confirmCode()"
-                ng-disabled="!WidgetAmount.amount || !myform.$valid"
+                ng-disabled="!(WidgetAmount.amount > 0) || !myform.$valid"
             >Next
         </button>
       </div>
