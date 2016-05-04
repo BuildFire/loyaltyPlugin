@@ -200,7 +200,7 @@
               WidgetHome.view.loadItems(WidgetHome.carouselImages);
             }
           }
-          if (app.content && app.content.description)
+          if (app.content && (app.content.description || app.content.description == ''))
             WidgetHome.description = app.content.description;
           RewardCache.setApplication(app);
         });
