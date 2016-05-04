@@ -24,7 +24,6 @@
         buildfire.navigation.scrollTop();
 
         ContentHome.masterData = null;
-        ContentHome.data = angular.copy(_data);
         ContentHome.loyaltyRewards = [];
         ContentHome.bodyWYSIWYGOptions = {
           plugins: 'advlist autolink link image lists charmap print preview',
@@ -114,7 +113,7 @@
             console.info('init success result:', result);
             ContentHome.data = result;
             if (!ContentHome.data)
-              ContentHome.data = {};
+                ContentHome.data = angular.copy(_data);
             if (!ContentHome.data.image)
               ContentHome.editor.loadItems([]);
             else
