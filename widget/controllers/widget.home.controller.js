@@ -13,7 +13,7 @@
         $rootScope.itemDetailsBackgroundImage = "";
 
         $scope.setWidth = function () {
-            $rootScope.deviceWidth = window.innerWidth;
+            $rootScope.deviceWidth = window.innerWidth > 0 ? window.innerWidth : '320';
         };
 
         //create new instance of buildfire carousel viewer
@@ -200,7 +200,7 @@
               WidgetHome.view.loadItems(WidgetHome.carouselImages);
             }
           }
-          if (app.content && app.content.description)
+          if (app.content && (app.content.description || app.content.description == ''))
             WidgetHome.description = app.content.description;
           RewardCache.setApplication(app);
         });
