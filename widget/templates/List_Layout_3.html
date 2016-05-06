@@ -7,7 +7,7 @@
          ng-if="WidgetHome.showDescription(WidgetHome.description)">
       <p ng-bind-html='WidgetHome.safeHtml(WidgetHome.description)'></p>
     </div>
-    <div class="padded" ng-if="WidgetHome.data">
+    <div class="padded" ng-if="WidgetHome.carouselImages && WidgetHome.loyaltyRewards">
       <div class="text-center">
         <p ng-if="!(WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)"><span
             class="text-primary"><a href="javascript:void(0);"

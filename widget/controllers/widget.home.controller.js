@@ -86,6 +86,7 @@
           };
 
           var errorApplication = function (error) {
+            WidgetHome.carouselImages = [];
             console.error('Error fetching loyalty application---------------------------------------------------',error);
           };
 
