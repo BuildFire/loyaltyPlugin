@@ -8,7 +8,7 @@
         var WidgetHome = this;
 
         $rootScope.deviceHeight = window.innerHeight;
-        $rootScope.deviceWidth = window.innerWidth;
+        $rootScope.deviceWidth = window.innerWidth || 320;
         $rootScope.itemListbackgroundImage = "";
         $rootScope.itemDetailsBackgroundImage = "";
 
