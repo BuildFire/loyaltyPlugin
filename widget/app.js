@@ -301,18 +301,16 @@
           }
         };
 
-        buildfire.navigation.onBackButtonClick = function () {
-          if (ViewStack.hasViews()) {
-            if (ViewStack.getCurrentView().template == 'Item_Details') {
-              buildfire.messaging.sendMessageToControl({
-                type: 'BackToHome'
-              });
+        buildfire.history.onPop(function(err,data){
+            if (ViewStack.hasViews()) {
+                if (ViewStack.getCurrentView().template == 'Item_Details') {
+                    buildfire.messaging.sendMessageToControl({
+                        type: 'BackToHome'
+                    });
+                }
+                ViewStack.pop();
             }
-            ViewStack.pop();
-          } else {
-              buildfire.navigation._goBackOne();
-          }
-        };
+        });
       }])
 
 })(window.angular, window.buildfire, window);

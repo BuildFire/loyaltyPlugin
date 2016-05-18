@@ -7,12 +7,26 @@
       function ($scope, ViewStack, RewardCache, $sce, $rootScope) {
 
         var WidgetSuccess = this;
+        var breadCrumbFlag = true;
 
         if (RewardCache.getReward()) {
           WidgetSuccess.reward = RewardCache.getReward();
         }
 
         WidgetSuccess.listeners =  {};
+
+          buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
+              if(result && result.length) {
+                  result.forEach(function(breadCrumb) {
+                      if(breadCrumb.label == 'Success') {
+                          breadCrumbFlag = false;
+                      }
+                  });
+              }
+              if(breadCrumbFlag) {
+                  buildfire.history.push('Success', { elementToShow: 'Success' });
+              }
+          });
 
         /**
          * Method to return to home page
@@ -21,7 +35,16 @@
           buildfire.messaging.sendMessageToControl({
             type: 'BackToHome'
           });
-          ViewStack.popAllViews();
+//          ViewStack.popAllViews();
+          buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
+              if (result && result.length) {
+                  result.forEach(function (breadCrumb) {
+                      if (breadCrumb.options && breadCrumb.options.elementToShow) {
+                          buildfire.history.pop();
+                      }
+                  });
+              }
+          });
         };
 
         /**

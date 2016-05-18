@@ -6,6 +6,7 @@
     .controller('ContentRewardCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$location', '$routeParams', 'RewardCache', 'context',
       function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $location, $routeParams, RewardCache, context) {
         var ContentReward = this;
+        var breadCrumbFlag = true;
         ContentReward.item = {
           title: "",
           pointsToRedeem: "",
@@ -22,6 +23,19 @@
           trusted: true,
           theme: 'modern'
         };
+
+          buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
+              if(result && result.length) {
+                  result.forEach(function(breadCrumb) {
+                      if(breadCrumb.label == 'Item') {
+                          breadCrumbFlag = false;
+                      }
+                  });
+              }
+              if(breadCrumbFlag) {
+                  buildfire.history.push('Item', { elementToShow: 'Item' });
+              }
+          });
 
         //Scroll current view to top when page loaded.
         buildfire.navigation.scrollTop();
@@ -198,6 +212,7 @@
           buildfire.messaging.sendMessageToWidget({
             type: 'ReturnHome'
           });
+          buildfire.history.pop();
           $location.path('#/');
         };
 
