@@ -7,6 +7,7 @@
       function ($scope, ViewStack, RewardCache, $sce, $rootScope, $timeout) {
 
         var WidgetItem = this;
+        var breadCrumbFlag = true;
 
         WidgetItem.listeners = {};
         WidgetItem.insufficientPoints = false;
@@ -14,6 +15,18 @@
         //create new instance of buildfire carousel viewer
         WidgetItem.view = null;
 
+        buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
+            if(result && result.length) {
+                result.forEach(function(breadCrumb) {
+                    if(breadCrumb.label == 'Item') {
+                        breadCrumbFlag = false;
+                    }
+                });
+            }
+            if(breadCrumbFlag) {
+                buildfire.history.push('Item', { elementToShow: 'Item' });
+            }
+        });
         /**
          * Initialize variable with current view returned by ViewStack service. In this case it is "Item_Details" view.
          */

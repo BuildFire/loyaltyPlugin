@@ -198,6 +198,7 @@
           buildfire.messaging.sendMessageToWidget({
             type: 'ReturnHome'
           });
+          buildfire.history.pop();
           $location.path('#/');
         };
 

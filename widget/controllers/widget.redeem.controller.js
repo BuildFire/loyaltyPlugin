@@ -7,6 +7,7 @@
       function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire, Context) {
 
         var WidgetRedeem = this;
+        var breadCrumbFlag = true;
 
         /**
          * Initialize show error message to false
@@ -15,6 +16,19 @@
         WidgetRedeem.dailyLimitExceeded = false;
         WidgetRedeem.context = Context.getContext();
         WidgetRedeem.listeners = {};
+
+          buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
+              if(result && result.length) {
+                  result.forEach(function(breadCrumb) {
+                      if(breadCrumb.label == 'Redeem') {
+                          breadCrumbFlag = false;
+                      }
+                  });
+              }
+              if(breadCrumbFlag) {
+                  buildfire.history.push('Redeem', { elementToShow: 'Redeem' });
+              }
+          });
 
         if (RewardCache.getReward()) {
           WidgetRedeem.reward = RewardCache.getReward();
@@ -76,7 +90,7 @@
          * Method to go back to previous page
          */
         WidgetRedeem.backToHome = function () {
-          ViewStack.pop();
+          buildfire.history.pop();
         };
 
         WidgetRedeem.listeners['REWARD_UPDATED'] = $rootScope.$on('REWARD_UPDATED', function (e, item) {
