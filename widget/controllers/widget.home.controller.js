@@ -16,6 +16,12 @@
             $rootScope.deviceWidth = window.innerWidth > 0 ? window.innerWidth : '320';
         };
 
+          //Refresh list of items on pulling the tile bar
+
+          buildfire.datastore.onRefresh(function () {
+              init();
+          });
+
         //create new instance of buildfire carousel viewer
         WidgetHome.view = null;
 
@@ -376,8 +382,14 @@
         });
         init();
 
-
-
+          WidgetHome.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+              if (!ViewStack.hasViews()) {
+                  // bind on refresh again
+                  buildfire.datastore.onRefresh(function () {
+                      init();
+                  });
+              }
+          });
       }]);
 })(window.angular, window.buildfire);
 

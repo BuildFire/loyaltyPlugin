@@ -30,6 +30,11 @@
               }
           });
 
+          //Refresh item details on pulling the tile bar
+
+          buildfire.datastore.onRefresh(function () {
+          });
+
         if (RewardCache.getReward()) {
           WidgetRedeem.reward = RewardCache.getReward();
         }
@@ -129,6 +134,13 @@
             $scope.$destroy();
           }
         });
+
+          WidgetRedeem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+              if (ViewStack.getCurrentView().template == 'Redeem') {
+                  buildfire.datastore.onRefresh(function () {
+                  });
+              }
+          });
 
         /**
          * Check for current logged in user

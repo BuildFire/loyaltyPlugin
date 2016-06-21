@@ -27,6 +27,12 @@
                 buildfire.history.push('Item', { elementToShow: 'Item' });
             }
         });
+
+          //Refresh item details on pulling the tile bar
+
+          buildfire.datastore.onRefresh(function () {
+          });
+
         /**
          * Initialize variable with current view returned by ViewStack service. In this case it is "Item_Details" view.
          */
@@ -107,6 +113,13 @@
             $scope.$destroy();
           }
         });
+
+          WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+              if (ViewStack.getCurrentView().template == 'Item') {
+                  buildfire.datastore.onRefresh(function () {
+                  });
+              }
+          });
 
         $scope.$on("$destroy", function () {
           console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");

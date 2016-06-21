@@ -26,6 +26,11 @@
               }
           });
 
+          //Refresh item details on pulling the tile bar
+
+          buildfire.datastore.onRefresh(function () {
+          });
+
         WidgetCode.passcodeFailure = false;
         WidgetCode.dailyLimitExceeded = false;
 
@@ -87,6 +92,13 @@
           console.log("#############", event);
           event.preventDefault();
         };
+
+          WidgetCode.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+              if (ViewStack.getCurrentView().template == 'Confirm') {
+                  buildfire.datastore.onRefresh(function () {
+                  });
+              }
+          });
 
         /**
          * Check for current logged in user
