@@ -31,7 +31,8 @@
           <div class="list-media-holder pull-left"
                ng-click="WidgetHome.openReward(reward)">
             <img load-image="16x9"
-                 data-final-src="{{reward.listImage | getImageUrl : 110:60}}"
+                 crop-width="110" crop-height="60" crop-type="crop"
+                 data-final-src="{{reward.listImage}}"
                  ng-if="reward.listImage">
             <img src="../../../styles/media/holder-16x9.png" width="{{WidgetHome.PlaceHolderImageWidth3}}" height="{{ WidgetHome.PlaceHolderImageHeight3}}"  ng-if="!reward.listImage">
           </div>
