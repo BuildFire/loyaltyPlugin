@@ -3,8 +3,8 @@
 (function (angular) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetAmountCtrl', ['$scope', 'ViewStack', 'RewardCache', 'TAG_NAMES', 'DataStore', '$sce',
-      function ($scope, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce) {
+    .controller('WidgetAmountCtrl', ['$scope', 'ViewStack', 'RewardCache', 'TAG_NAMES', 'DataStore', '$sce', '$rootScope',
+      function ($scope, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce, $rootScope) {
 
         var WidgetAmount = this;
         var breadCrumbFlag = true;
