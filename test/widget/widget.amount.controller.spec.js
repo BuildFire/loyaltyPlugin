@@ -27,7 +27,7 @@ describe('Unit : loyaltyPluginWidget Plugin widget.amount.controller.js', functi
             LAYOUTS: LAYOUTS
         });
     });
-    describe('call the inner controller methods', function () {
+    xdescribe('call the inner controller methods', function () {
         it('should invoke when get  WidgetAmount.safeHtml called with html', function () {
             var html = "<p>Hi</p>";
             WidgetAmount.safeHtml(html);

@@ -3,14 +3,15 @@
 (function (angular) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetAmountCtrl', ['$scope', 'ViewStack', 'RewardCache', 'TAG_NAMES', 'DataStore', '$sce',
-      function ($scope, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce) {
+    .controller('WidgetAmountCtrl', ['$scope', 'ViewStack', 'RewardCache', 'TAG_NAMES', 'DataStore', '$sce', '$rootScope',
+      function ($scope, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce, $rootScope) {
 
         var WidgetAmount = this;
         var breadCrumbFlag = true;
 
         WidgetAmount.totalLimitExceeded = false;
         WidgetAmount.data = [];
+        WidgetAmount.listeners = {};
           buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
               if(result && result.length) {
                   result.forEach(function(breadCrumb) {
@@ -23,6 +24,12 @@
                   buildfire.history.push('Amount', { elementToShow: 'Amount' });
               }
           });
+
+          //Refresh item details on pulling the tile bar
+
+          buildfire.datastore.onRefresh(function () {
+          });
+
         /**
          * Initialize variable with current view returned by ViewStack service. In this case it is "Item_Details" view.
          */
@@ -88,6 +95,13 @@
             });
           }
         };
+
+          WidgetAmount.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+              if (ViewStack.getCurrentView().template == 'Amount') {
+                  buildfire.datastore.onRefresh(function () {
+                  });
+              }
+          });
 
         /**
          * DataStore.onUpdate() is bound to listen any changes in datastore
