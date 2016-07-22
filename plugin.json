@@ -4,6 +4,7 @@
 ,"pluginDescription":"Unlike the 'punch card' methodology which limits what you can offer, our loyalty program allows users to accumulate points and then redeem them for rewards at whatever point value you'd like to offer them."
 ,"supportEmail":"support@buildfire.com"
 ,"supportSite":"http://support.appdocumentation.com/knowledge-base/loyalty-plugin-tutorial/"
+,"offlineModeEnabled": true
 ,"control":{
   "content":{
     "enabled":true
