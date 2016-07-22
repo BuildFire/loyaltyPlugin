@@ -8,6 +8,7 @@
 
         var WidgetCode = this;
         var breadCrumbFlag = true;
+        WidgetCode.listeners = {};
         /**
          * Initialize variable with current view returned by ViewStack service. In this case it is "Item_Details" view.
          */

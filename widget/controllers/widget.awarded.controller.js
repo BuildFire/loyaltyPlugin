@@ -3,11 +3,12 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetAwardedCtrl', ['$scope', 'ViewStack',
-      function ($scope, ViewStack) {
+    .controller('WidgetAwardedCtrl', ['$scope', 'ViewStack', '$rootScope',
+      function ($scope, ViewStack, $rootScope) {
 
         var WidgetAwarded = this;
         var breadCrumbFlag = true;
+        WidgetAwarded.listeners = {};
         /**
          * Initialize variable with current view returned by ViewStack service. In this case it is "Item_Details" view.
          */

@@ -11,6 +11,7 @@
 
         WidgetAmount.totalLimitExceeded = false;
         WidgetAmount.data = [];
+        WidgetAmount.listeners = {};
           buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
               if(result && result.length) {
                   result.forEach(function(breadCrumb) {
