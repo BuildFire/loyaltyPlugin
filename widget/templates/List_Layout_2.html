@@ -25,12 +25,10 @@
      	<div class="list-layout" ng-if="WidgetHome.loyaltyRewards && WidgetHome.carouselImages">
 			<div class="list-item" ng-repeat="reward in WidgetHome.loyaltyRewards">
 				<div class="list-item-media text-left overflow-hidden">
-					<div class="list-media-holder square-icon pull-left" ng-click="WidgetHome.openReward(reward)">
+					<div class="list-media-holder square-icon pull-left" ng-click="WidgetHome.openReward(reward)" ng-if="reward.listImage">
             <img load-image="1x1"
                  crop-width="60" crop-height="60" crop-type="crop"
-                 data-final-src="{{reward.listImage}}"
-                 ng-if="reward.listImage">
-            <img src="../../../styles/media/holder-1x1.png" width="{{WidgetHome.PlaceHolderImageWidth}}" height="{{ WidgetHome.PlaceHolderImageHeight}}" ng-if="!reward.listImage">
+                 data-final-src="{{reward.listImage}}">
 					</div>
 					<div class="list-item-copy text-left padding-left-ten padding-right-ten">
 						<p class="ellipsis margin-zero text-primary margin-top-ten"><a
