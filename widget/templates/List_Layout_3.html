@@ -29,12 +29,11 @@
       <div class="list-item" ng-repeat="reward in WidgetHome.loyaltyRewards">
         <div class="list-item-media text-left overflow-hidden">
           <div class="list-media-holder pull-left"
-               ng-click="WidgetHome.openReward(reward)">
+               ng-click="WidgetHome.openReward(reward)"
+               ng-if="reward.listImage">
             <img load-image="16x9"
                  crop-width="110" crop-height="60" crop-type="crop"
-                 data-final-src="{{reward.listImage}}"
-                 ng-if="reward.listImage">
-            <img src="../../../styles/media/holder-16x9.png" width="{{WidgetHome.PlaceHolderImageWidth3}}" height="{{ WidgetHome.PlaceHolderImageHeight3}}"  ng-if="!reward.listImage">
+                 data-final-src="{{reward.listImage}}">
           </div>
           <div
               class="list-item-copy text-left padding-left-ten padding-right-ten">
