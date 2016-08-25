@@ -270,7 +270,7 @@
 
             case 'UpdateItem':
               RewardCache.setReward(msg.data);
-              $rootScope.$broadcast("REWARD_UPDATED", msg.data);
+              $rootScope.$broadcast("REWARD_UPDATED", msg.data, msg.index);
               $rootScope.$apply();
               break;
 

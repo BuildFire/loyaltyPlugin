@@ -63,7 +63,7 @@
             return $sce.trustAsHtml(html);
         };
 
-        WidgetItem.listeners['REWARD_UPDATED'] = $rootScope.$on('REWARD_UPDATED', function (e, item) {
+        WidgetItem.listeners['REWARD_UPDATED'] = $rootScope.$on('REWARD_UPDATED', function (e, item, index) {
 
           if (item.carouselImage) {
             WidgetItem.reward.carouselImage = item.carouselImage || [];

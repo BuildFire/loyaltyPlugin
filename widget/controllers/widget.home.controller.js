@@ -339,6 +339,13 @@
           }
         });
 
+          WidgetHome.listeners['REWARD_UPDATED'] = $rootScope.$on('REWARD_UPDATED', function (e, item, index) {
+              if (index) {
+                    WidgetHome.loyaltyRewards[index] = item;
+                  if($scope.$$phase) $scope.$digest();
+              }
+          });
+
         $scope.$on("$destroy", function () {
           console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
           for (var i in WidgetHome.listeners) {
