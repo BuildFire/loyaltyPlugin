@@ -39,7 +39,7 @@
         /**
          * Method to open a reward details page.
          */
-        WidgetHome.openReward = function (reward) {
+        WidgetHome.openReward = function (reward, index) {
           RewardCache.setReward(reward);
           ViewStack.push({
             template: 'Item_Details',
@@ -47,7 +47,8 @@
           });
           buildfire.messaging.sendMessageToControl({
             type: 'OpenItem',
-            data: reward
+            data: reward,
+            index: index
           });
         };
 

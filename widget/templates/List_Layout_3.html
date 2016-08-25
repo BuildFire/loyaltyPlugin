@@ -29,7 +29,7 @@
       <div class="list-item" ng-repeat="reward in WidgetHome.loyaltyRewards">
         <div class="list-item-media text-left overflow-hidden">
           <div class="list-media-holder pull-left"
-               ng-click="WidgetHome.openReward(reward)"
+               ng-click="WidgetHome.openReward(reward, $index)"
                ng-if="reward.listImage">
             <img load-image="16x9"
                  crop-width="110" crop-height="60" crop-type="crop"
@@ -39,7 +39,7 @@
               class="list-item-copy text-left padding-left-ten padding-right-ten">
             <p class="ellipsis margin-zero text-primary margin-top-ten"><a
                 class="text-primary" href="javascript:void(0);"
-                ng-click="WidgetHome.openReward(reward)">{{reward.title}}</a>
+                ng-click="WidgetHome.openReward(reward, $index)">{{reward.title}}</a>
             </p>
 
             <p class="ellipsis margin-zero opacity-seventy">
