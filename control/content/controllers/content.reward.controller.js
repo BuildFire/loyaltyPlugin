@@ -6,7 +6,6 @@
     .controller('ContentRewardCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$location', '$routeParams', 'RewardCache', 'context',
       function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $location, $routeParams, RewardCache, context) {
         var ContentReward = this;
-        var breadCrumbFlag = true;
         ContentReward.item = {
           title: "",
           pointsToRedeem: "",
@@ -23,19 +22,6 @@
           trusted: true,
           theme: 'modern'
         };
-
-          buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
-              if(result && result.length) {
-                  result.forEach(function(breadCrumb) {
-                      if(breadCrumb.label == 'Item') {
-                          breadCrumbFlag = false;
-                      }
-                  });
-              }
-              if(breadCrumbFlag) {
-                  buildfire.history.push('Item', { elementToShow: 'Item' });
-              }
-          });
 
         //Scroll current view to top when page loaded.
         buildfire.navigation.scrollTop();
@@ -158,7 +144,7 @@
                   data: ContentReward.item
                 });
               }
-              $scope.$digest();
+              if($scope.$$phase) $scope.$digest();
             }
             , error = function (err) {
               ContentReward.isInserted = false;
@@ -180,6 +166,7 @@
           data.auth = ContentReward.currentLoggedInUser.auth;
           buildfire.messaging.sendMessageToWidget({
             id: $routeParams.id,
+            index: $routeParams.index,
             type: 'UpdateItem',
             data: ContentReward.item
           });
@@ -225,6 +212,7 @@
           ContentReward.isInserted = true;
           buildfire.messaging.sendMessageToWidget({
             id: $routeParams.id,
+            index: $routeParams.index,
             type: 'OpenItem',
             data: ContentReward.item
           });
