@@ -71,7 +71,7 @@
                 switch (msg.type) {
                     case 'OpenItem':
                         RewardCache.setReward(msg.data);
-                        $location.path('/reward/' + msg.data._id + msg.index);
+                        $location.path('/reward/' + msg.data._id + '/' + msg.index);
                         $rootScope.$apply();
                         break;
                     case 'BackToHome':
