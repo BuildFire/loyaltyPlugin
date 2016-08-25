@@ -166,7 +166,7 @@
           data.auth = ContentReward.currentLoggedInUser.auth;
           buildfire.messaging.sendMessageToWidget({
             id: $routeParams.id,
-            index: $routeParams.index,
+            index: $routeParams.index || 0,
             type: 'UpdateItem',
             data: ContentReward.item
           });
@@ -212,7 +212,7 @@
           ContentReward.isInserted = true;
           buildfire.messaging.sendMessageToWidget({
             id: $routeParams.id,
-            index: $routeParams.index,
+            index: $routeParams.index || 0,
             type: 'OpenItem',
             data: ContentReward.item
           });
