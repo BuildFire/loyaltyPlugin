@@ -368,7 +368,7 @@
         });
 
           WidgetHome.listeners['REWARD_UPDATED'] = $rootScope.$on('REWARD_UPDATED', function (e, item, index) {
-              if (index) {
+              if (index == 0 || index) {
                     WidgetHome.loyaltyRewards[index] = item;
                   if($scope.$$phase) $scope.$digest();
               }

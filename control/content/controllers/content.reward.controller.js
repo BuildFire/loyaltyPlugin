@@ -144,7 +144,7 @@
                   data: ContentReward.item
                 });
               }
-              if($scope.$$phase) $scope.$digest();
+//              if($scope.$$phase) $scope.$digest();
             }
             , error = function (err) {
               ContentReward.isInserted = false;
