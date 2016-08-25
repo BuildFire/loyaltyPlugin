@@ -276,9 +276,9 @@
           });
         };
 
-        ContentHome.openReward = function (data) {
+        ContentHome.openReward = function (data, index) {
           RewardCache.setReward(data);
-          $location.path('/reward/' + data._id);
+          $location.path('/reward/' + data._id + '/' + index);
           //  $scope.$digest();
         };
         /*

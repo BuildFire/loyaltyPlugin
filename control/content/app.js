@@ -26,7 +26,7 @@
                         }
                     }
                 })
-                .when('/reward/:id', {
+                .when('/reward/:id/:index', {
                     templateUrl: 'templates/reward.html',
                     controllerAs: 'ContentReward',
                     controller: 'ContentRewardCtrl',
@@ -71,7 +71,7 @@
                 switch (msg.type) {
                     case 'OpenItem':
                         RewardCache.setReward(msg.data);
-                        $location.path('/reward/' + msg.data._id);
+                        $location.path('/reward/' + msg.data._id + '/' + msg.index);
                         $rootScope.$apply();
                         break;
                     case 'BackToHome':

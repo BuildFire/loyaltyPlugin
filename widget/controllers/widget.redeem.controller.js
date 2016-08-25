@@ -98,7 +98,7 @@
           buildfire.history.pop();
         };
 
-        WidgetRedeem.listeners['REWARD_UPDATED'] = $rootScope.$on('REWARD_UPDATED', function (e, item) {
+        WidgetRedeem.listeners['REWARD_UPDATED'] = $rootScope.$on('REWARD_UPDATED', function (e, item, index) {
           if (item.carouselImage) {
             WidgetRedeem.reward.carouselImage = item.carouselImage || [];
             if (WidgetRedeem.view) {
