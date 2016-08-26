@@ -15,6 +15,7 @@
         };
         ContentReward.isInserted = false;
         ContentReward.masterData = null;
+        ContentReward.itemSaved = false;
         updateMasterItem(ContentReward.item);
         ContentReward.bodyWYSIWYGOptions = {
           plugins: 'advlist autolink link image lists charmap print preview',
@@ -129,11 +130,12 @@
           var data = newObj;
           data.appId = context.appId;
           data.loyaltyUnqiueId = context.instanceId;
-          data.userToken = ContentReward.currentLoggedInUser.userToken;
-          data.auth = ContentReward.currentLoggedInUser.auth;
+          data.userToken = ContentReward.currentLoggedInUser && ContentReward.currentLoggedInUser.userToken;
+          data.auth = ContentReward.currentLoggedInUser && ContentReward.currentLoggedInUser.auth;
           var success = function (result) {
               console.info('Saved data result: ', result);
               updateMasterItem(newObj);
+              ContentReward.itemSaved = true;
               ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: result._id});
               ContentReward.item = Object.assign(ContentReward.item, result);
               ContentReward.isInserted = true;
@@ -148,6 +150,7 @@
             }
             , error = function (err) {
               ContentReward.isInserted = false;
+              ContentReward.itemSaved = true;
               console.error('Error while saving data : ', err);
             };
           LoyaltyAPI.addReward(data).then(success, error);
@@ -173,9 +176,11 @@
           $scope.$digest();
           var success = function (result) {
               console.info('Saved data result: ', result);
+              ContentReward.itemSaved = true;
             }
             , error = function (err) {
               console.error('Error while saving data : ', err);
+              ContentReward.itemSaved = true;
             };
           LoyaltyAPI.updateReward(data).then(success, error);
         };
