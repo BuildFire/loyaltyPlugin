@@ -234,6 +234,7 @@
             if (isUnchanged(newObj)) {
               return;
             }
+            ContentReward.itemSaved = false;
             if (tmrDelay) {
               clearTimeout(tmrDelay);
             }
