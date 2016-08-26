@@ -209,6 +209,9 @@ describe('Unit : loyaltyPluginWidget Plugin widget.home.controller.js', function
       var points = 5, callback = function(e, data){
       }
       WidgetHome.loyaltyRewards = [1,2,3];
+      WidgetHome.context = {
+          instanceId : 'abcde1234'
+      };
       $rootScope.$broadcast('REWARD_ADDED', callback);
     });
     it('should invoke GOTO_HOME when point have some values', function () {

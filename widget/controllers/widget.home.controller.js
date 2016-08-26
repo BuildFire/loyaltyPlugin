@@ -188,7 +188,17 @@
          * This event listener is bound for "REWARD_ADDED" event broadcast
          */
         WidgetHome.listeners['REWARD_ADDED'] = $rootScope.$on('REWARD_ADDED', function (e, item) {
-          WidgetHome.loyaltyRewards.unshift(item);
+            var successLoyaltyRewards = function (result) {
+                    WidgetHome.loyaltyRewards = result;
+                    if (!WidgetHome.loyaltyRewards)
+                        WidgetHome.loyaltyRewards = [];
+                }
+                , errorLoyaltyRewards = function (err) {
+                    if (err && err.code !== STATUS_CODE.NOT_FOUND) {
+                        console.error('Error while getting data loyaltyRewards--------------------------------------', err);
+                    }
+                };
+            LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
         });
 
         /**
@@ -368,9 +378,13 @@
         });
 
           WidgetHome.listeners['REWARD_UPDATED'] = $rootScope.$on('REWARD_UPDATED', function (e, item, index) {
-              if (index == 0 || index) {
-                    WidgetHome.loyaltyRewards[index] = item;
-                  if($scope.$$phase) $scope.$digest();
+              if (item && WidgetHome.loyaltyRewards && WidgetHome.loyaltyRewards.length) {
+                  WidgetHome.loyaltyRewards.some(function (reward, index) {
+                      if (reward._id == item._id) {
+                          WidgetHome.loyaltyRewards[index] = item;
+                          return true;
+                      }
+                  })
               }
           });
 
