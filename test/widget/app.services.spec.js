@@ -29,7 +29,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
           LoyaltyAPI.addApplication(data);
 
           $httpBackend
-              .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyApp')
+              .when('POST', 'https://loyalty.buildfire.com/api/loyaltyApp')
               .respond(200, {
                   status: "success"
               });
@@ -43,7 +43,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
           LoyaltyAPI.addApplication(data);
 
           $httpBackend
-              .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyApp')
+              .when('POST', 'https://loyalty.buildfire.com/api/loyaltyApp')
               .respond(500, {
                   status: null
               });
@@ -56,7 +56,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
         LoyaltyAPI.getApplication('');
 
         $httpBackend
-            .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyApp/', {
+            .when('GET', 'https://loyalty.buildfire.com/api/loyaltyApp/', {
         })
             .respond(200, { data: 'value' });
 
@@ -68,7 +68,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
           LoyaltyAPI.getApplication('');
 
           $httpBackend
-              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyApp/', {
+              .when('GET', 'https://loyalty.buildfire.com/api/loyaltyApp/', {
               })
               .respond(500, { data: null });
 
@@ -83,7 +83,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
               template:['Item_Details']
           }
           $httpBackend
-              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyRewards/e22494ec-73ea-44ac-b82b-75f64b8bc535', {
+              .when('GET', 'https://loyalty.buildfire.com/api/loyaltyRewards/e22494ec-73ea-44ac-b82b-75f64b8bc535', {
               })
               .respond(200, {
                   status: "success"
@@ -98,7 +98,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
               template:['Item_Details']
           }
           $httpBackend
-              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyRewards/', {
+              .when('GET', 'https://loyalty.buildfire.com/api/loyaltyRewards/', {
               })
               .respond(500, {
                   status: null
@@ -127,7 +127,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
               template:['Item_Details']
           }
           $httpBackend
-              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyUser/557c6567c8faa5ec0f003728?userToken=EqrMk%2FnVWw3Qqwjikn277vxqp2JNTSreFbQdrq%2BzqEo%3D&loyaltyUnqiueId=1450083424880-07702731736935675', {
+              .when('GET', 'https://loyalty.buildfire.com/api/loyaltyUser/557c6567c8faa5ec0f003728?userToken=EqrMk%2FnVWw3Qqwjikn277vxqp2JNTSreFbQdrq%2BzqEo%3D&loyaltyUnqiueId=1450083424880-07702731736935675', {
               })
               .respond(200, {
                   status: "success"
@@ -143,7 +143,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
               template:['Item_Details']
           }
           $httpBackend
-              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyUser/'+userid+'?userToken=EqrMk%2FnVWw3Qqwjikn277vxqp2JNTSreFbQdrq%2BzqEo%3D&loyaltyUnqiueId=1450083424880-07702731736935675', {
+              .when('GET', 'https://loyalty.buildfire.com/api/loyaltyUser/'+userid+'?userToken=EqrMk%2FnVWw3Qqwjikn277vxqp2JNTSreFbQdrq%2BzqEo%3D&loyaltyUnqiueId=1450083424880-07702731736935675', {
               })
               .respond(500, {
                   status: null
@@ -158,7 +158,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
               template:['Item_Details']
           }
           $httpBackend
-              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyUserAddPoint/557c6567c8faa5ec0f003728?userToken=RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK%2B5%2F1Ef07A%3D&loyaltyUnqiueId=1450083424880-07702731736935675&redemptionPasscode=12345&purchaseAmount=1000', {
+              .when('GET', 'https://loyalty.buildfire.com/api/loyaltyUserAddPoint/557c6567c8faa5ec0f003728?userToken=RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK%2B5%2F1Ef07A%3D&loyaltyUnqiueId=1450083424880-07702731736935675&redemptionPasscode=12345&purchaseAmount=1000', {
               })
               .respond(200, {
                   status: "success"
@@ -174,7 +174,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
               template:['Item_Details']
           }
           $httpBackend
-              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyUserAddPoint/557c6567c8faa5ec0f003728?userToken=RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK%2B5%2F1Ef07A%3D&loyaltyUnqiueId='+loyalityUniqueId+'&redemptionPasscode=12345&purchaseAmount=1000', {
+              .when('GET', 'https://loyalty.buildfire.com/api/loyaltyUserAddPoint/557c6567c8faa5ec0f003728?userToken=RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK%2B5%2F1Ef07A%3D&loyaltyUnqiueId='+loyalityUniqueId+'&redemptionPasscode=12345&purchaseAmount=1000', {
               })
               .respond(500, {
                   status: null
@@ -189,7 +189,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
               template:['Item_Details']
           }
           $httpBackend
-              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyAppPassCode/1450083424880-07702731736935675?userToken=RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK%2B5%2F1Ef07A%3D&redemptionPasscode=12345', {
+              .when('GET', 'https://loyalty.buildfire.com/api/loyaltyAppPassCode/1450083424880-07702731736935675?userToken=RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK%2B5%2F1Ef07A%3D&redemptionPasscode=12345', {
               })
               .respond(200);
           $httpBackend.flush();
@@ -203,7 +203,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
               template:['Item_Details']
           }
           $httpBackend
-              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyAppPassCode/'+null+'?userToken=RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK%2B5%2F1Ef07A%3D&redemptionPasscode=12345', {
+              .when('GET', 'https://loyalty.buildfire.com/api/loyaltyAppPassCode/'+null+'?userToken=RxkOcyDzsgXq0AqpzI8v5557D41sd56NiK%2B5%2F1Ef07A%3D&redemptionPasscode=12345', {
               })
               .respond(500, {
                   status: null
@@ -218,7 +218,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
               template:['Item_Details']
           }
           $httpBackend
-              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyUserRedeem/557c6567c8faa5ec0f003728?loyaltyUnqiueId=1450237043026-01417660885490477&userToken=3paSyI1VnmWrRfrpnclagflkLezdxaQTHcskZBetTlw%3D&redeemId=5671028609db81b815000002', {
+              .when('GET', 'https://loyalty.buildfire.com/api/loyaltyUserRedeem/557c6567c8faa5ec0f003728?loyaltyUnqiueId=1450237043026-01417660885490477&userToken=3paSyI1VnmWrRfrpnclagflkLezdxaQTHcskZBetTlw%3D&redeemId=5671028609db81b815000002', {
               })
               .respond(200);
           $httpBackend.flush();
@@ -232,7 +232,7 @@ describe('Unit : loyaltyPluginWidget design services', function () {
               template:['Item_Details']
           }
           $httpBackend
-              .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyUserRedeem/557c6567c8faa5ec0f003728?loyaltyUnqiueId=1450237043026-01417660885490477&userToken='+userToken+'&redeemId=5671028609db81b815000002', {
+              .when('GET', 'https://loyalty.buildfire.com/api/loyaltyUserRedeem/557c6567c8faa5ec0f003728?loyaltyUnqiueId=1450237043026-01417660885490477&userToken='+userToken+'&redeemId=5671028609db81b815000002', {
               })
               .respond(500, {
                   status: null

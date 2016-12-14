@@ -65,8 +65,8 @@ describe('Unit : loyaltyPluginWidget Widget Enums', function () {
     it('SERVER should exist and be an object', function () {
       expect(typeof SERVER).toEqual('object');
     });
-    it('SERVER.URL should exist and equals to "http://loyalty.kaleoapps.com"', function () {
-      expect(SERVER.URL).toEqual('http://loyalty.kaleoapps.com');
+    it('SERVER.URL should exist and equals to "https://loyalty.buildfire.com"', function () {
+      expect(SERVER.URL).toEqual('https://loyalty.buildfire.com');
     });
   });
 });
