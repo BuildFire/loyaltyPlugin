@@ -20,6 +20,6 @@
       ITEM_ARRAY_FOUND: 'Array of Items provided'
     })
     .constant('SERVER', {
-      URL : 'https://loyalty.buildfire.com/'
+      URL : 'http://loyalty.kaleoapps.com'
     });
 })(window.angular);

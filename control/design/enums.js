@@ -23,7 +23,7 @@
       ITEM_ARRAY_FOUND: 'Array of Items provided'
     })
     .constant('SERVER', {
-      URL: 'http://loyalty.kaleoapps.com'
+      URL: 'https://loyalty.buildfire.com'
     })
     .constant('LAYOUTS', {
       listLayout: [

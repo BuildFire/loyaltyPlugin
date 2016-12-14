@@ -58,19 +58,12 @@
     }])
     .factory('LoyaltyAPI', ['$q', 'STATUS_CODE', 'STATUS_MESSAGES', 'SERVER', '$http',
       function ($q, STATUS_CODE, STATUS_MESSAGES, SERVER, $http) {
-        var isAndroid = function () {
-          var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-          return (/android/i.test(userAgent));
-        };
-        var getProxyServerUrl = function () {
-          return isAndroid() ? SERVER.URL : SERVER.secureURL;
-        };
         var addApplication = function (app) {
           var deferred = $q.defer();
           if (!app) {
             deferred.reject(new Error('Undefined app data'));
           }
-          $http.post(getProxyServerUrl() + '/api/loyaltyApp', app).success(function (response) {
+          $http.post(SERVER.URL + '/api/loyaltyApp', app).success(function (response) {
             if (response.statusCode == 200)
               deferred.resolve(response);
             else
