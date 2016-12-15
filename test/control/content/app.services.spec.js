@@ -34,7 +34,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.addEditApplication(data);
 
       $httpBackend
-          .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyApp')
+          .when('POST', 'https://loyalty.buildfire.com/api/loyaltyApp')
           .respond(200, {
             status: "success"
           });
@@ -57,7 +57,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
 
 
       $httpBackend
-          .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyApp')
+          .when('POST', 'https://loyalty.buildfire.com/api/loyaltyApp')
           .respond(null);
       $httpBackend.flush();
       $rootScope.$digest();
@@ -74,7 +74,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.addEditApplication(data);
 
       $httpBackend
-          .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyApp')
+          .when('POST', 'https://loyalty.buildfire.com/api/loyaltyApp')
           .respond(500, {
             status: null
           });
@@ -97,7 +97,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.getApplication(id);
 
       $httpBackend
-          .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyApp/'+id)
+          .when('GET', 'https://loyalty.buildfire.com/api/loyaltyApp/'+id)
           .respond(200, {
             status: "success"
           });
@@ -118,7 +118,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.getApplication(id);
 
       $httpBackend
-          .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyApp/'+id)
+          .when('GET', 'https://loyalty.buildfire.com/api/loyaltyApp/'+id)
           .respond(null);
       $httpBackend.flush();
       $rootScope.$digest();
@@ -137,7 +137,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.getApplication(id);
 
       $httpBackend
-          .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyApp/'+id)
+          .when('GET', 'https://loyalty.buildfire.com/api/loyaltyApp/'+id)
           .respond(500, {
             status: null
           });
@@ -159,7 +159,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.addReward(data);
 
       $httpBackend
-          .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyRewards',data)
+          .when('POST', 'https://loyalty.buildfire.com/api/loyaltyRewards',data)
           .respond(200, {
             status: "success"
           });
@@ -180,7 +180,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.addReward(data);
 
       $httpBackend
-          .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyRewards',data)
+          .when('POST', 'https://loyalty.buildfire.com/api/loyaltyRewards',data)
           .respond(null);
       $httpBackend.flush();
       $rootScope.$digest();
@@ -197,7 +197,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.addReward(data);
 
       $httpBackend
-          .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyRewards',data)
+          .when('POST', 'https://loyalty.buildfire.com/api/loyaltyRewards',data)
           .respond(500, {
             status: null
           });
@@ -219,7 +219,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.getRewards(id);
 
       $httpBackend
-          .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyRewards/'+id)
+          .when('GET', 'https://loyalty.buildfire.com/api/loyaltyRewards/'+id)
           .respond(200, {
             status: "success"
           });
@@ -240,7 +240,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.getRewards(id);
 
       $httpBackend
-          .when('GET', 'http://loyalty.kaleoapps.com/api/loyaltyRewards/'+id)
+          .when('GET', 'https://loyalty.buildfire.com/api/loyaltyRewards/'+id)
           .respond(500, {
             status: null
           });
@@ -262,7 +262,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.updateReward(data);
 
       $httpBackend
-          .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyRewards',data)
+          .when('POST', 'https://loyalty.buildfire.com/api/loyaltyRewards',data)
           .respond(200, {
             status: "success"
           });
@@ -283,7 +283,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.updateReward(data);
 
       $httpBackend
-          .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyRewards',data)
+          .when('POST', 'https://loyalty.buildfire.com/api/loyaltyRewards',data)
           .respond(500, {
             status: null
           });
@@ -308,7 +308,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.removeReward(id,data);
 
       $httpBackend
-          .when('DELETE', 'http://loyalty.kaleoapps.com/api/loyaltyRewards/'+id+'?appId='+data.appId+'&userToken='+data.userToken+'&auth='+data.auth)
+          .when('DELETE', 'https://loyalty.buildfire.com/api/loyaltyRewards/'+id+'?appId='+data.appId+'&userToken='+data.userToken+'&auth='+data.auth)
           .respond(200, {
             status: "success"
           });
@@ -332,7 +332,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.removeReward(id,data);
 
       $httpBackend
-          .when('DELETE', 'http://loyalty.kaleoapps.com/api/loyaltyRewards/'+id+'?appId='+data.appId+'&userToken='+data.userToken+'&auth='+data.auth)
+          .when('DELETE', 'https://loyalty.buildfire.com/api/loyaltyRewards/'+id+'?appId='+data.appId+'&userToken='+data.userToken+'&auth='+data.auth)
           .respond(null);
       $httpBackend.flush();
       $rootScope.$digest();
@@ -354,7 +354,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.removeReward(id,data);
 
       $httpBackend
-          .when('DELETE', 'http://loyalty.kaleoapps.com/api/loyaltyRewards/'+id+'?appId='+data.appId+'&userToken='+data.userToken+'&auth='+data.auth)
+          .when('DELETE', 'https://loyalty.buildfire.com/api/loyaltyRewards/'+id+'?appId='+data.appId+'&userToken='+data.userToken+'&auth='+data.auth)
           .respond(500, {
             status: null
           });
@@ -376,7 +376,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.sortRewards(data);
 
       $httpBackend
-          .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyRewardsSort',data)
+          .when('POST', 'https://loyalty.buildfire.com/api/loyaltyRewardsSort',data)
           .respond(200, {
             status: "success"
           });
@@ -397,7 +397,7 @@ describe('Unit : loyaltyPluginContent content services', function () {
       LoyaltyAPI.sortRewards(data);
 
       $httpBackend
-          .when('POST', 'http://loyalty.kaleoapps.com/api/loyaltyRewardsSort',data)
+          .when('POST', 'https://loyalty.buildfire.com/api/loyaltyRewardsSort',data)
           .respond(500, {
             status: null
           });
