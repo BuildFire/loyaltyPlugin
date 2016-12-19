@@ -58,12 +58,20 @@
     }])
     .factory('LoyaltyAPI', ['$q', 'STATUS_CODE', 'STATUS_MESSAGES', 'SERVER', '$http',
       function ($q, STATUS_CODE, STATUS_MESSAGES, SERVER, $http) {
-        var isAndroid = function () {
-          var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-          return (/android/i.test(userAgent));
+        var requiresHttps = function () {
+          var useHttps = false;
+          var userAgent = navigator.userAgent || navigator.vendor;
+          var isiPhone = (/(iPhone|iPod|iPad)/i.test(userAgent));
+          if (isiPhone) {
+            if (!(/OS [4-9](.*) like Mac OS X/i.test(userAgent))) {
+              useHttps = true;
+            }
+          }
+
+          return useHttps;
         };
         var getProxyServerUrl = function () {
-          return isAndroid() ? SERVER.httpURL : SERVER.URL;
+          return requiresHttps() ? SERVER.URL : SERVER.httpURL;
         };
         var addApplication = function (app) {
           var deferred = $q.defer();
