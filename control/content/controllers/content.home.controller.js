@@ -108,68 +108,73 @@
         /*
          * Go pull any previously saved data
          * */
-        ContentHome.init = function () {
-          ContentHome.success = function (result) {
-            console.info('init success result:', result);
-            ContentHome.data = result;
-            if (!ContentHome.data)
-                ContentHome.data = angular.copy(_data);
-            if (!ContentHome.data.image)
-              ContentHome.editor.loadItems([]);
-            else
-              ContentHome.editor.loadItems(ContentHome.data.image);
-            updateMasterItem(ContentHome.data);
-            if (tmrDelay)clearTimeout(tmrDelay);
-          };
-          ContentHome.error = function (err) {
-            if (err && err.code == 2100) {
-              console.log('Error while getting application:', err);
-              var success = function (result) {
-                  console.info('Saved data result: ', result);
+          ContentHome.init = function () {
+              ContentHome.success = function (result) {
+                  console.info('init success result:', result);
                   ContentHome.data = result;
-                  updateMasterItem(result);
-                  buildfire.messaging.sendMessageToWidget({
-                    type: 'AppCreated'
-                  });
-                }
-                , error = function (err) {
-                  console.log('Error while saving data : ', err);
-                };
-              if (ContentHome.currentLoggedInUser) {
-                _data.userToken = ContentHome.currentLoggedInUser.userToken;
-                _data.auth = ContentHome.currentLoggedInUser.auth;
-                LoyaltyAPI.addEditApplication(_data).then(success, error);
-              } else {
-                ContentHome.needToLoginInCP = true;
-                $timeout(function () {
-                  ContentHome.needToLoginInCP = false;
-                }, 5000);
-              }
-            }
+                  if (!ContentHome.data)
+                      ContentHome.data = angular.copy(_data);
+
+                  //make sure to assign to the right appId
+                  ContentHome.data.appId = _data.appId;
+                  ContentHome.data.externalAppId = _data.externalAppId;
+
+                  if (!ContentHome.data.image)
+                      ContentHome.editor.loadItems([]);
+                  else
+                      ContentHome.editor.loadItems(ContentHome.data.image);
+                  updateMasterItem(ContentHome.data);
+                  if (tmrDelay) clearTimeout(tmrDelay);
+              };
+              ContentHome.error = function (err) {
+                  if (err && err.code == 2100) {
+                      console.log('Error while getting application:', err);
+                      var success = function (result) {
+                          console.info('Saved data result: ', result);
+                          ContentHome.data = result;
+                          updateMasterItem(result);
+                          buildfire.messaging.sendMessageToWidget({
+                              type: 'AppCreated'
+                          });
+                      }
+                          , error = function (err) {
+                          console.log('Error while saving data : ', err);
+                      };
+                      if (ContentHome.currentLoggedInUser) {
+                          _data.userToken = ContentHome.currentLoggedInUser.userToken;
+                          _data.auth = ContentHome.currentLoggedInUser.auth;
+                          LoyaltyAPI.addEditApplication(_data).then(success, error);
+                      } else {
+                          ContentHome.needToLoginInCP = true;
+                          $timeout(function () {
+                              ContentHome.needToLoginInCP = false;
+                          }, 5000);
+                      }
+                  }
+              };
+              ContentHome.successloyaltyRewards = function (result) {
+                  ContentHome.loyaltyRewards = result;
+                  if (!ContentHome.loyaltyRewards)
+                      ContentHome.loyaltyRewards = [];
+                  console.info('init success result loyaltyRewards:', result);
+                  if (tmrDelay) clearTimeout(tmrDelay);
+              };
+              ContentHome.errorloyaltyRewards = function (err) {
+                  if (err && err.code !== STATUS_CODE.NOT_FOUND) {
+                      console.log('Error while getting data loyaltyRewards', err);
+                      if (tmrDelay) clearTimeout(tmrDelay);
+                  }
+              };
+              LoyaltyAPI.getRewards(context.instanceId).then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
+              LoyaltyAPI.getApplication(context.instanceId).then(ContentHome.success, ContentHome.error);
+              buildfire.auth.getCurrentUser(function (err, user) {
+                  console.log("!!!!!!!!!!User!!!!!!!!!!!!", user);
+                  if (user) {
+                      ContentHome.currentLoggedInUser = user;
+                      $scope.$digest();
+                  }
+              });
           };
-          ContentHome.successloyaltyRewards = function (result) {
-            ContentHome.loyaltyRewards = result;
-            if (!ContentHome.loyaltyRewards)
-              ContentHome.loyaltyRewards = [];
-            console.info('init success result loyaltyRewards:', result);
-            if (tmrDelay)clearTimeout(tmrDelay);
-          };
-          ContentHome.errorloyaltyRewards = function (err) {
-            if (err && err.code !== STATUS_CODE.NOT_FOUND) {
-              console.log('Error while getting data loyaltyRewards', err);
-              if (tmrDelay)clearTimeout(tmrDelay);
-            }
-          };
-          LoyaltyAPI.getRewards(context.instanceId).then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
-          LoyaltyAPI.getApplication(context.instanceId).then(ContentHome.success, ContentHome.error);
-          buildfire.auth.getCurrentUser(function (err, user) {
-              console.log("!!!!!!!!!!User!!!!!!!!!!!!", user);
-              if (user) {
-                  ContentHome.currentLoggedInUser = user;
-                  $scope.$digest();
-              }
-          });
-        };
 
 
         /*SortRewards method declaration*/
@@ -215,9 +220,11 @@
                 }, 3000);
               }
             };
-            if( ContentHome.currentLoggedInUser) {
+            if (ContentHome.currentLoggedInUser) {
                 newObj.auth = ContentHome.currentLoggedInUser.auth;
                 newObj.userToken = ContentHome.currentLoggedInUser.userToken;
+                newObj.appId = _data.appId;
+                newObj.externalAppId = _data.externalAppId;
             }
             if (newObj && newObj.auth)
                 LoyaltyAPI.addEditApplication(newObj).then(success, error);
