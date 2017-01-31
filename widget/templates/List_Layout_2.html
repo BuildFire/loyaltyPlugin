@@ -14,7 +14,7 @@
           get points</p>
 
         <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id">You currently have <span
-            class="text-primary">{{loyaltyPoints}}</span> points.
+            class="text-primary">{{loyaltyPoints | number : 2}}</span> points.
         </p>
         <a class="btn btn-primary padding-left-twenty padding-right-twenty"
            href="javascript:void(0);"
