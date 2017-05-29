@@ -41,6 +41,10 @@
                 {
                     name:"Switz Franc",
                     symbol:"SFr"
+                },
+                {
+                    name:"Rand",
+                    symbol:"ZAR"
                 }];
 
                 var _data = {
