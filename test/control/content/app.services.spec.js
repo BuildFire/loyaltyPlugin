@@ -27,6 +27,8 @@ describe('Unit : loyaltyPluginContent content services', function () {
 
     /*LoyaltyAPI.addEditApplication test case*/
     it('LoyaltyAPI.addEditApplication should return success', function () {
+      debugger;
+      
       var data ={
           data:"data"
       }
