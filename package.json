@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Buildfire plugin to enable people to provide a reward and points system to their users.",
   "main": "index.js",
+   "supportSite":"http://learn.appdocumentation.com/plugin-tutorials/loyalty-plugin-tutorial",
   "scripts": {
     "postinstall": "./node_modules/.bin/bower install",
     "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
