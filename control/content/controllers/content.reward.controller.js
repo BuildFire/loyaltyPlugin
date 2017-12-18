@@ -165,7 +165,7 @@
           var data = newObj;
           data.appId = context.appId;
           data.loyaltyUnqiueId = context.instanceId;
-          data.userToken = ContentReward.currentLoggedInUser.userToken;
+          data.userToken = ContentReward.currentLoggedInUser._id;
           data.auth = ContentReward.currentLoggedInUser.auth;
           buildfire.messaging.sendMessageToWidget({
             id: $routeParams.id,
