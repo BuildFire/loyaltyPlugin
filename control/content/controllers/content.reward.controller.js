@@ -116,6 +116,7 @@
 
         buildfire.auth.getCurrentUser(function (err, user) {
           if (user) {
+            user.userToken=user._id;
             ContentReward.currentLoggedInUser = user;
             $scope.$digest();
           }
@@ -165,7 +166,7 @@
           var data = newObj;
           data.appId = context.appId;
           data.loyaltyUnqiueId = context.instanceId;
-          data.userToken = ContentReward.currentLoggedInUser._id;
+          data.userToken = ContentReward.currentLoggedInUser.userToken;
           data.auth = ContentReward.currentLoggedInUser.auth;
           buildfire.messaging.sendMessageToWidget({
             id: $routeParams.id,
