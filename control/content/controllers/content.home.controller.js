@@ -170,6 +170,7 @@
               buildfire.auth.getCurrentUser(function (err, user) {
                   console.log("!!!!!!!!!!User!!!!!!!!!!!!", user);
                   if (user) {
+                      user.userToken=user._id;
                       ContentHome.currentLoggedInUser = user;
                       $scope.$digest();
                   }
