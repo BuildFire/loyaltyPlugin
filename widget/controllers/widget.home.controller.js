@@ -96,8 +96,9 @@
             WidgetHome.carouselImages = [];
             console.error('Error fetching loyalty application---------------------------------------------------',error);
           };
-
+          WidgetHome.getLoyaltyPoints();
           if(WidgetHome.context && WidgetHome.context.instanceId){
+            getLoggedInUser();
             LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
             LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
           }
@@ -359,7 +360,8 @@
         /**
          * Check for current logged in user, if yes fetch its loyalty points
          */
-        buildfire.auth.getCurrentUser(function (err, user) {
+        var getLoggedInUser = function(){
+          buildfire.auth.getCurrentUser(function (err, user) {
           console.log("_______________________", user);
           if (user) {
             WidgetHome.currentLoggedInUser = user;
@@ -376,7 +378,8 @@
             }
           }
         });
-
+        };
+        getLoggedInUser();
           WidgetHome.listeners['REWARD_UPDATED'] = $rootScope.$on('REWARD_UPDATED', function (e, item, index) {
               if (item && WidgetHome.loyaltyRewards && WidgetHome.loyaltyRewards.length) {
                   WidgetHome.loyaltyRewards.some(function (reward, index) {
