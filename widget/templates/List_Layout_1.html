@@ -1,13 +1,13 @@
-<div class="holder padding-zero">
+<div class="holder padding-zero layout1">
   <div class="loyalty-plugin" data-ng-init="setWidth()">
     <div id="carousel" ng-if="WidgetHome.carouselImages.length"
          build-fire-carousel=""
          ng-style="WidgetHome.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
-    <div class="padded padding-bottom-zero"
+    <div class="description"
          ng-if="WidgetHome.showDescription(WidgetHome.description)">
       <p ng-bind-html='WidgetHome.safeHtml(WidgetHome.description)'></p>
     </div>
-    <div class="padded" ng-if="WidgetHome.carouselImages && WidgetHome.loyaltyRewards">
+    <div class="current-points" ng-if="WidgetHome.carouselImages && WidgetHome.loyaltyRewards">
       <div class="text-center">
         <p ng-if="!(WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)"><span
             class="text-primary"><a href="javascript:void(0);"
@@ -25,28 +25,26 @@
             >Get More Points</a>
       </div>
     </div>
-    <div class="list-layout layout1" ng-if="WidgetHome.loyaltyRewards && WidgetHome.carouselImages">
-      <div class="group-row">
-        <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="reward in WidgetHome.loyaltyRewards">
-          <div class="list-item-media text-center" ng-click="WidgetHome.openReward(reward, $index)">
-            <div class="list-media-holder">
-              <img load-image="1x1"
-                   crop-width="380" crop-height="380" crop-type="crop"
-                   data-final-src="{{reward.listImage}}" ng-if="reward.listImage">
-              <img src="../../../styles/media/holder-1x1.png" ng-if="!reward.listImage">
-            </div>
-            <div class="info-bar bg-primary">
-              <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">
-                {{reward.pointsToRedeem}}
-                Points</p>
-            </div>
+    <div class="list-grid" ng-if="WidgetHome.loyaltyRewards && WidgetHome.carouselImages">
+      <div class="list-item has-info-bar" ng-repeat="reward in WidgetHome.loyaltyRewards">
+        <div class="list-item-media text-center" ng-click="WidgetHome.openReward(reward, $index)">
+          <div class="list-media-holder">
+            <img load-image="1x1"
+                  crop-width="380" crop-height="380" crop-type="crop"
+                  data-final-src="{{reward.listImage}}" ng-if="reward.listImage">
+            <img src="../../../styles/media/holder-1x1.png" ng-if="!reward.listImage">
           </div>
-          <div class="copy margin-top-five text-center">
-            <p class="ellipsis text-primary">
-              <a class="text-primary" href="javascript:void(0);"
-                 ng-click="WidgetHome.openReward(reward, $index)">{{reward.title}}</a>
-            </p>
+          <div class="info-bar bg-primary">
+            <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">
+              {{reward.pointsToRedeem}}
+              Points</p>
           </div>
+        </div>
+        <div class="copy margin-top-five text-center">
+          <p class="ellipsis text-primary">
+            <a class="text-primary" href="javascript:void(0);"
+                ng-click="WidgetHome.openReward(reward, $index)">{{reward.title}}</a>
+          </p>
         </div>
       </div>
     </div>
