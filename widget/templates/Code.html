@@ -1,5 +1,5 @@
 <div class="holder code-holder padding-zero" ng-controller="WidgetCodeCtrl as WidgetCode">
-  <div class="loyalty-plugin">
+  <!-- <div class="loyalty-plugin"> -->
     <div class="purchase-amount padded margin-top-ten">
       <h5 class="text-center">Please hand your device to a staff member for
         confirmation</h5>
@@ -18,15 +18,15 @@
         </button>
       </div>
     </div>
-    <div class="col-xs-12 margin-top-five">
-      <div class="alert alert-sm text-center alert-danger"
-           ng-if="WidgetCode.passcodeFailure">Invalid confirmation
-        code.
-      </div>
-      <div class="alert alert-sm text-center alert-danger"
-           ng-if="WidgetCode.dailyLimitExceeded">You have
-        exceeded the daily limit.
-      </div>
+    
+    <div class="alert alert-sm text-center alert-danger"
+          ng-if="WidgetCode.passcodeFailure">Invalid confirmation
+      code.
     </div>
-  </div>
+    <div class="alert alert-sm text-center alert-danger"
+          ng-if="WidgetCode.dailyLimitExceeded">You have
+      exceeded the daily limit.
+    </div>
+    
+  <!-- </div> -->
 </div>
