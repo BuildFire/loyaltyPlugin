@@ -22,14 +22,14 @@
           has been received and the corresponding points will, therefore, be
           deducted from the user's account.</p>
 
-        <div class="clearfix row confirm-cancel">
-          <div class="col-xs-6 pull-left padding-right-five">
-            <a class="btn btn-danger stretch" href="javascript:void(0);"
-               ng-click="WidgetRedeem.backToHome()">Cancel</a>
-          </div>
-          <div class="col-xs-6 pull-right padding-left-five">
+        <div class="confirm-cancel">
+          <div class="text-center margin-bottom-fifteen">
             <a class="btn btn-success stretch" href="javascript:void(0);"
-               ng-click="WidgetRedeem.redeemPoints(WidgetRedeem.reward._id)">Confirm</a>
+            ng-click="WidgetRedeem.redeemPoints(WidgetRedeem.reward._id)">Confirm</a>
+          </div>
+          <div class="text-center">
+            <a class="btn-text bodyTextTheme stretch" href="javascript:void(0);"
+                ng-click="WidgetRedeem.backToHome()">Cancel</a>
           </div>
         </div>
         <br>

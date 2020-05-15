@@ -79,6 +79,14 @@
 }
 .confirm-cancel{
 	padding-top: 40px;
+	max-width: 240px;
+	margin: 0 auto;
+}
+.btn-text{
+	background-color: transparent;
+	border: 1px solid transparent;
+	padding: 6px 12px;
+	display: inline-block;
 }
 
 .purchase-amount h5{
@@ -408,4 +416,17 @@ input[type="password"].form-control::placeholder{
 			transform: scale(1);
 			opacity: 1;
 	}
+}
+
+.plugin-slider .plugin-slide,
+.plugin-slider.owl-carousel .owl-stage-outer,
+.plugin-slider.owl-carousel .owl-stage,
+.plugin-slider.owl-carousel .owl-item{
+	min-height: inherit !important;
+}
+.plugin-slider .plugin-slide img{
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: cover !important;
+	min-height: inherit !important;
 }
