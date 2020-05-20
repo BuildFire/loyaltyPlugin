@@ -3,7 +3,7 @@
 	<div class="loyalty-plugin" data-ng-init="setWidth()">
     <div id="carousel" ng-if="WidgetHome.carouselImages.length" build-fire-carousel=""
          ng-style="WidgetHome.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
-    <div class="description padding-bottom-zero" ng-if="WidgetHome.showDescription(WidgetHome.description)">
+    <div class="description padding-bottom-zero word-break" ng-if="WidgetHome.showDescription(WidgetHome.description)">
       <p ng-bind-html='WidgetHome.safeHtml(WidgetHome.description)'></p>
     </div>
 		<div class="current-points" ng-if="WidgetHome.carouselImages && WidgetHome.loyaltyRewards">

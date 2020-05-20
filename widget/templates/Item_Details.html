@@ -3,7 +3,7 @@
     <div id="carousel2" ng-if="WidgetItem.reward.carouselImage.length"
          build-fire-carousel2="" ng-style="WidgetItem.reward.carouselImage.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
     <div ng-if="WidgetItem.reward">
-      <div class="detail-header">
+      <div class="detail-header word-break">
         <div class="margin-right-fifteen">
           <p>{{WidgetItem.reward.title}}</p>
 
@@ -15,7 +15,7 @@
              ng-click="WidgetItem.confirmCancel()">Redeem</a>
         </div>
       </div>
-      <div class="editor padded">
+      <div class="editor padded word-break">
         <p class="margin-zero"
            ng-bind-html="WidgetItem.safeHtml(WidgetItem.reward.description)"></p>
       </div>

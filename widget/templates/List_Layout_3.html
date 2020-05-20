@@ -3,7 +3,7 @@
     <div id="carousel" ng-if="WidgetHome.carouselImages.length"
          build-fire-carousel=""
          ng-style="WidgetHome.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
-    <div class="padding-bottom-zero description"
+    <div class="padding-bottom-zero description word-break"
          ng-if="WidgetHome.showDescription(WidgetHome.description)">
       <p ng-bind-html='WidgetHome.safeHtml(WidgetHome.description)'></p>
     </div>

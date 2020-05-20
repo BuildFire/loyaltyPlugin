@@ -195,7 +195,9 @@
 	border-radius: 4px;
 	box-shadow: 0 2px 4px rgba(98, 98, 98, 0.3);
 }
-
+.description{
+	padding: 16px;
+}
 .description:empty,
 .description:empty p{
 	display: none;
@@ -429,4 +431,7 @@ input[type="password"].form-control::placeholder{
 	height: 100% !important;
 	object-fit: cover !important;
 	min-height: inherit !important;
+}
+.word-break{
+	word-break: break-word;
 }
