@@ -160,7 +160,7 @@
 	display: flex;
 	cursor: pointer;
 	align-items: center;
-	min-height: 56px;
+	padding: 12px 16px;
 }
 .layout3 .list-item:hover,
 .layout2 .list-item:hover{
@@ -170,7 +170,7 @@
 	width: 40px;
 	height: 40px;
 	margin: inherit;
-	margin: 0 16px;
+	margin-right: 16px;
 	border-radius: 4px;
 	text-align: center;
 	overflow: hidden;
@@ -308,13 +308,13 @@
 	background:none;
 }
 .layout3 .list .list-item{
-	min-height: 80px;
+	padding: 12px 16px;
 }
 .layout3 .list .list-media-holder{
 	width: 100px;
 	height: 56px;
 	margin: inherit;
-	margin: 0 16px 0 12px;
+	margin-right: 16px;
 	border-radius: 4px;
 	text-align: center;
 	overflow: hidden;
