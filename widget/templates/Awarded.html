@@ -1,10 +1,12 @@
-<div class="holder padding-zero"
+<div class="holder awarded-holder padding-zero"
      ng-controller="WidgetAwardedCtrl as WidgetAwarded">
   <div class="loyalty-plugin amount">
     <div class="purchase-amount padded margin-top-ten">
-      <p class="text-center">Awesome!<br>You just earned yourself <span
-          style="font-weight:400;">{{WidgetAwarded.pointsAwarded}} Points!</span><br>Check
-        out our list of rewards to redeem.</p>
+      <h5 class="text-center">Awesome!</h5>
+        <p class="text-center">You just earned yourself</p>
+        <h4 class="text-center">{{WidgetAwarded.pointsAwarded}}</h4>
+        <p class="text-center">Points!</p>
+        <p class="text-center check-rewards"> Check out our list of rewards to redeem.</p>
 
       <div class="next-btn margin-top-twenty">
         <a class="btn btn-primary stretch margin-top" href="javascript:void(0);"

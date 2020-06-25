@@ -1,21 +1,100 @@
 .purchase-amount p {
     padding: 0 40px;
 }
-
+.awarded-holder .purchase-amount{
+	animation: amount-in .4s ease-in .5s forwards;
+	transform: scale(.1);
+	opacity: 0;
+}
+.awarded-holder .btn-primary{
+	animation: btn-in .3s cubic-bezier(0.4, 0.03, 0.63, 1.16) 1.2s forwards;
+	transform: translateY(200%);
+	opacity: 0;
+}
+@keyframes btn-in {
+	0%{
+			transform: translateY(200%);
+	}
+	100%{
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+@keyframes amount-in {
+	0%{
+			transform: scale(.1);
+	}
+	100%{
+			transform: scale(1);
+			opacity: 1;
+	}
+}
 .enter-price,
 .next-btn {
     width: 100%;
-    max-width: 160px;
+    max-width: 240px;
     margin: 0 auto;
     position: relative;
 }
-
-.enter-price .currency {
-    position: absolute;
-    top: 6px;
-    left: 0;
+.list-item{
+	cursor: pointer;
+	overflow: hidden;
 }
 
+.enter-price .currency {
+	position: absolute;
+	top: 14px;
+	left: 12px;
+	font-size: 24px;
+}
+.layout1 .list-grid{
+	padding: 12px !important;
+	padding-bottom: calc(24px + env(safe-area-inset-bottom));
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-column-gap: 12px;
+}
+.layout1 .list-item-media{
+	border-radius: 4px;
+	overflow: hidden;
+	box-shadow: 0 2px 4px rgba(98, 98, 98, 0.3);
+}
+@media (min-width: 540px){
+	.layout1 .list-grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+.detail-header{
+	padding: 16px;
+	box-shadow: 0 2px 4px rgba(98, 98, 98, 0.3);
+	display: flex;
+	justify-content: space-between;
+}
+.detail-header p{
+	font-size: 16px;
+	margin-bottom: 4px;
+}
+.detail-header h5{
+	font-size: 24px;
+	margin-bottom: 0;
+}
+.confirm-cancel{
+	padding-top: 40px;
+	max-width: 240px;
+	margin: 0 auto;
+}
+.btn-text{
+	background-color: transparent;
+	border: 1px solid transparent;
+	padding: 6px 12px;
+	display: inline-block;
+}
+
+.purchase-amount h5{
+	font-size: 16px;
+	line-height: 1.5em;
+	margin-bottom: 40px;
+}
 .list-item-media{
 	position:relative;
 }
@@ -64,7 +143,7 @@
 .list-items .list-item:before,
 .layout3 .list-layout .list-item:after{
 	content:'';
-	border-top:1px solid #ddd !important;
+	/* border-top:1px solid #ddd !important; */
 	opacity:0.25;
 	top:0;
 	left:0;
@@ -75,8 +154,57 @@
 	border-top:none !important;
 	top:inherit;
 	bottom:0;
-	border-bottom:1px solid #ddd !important;
+	/* border-bottom:1px solid #ddd !important; */
 }
+.layout3 .list-item,
+.layout2 .list-item{
+	display: flex;
+	cursor: pointer;
+	align-items: center;
+	padding: 12px 16px;
+}
+.layout3 .list-item:hover,
+.layout2 .list-item:hover{
+	background-color: rgba(150,150,150,.05);
+}
+.layout2 .list-item .list-media-holder{
+	width: 40px;
+	height: 40px;
+	margin: inherit;
+	margin-right: 16px;
+	border-radius: 4px;
+	text-align: center;
+	overflow: hidden;
+	flex-shrink: 0;
+}
+.layout3 .list-item-copy,
+.layout2 .list-item-copy{
+	padding-right: 16px;
+}
+.list-item .list-item-copy a:first-of-type{
+	margin: 0;
+	font-weight: bold;
+}
+.list-item .list-item-copy .caption{
+	font-size: 12px;
+}
+.layout1 .current-points,
+.layout2 .current-points,
+.layout3 .current-points{
+	margin: 16px 12px;
+	padding: 16px;
+	border-radius: 4px;
+	box-shadow: 0 2px 4px rgba(98, 98, 98, 0.3);
+}
+.description{
+	padding: 16px;
+}
+.description:empty,
+.description:empty p{
+	display: none;
+}
+
+
 .list-items .list-item + .list-item{
 	padding-top:10px;
 	margin-top:10px;
@@ -170,26 +298,32 @@
 }
 .layout3 .list-layout:before{
 	content:'';
-	border-top:1px solid #ddd !important;
+	/* border-top:1px solid #ddd !important; */
 	opacity:0.25;
 	top:0;
 	left:0;
 	position:absolute;
 	width:100%;
 }
-.layout3 .list-layout .list-item-media{
+.layout3 .list .list-item-media{
 	background:none;
 }
-.layout3 .list-layout .list-item-media .list-media-holder{
-	width:110px;
-	height:60px;
-	line-height:58px;
-	margin:inherit;
-	margin-right:10px;
-	/*background:#efefef;*/
-	border-radius:4px;
-	margin:5px 10px 5px 5px;
-	text-align:center;
+.layout3 .list .list-item{
+	padding: 12px 16px;
+}
+.layout3 .list .list-media-holder{
+	width: 100px;
+	height: 56px;
+	margin: inherit;
+	margin-right: 16px;
+	border-radius: 4px;
+	text-align: center;
+	overflow: hidden;
+}
+.layout3 .list .list-media-holder img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 .media-center-plugin.layout3 .list-layout .list-item-media .list-media-holder{
 	background:none;
@@ -218,4 +352,87 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 }
 .layout3 .list-layout .list-item-copy{
 	padding:6px 10px 5px;
+}
+.layout1,
+.layout2,
+.layout3{
+	opacity: 0;
+	animation: load-in .2s ease-in .5s forwards;
+}
+
+.amount-holder,
+.code-holder,
+.awarded-holder{
+	height: calc(100% - 4vh - env(safe-area-inset-bottom));
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+.awarded-holder h5{
+	font-size: 16px;
+	margin-bottom: 8px;
+}
+.awarded-holder h4{
+	font-size: 56px;
+	font-weight: bold;
+}
+.awarded-holder .check-rewards{
+	font-size: 16px;
+	margin: 32px 0;
+	opacity: .5;
+}
+.alert-danger{
+	position: absolute;
+	width: calc(100% - 32px);
+	bottom: calc(0px + env(safe-area-inset-bottom));
+	left: 50%;
+	transform: translateX(-50%);
+}
+.form-control{
+	border: 0;
+	padding: 0;
+	height: inherit;
+	min-height: inherit;
+	background: 0 0;
+}
+input[type="text"].form-control, 
+input[type="number"].form-control,
+input[type="password"].form-control {
+	font-size: 32px;
+	background-color: rgba(150,150,150,.1);
+	border-bottom: 1px solid rgba(150,150,150,.3) !important;
+	border-radius: 4px 4px 0 0;
+	padding: .75em .5em;
+	margin-bottom: .5em;
+	color: inherit;
+}
+input[type="password"].form-control::placeholder{
+	font-size: 20px;
+}
+@keyframes load-in {
+	0%{
+			transform: scale(.1);
+	}
+	100%{
+			transform: scale(1);
+			opacity: 1;
+	}
+}
+
+.plugin-slider .plugin-slide,
+.plugin-slider.owl-carousel .owl-stage-outer,
+.plugin-slider.owl-carousel .owl-stage,
+.plugin-slider.owl-carousel .owl-item{
+	min-height: inherit !important;
+}
+.plugin-slider .plugin-slide img{
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: cover !important;
+	min-height: inherit !important;
+}
+.word-break{
+	word-break: break-word;
 }

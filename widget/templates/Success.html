@@ -9,22 +9,23 @@
       </div>
     </div>
     </div>
-    <div class="padded" ng-if="WidgetSuccess.reward">
-      <div class="clearfix row">
-        <div class="col-xs-8 pull-left">
+    <div ng-if="WidgetSuccess.reward">
+      <div class="detail-header">
+        <div>
           <p class="margin-zero ellipsis">{{WidgetSuccess.reward.title}}</p>
 
-          <p class="margin-zero ellipsis opacity-seventy">
-            {{WidgetSuccess.reward.pointsToRedeem}} Points</p>
+          <h5 class="margin-zero ellipsis opacity-seventy">
+            {{WidgetSuccess.reward.pointsToRedeem}} Points</h5>
         </div>
       </div>
-      <hr class="small">
-      <div class="editor text-center">
+      <div class="editor padded text-center">
         <p class="margin-top-ten"
            ng-bind-html="WidgetSuccess.safeHtml(WidgetSuccess.reward.description)"></p>
-        <a class="btn btn-primary padding-left-thirty padding-right-thirty"
-           href="javascript:void(0);"
-           ng-click="WidgetSuccess.goToHome()">Done</a>
+        <div class="padding-top-thirty">
+          <a class="btn btn-primary padding-left-thirty padding-right-thirty"
+            href="javascript:void(0);"
+            ng-click="WidgetSuccess.goToHome()">Done</a>
+        </div>
       </div>
     </div>
   </div>
