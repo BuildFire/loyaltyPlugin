@@ -6,7 +6,9 @@
    "supportSite":"http://learn.appdocumentation.com/plugin-tutorials/loyalty-plugin-tutorial",
   "scripts": {
     "postinstall": "./node_modules/.bin/bower install",
-    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
+    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS",
+    "build": "cd .. && rm -rf loyaltyPlugin.zip && zip -r loyaltyPlugin.zip loyaltyPlugin/ -x *node_modules/* *.git* *test/*"
+
   },
   "license": "ISC",
   "dependencies": {
