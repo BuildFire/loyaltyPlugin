@@ -16,6 +16,7 @@
     "angular-animate": "~1.4.3",
     "angular-route": "~1.4.3",
     "tinymce": "~4.2.3",
+    "owl.carousel": "~2.3.4",
     "angular-bootstrap": "~0.13.3"
   }
 }
