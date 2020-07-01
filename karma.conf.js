@@ -19,7 +19,7 @@ module.exports = function(config) {
       'test/assets/bower_components/angular-animate/angular-animate.min.js',
       'test/assets/bower_components/angular-route/angular-route.min.js',
       'test/assets/bower_components/angular-bootstrap/ui-bootstrap.min.js',
-      'test/assets/bower_components/owlcarousel/owl-carousel/owl.carousel.min.js',
+      'test/assets/bower_components/owl.carousel/dist/owl.carousel.min.js',
       'test/assets/bower_components/tinymce/tinymce.min.js',
       'test/assets/bower_components/angular-mocks/angular-mocks.js',
       'test/assets/*.js',
