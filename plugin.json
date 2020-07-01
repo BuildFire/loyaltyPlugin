@@ -1,7 +1,8 @@
 {
   "author":"BuildFire"
-,"pluginName":"Loyalty"
-,"pluginDescription":"Unlike the 'punch card' methodology which limits what you can offer, our loyalty program allows users to accumulate points and then redeem them for rewards at whatever point value you'd like to offer them.Related Topics:Photo"
+,"pluginName":"Loyalty Reward System"
+,"pluginDescription":"The Loyalty Reward System feature helps you retain your customers by setting up your rewards program in few easy steps. Just set the value of your points and allow users to accumulate and redeem them for rewards of your choice."
+,"pluginKeywords": "Points, Rewards, Loyalty, Redeem"
 ,"supportEmail":"support@buildfire.com"
 ,"supportSite":"http://learn.appdocumentation.com/plugin-tutorials/loyalty-plugin-tutorial/"
 ,"offlineModeEnabled": true
@@ -20,5 +21,9 @@
 
 },
   "features" : [],
-  "languages" : ["en"]
+  "languages" : ["en"],
+	"media": [
+      { "type": "image-resource", "path": "marketplacegif.gif" },
+      { "type": "image-resource", "path": "image.png" }
+    ]
 }

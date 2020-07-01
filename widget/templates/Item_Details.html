@@ -2,21 +2,20 @@
   <div class="loyalty-plugin" ng-if="WidgetItem.reward">
     <div id="carousel2" ng-if="WidgetItem.reward.carouselImage.length"
          build-fire-carousel2="" ng-style="WidgetItem.reward.carouselImage.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
-    <div class="padded" ng-if="WidgetItem.reward">
-      <div class="clearfix row">
-        <div class="col-xs-8 pull-left">
-          <p class="margin-zero ellipsis">{{WidgetItem.reward.title}}</p>
+    <div ng-if="WidgetItem.reward">
+      <div class="detail-header word-break">
+        <div class="margin-right-fifteen">
+          <p>{{WidgetItem.reward.title}}</p>
 
-          <p class="margin-zero ellipsis opacity-seventy">
-            {{WidgetItem.reward.pointsToRedeem}} Points</p>
+          <h5 class="ellipsis opacity-seventy">
+            {{WidgetItem.reward.pointsToRedeem}} Points</h5>
         </div>
-        <div class="col-xs-4 pull-right">
+        <div class="">
           <a class="btn btn-primary stretch" href="javascript:void(0);"
              ng-click="WidgetItem.confirmCancel()">Redeem</a>
         </div>
       </div>
-      <hr class="small">
-      <div class="editor">
+      <div class="editor padded word-break">
         <p class="margin-zero"
            ng-bind-html="WidgetItem.safeHtml(WidgetItem.reward.description)"></p>
       </div>

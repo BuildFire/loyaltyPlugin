@@ -120,7 +120,9 @@
             $scope.$digest();
           }
         });
-
+        ContentReward.addingReward = function () {
+          ContentReward.addReward(JSON.parse(angular.toJson(ContentReward.item)));
+        }
         /*Add reward method declaration*/
         ContentReward.addReward = function (newObj) {
           ContentReward.isInserted = true;
@@ -146,11 +148,20 @@
                   data: ContentReward.item
                 });
               }
+              ContentReward.gotToHome()
 //              if($scope.$$phase) $scope.$digest();
             }
             , error = function (err) {
               ContentReward.isInserted = false;
               ContentReward.itemSaved = true;
+              if (ContentReward.item._id) {
+                buildfire.messaging.sendMessageToWidget({
+                  id: ContentReward.item._id,
+                  type: 'AddNewItem',
+                  data: ContentReward.item
+                });
+              }
+              ContentReward.gotToHome();
               console.error('Error while saving data : ', err);
             };
           LoyaltyAPI.addReward(data).then(success, error);
@@ -239,9 +250,7 @@
               clearTimeout(tmrDelay);
             }
             tmrDelay = setTimeout(function () {
-              if (ContentReward.isValidReward(ContentReward.item) && !ContentReward.isInserted && !$routeParams.id) {
-                ContentReward.addReward(JSON.parse(angular.toJson(newObj)));
-              }
+
               if (ContentReward.isValidReward(ContentReward.item) && ContentReward.isInserted && newObj._id) {
                 ContentReward.updateReward(JSON.parse(angular.toJson(newObj)));
               }
