@@ -51,7 +51,6 @@
                     function error(err) {
                         TestsHome.logs.push({message: JSON.stringify(err), type: "danger"});
                     }
-                    console.log(TestsHome.currentLoggedInUser);
                     LoyaltyAPI.addLoyaltyPoints(
                         TestsHome.currentLoggedInUser._id, 
                         TestsHome.currentLoggedInUser.userToken, 
