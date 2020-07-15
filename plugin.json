@@ -16,6 +16,9 @@
 , "settings":{
     "enabled":true
   }
+  , "customTabs": [
+    { "title": "Tests", "url": "/tests/index.html" }
+  ]
 }
 ,"widget":{
 

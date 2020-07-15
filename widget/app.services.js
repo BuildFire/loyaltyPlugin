@@ -295,6 +295,7 @@
               }
             });
           });
+          return items;
         },
         redeemReward: function (item, pointsSpent, currentPointsAmount, user) {
           const data = {
