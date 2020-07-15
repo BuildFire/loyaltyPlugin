@@ -243,6 +243,84 @@
         }
       }
     }])
+    .factory("Transactions", ['Buildfire', '$q', 'TRANSACTIONS', function (Buildfire, $q, TRANSACTIONS ) {
+      return {
+        buyPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, pointsPerPurchase, user) {
+          const data = {
+            createdBy: user,
+            createdAt: new Date(),
+            type: "earnPoints",
+            purchaseAmount: purchaseAmount,
+            pointsEarned: pointsEarned,
+            currentPointsAmount: currentPointsAmount,
+            pointsPerPurchase: pointsPerPurchase
+          }
+          var deferred = $q.defer();
+          Buildfire.publicData.insert(TRANSACTIONS, data, function (err, result) {
+            if (err) {
+              return deferred.reject(err);
+            } else if (result) {
+              buildfire.analytics.trackAction('points-earned', { pointsEarned : pointsEarned });
+              return deferred.resolve(result);
+            }
+            else{
+              return deferred.reject(new Error('Result Not Found'));
+            }
+          });
+          return deferred.promise;
+        },
+        buyProducts: function (items, currentPointsAmount, pointsPerPurchase, user) {
+          items.forEach(function(item) {
+            const data = {
+              createdBy: user,
+              createdAt: new Date(),
+              type: "earnPoints",
+              itemTitle: item.name,
+              itemId: item.id,
+              itemQuantity: item.quantity,
+              pointsPerProduct: item.pointsPerProduct,
+              pointsPerPurchase: pointsPerPurchase,
+              moneySpent: item.pointsPerProduct * item.quantity,
+              currentPointsAmount: currentPointsAmount
+            }
+            Buildfire.publicData.insert(TRANSACTIONS, data, function (err, result) {
+              if (err) {
+                return console.error(err);
+              } else if (result) {
+                buildfire.analytics.trackAction('points-earned', { pointsEarned : item.pointsPerProduct * item.quantity });
+                return console.log(result)
+              }
+              else{
+                return console.error("Result not found");
+              }
+            });
+          });
+        },
+        redeemReward: function (item, pointsSpent, currentPointsAmount, user) {
+          const data = {
+            createdBy: user,
+            createdAt: new Date(),
+            type: "redeemReward",
+            itemTitle: item.name,
+            itemId: item.id,
+            pointsSpent: pointsSpent,
+            currentPointsAmount: currentPointsAmount
+          }
+          Buildfire.publicData.insert(TRANSACTIONS, data, function (err, result) {
+            if (err) {
+              return deferred.reject(err);
+            } else if (result) {
+              buildfire.analytics.trackAction('reward-redeemed', { pointsSpent : point});
+              return deferred.resolve(result);
+            }
+            else{
+              return deferred.reject(new Error('Result Not Found'));
+            }
+          });
+          return deferred.promise;
+        }
+      }
+    }])
     .factory('RewardCache', ['$rootScope', function ($rootScope) {
       var reward = {};
       var application = {};

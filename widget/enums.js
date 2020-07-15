@@ -24,7 +24,8 @@
       httpURL: 'http://loyalty.kaleoapps.com'
     })
     .constant('TAG_NAMES', {
-      LOYALTY_INFO: 'loyaltyInfo'
+      LOYALTY_INFO: 'loyaltyInfo',
+      TRANSACTIONS: 'transactions'
     })
     .constant('LAYOUTS', {
       listLayout: [
