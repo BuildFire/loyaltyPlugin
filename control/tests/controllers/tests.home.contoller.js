@@ -22,7 +22,6 @@
                 });
                 
                 TestsHome.runTests = function() {
-                    validatePasscode();
                     setTimeout(buyPoints, 1000);
                     setTimeout(buyProducts, 2000);
                     setTimeout(redeemRewards, 3000);
@@ -35,7 +34,7 @@
                     function error(err) {
                         TestsHome.logs.push({message: JSON.stringify(err), type: "danger"});
                     }
-                    LoyaltyAPI.validatePasscode(TestsHome.currentLoggedInUser.userToken, TestsHome.context.instanceId, '12345').then(success, error);
+                    LoyaltyAPI.validatePasscode(TestsHome.currentLoggedInUser._cpUser.userToken, TestsHome.context.instanceId, '12345').then(success, error);
                 }
 
                 function buyPoints() {
@@ -52,6 +51,7 @@
                     function error(err) {
                         TestsHome.logs.push({message: JSON.stringify(err), type: "danger"});
                     }
+                    console.log(TestsHome.currentLoggedInUser);
                     LoyaltyAPI.addLoyaltyPoints(
                         TestsHome.currentLoggedInUser._id, 
                         TestsHome.currentLoggedInUser.userToken, 
