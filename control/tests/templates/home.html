@@ -1,0 +1,13 @@
+<div class="tests">
+    <h1>Tests</h1>
+    <button class="btn btn-primary" ng-click="TestsHome.runTests()">
+      Run Tests
+    </button>
+    <br />
+    <br />
+    <ul class="list-group">
+      <li ng-repeat="log in TestsHome.logs" data-number="{{$index + 1}}" class="list-group-item list-group-item-{{log.type}}">
+        {{log.message}}
+      </li>
+    </ul>
+  </div>

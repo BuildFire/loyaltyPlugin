@@ -243,7 +243,7 @@
         }
       }
     }])
-    .factory("Transactions", ['Buildfire', '$q', 'TRANSACTIONS', function (Buildfire, $q, TRANSACTIONS ) {
+    .factory("Transactions", ['Buildfire', '$q', 'TAG_NAMES', function (Buildfire, $q, TAG_NAMES ) {
       return {
         buyPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, pointsPerPurchase, user) {
           const data = {
@@ -256,7 +256,7 @@
             pointsPerPurchase: pointsPerPurchase
           }
           var deferred = $q.defer();
-          Buildfire.publicData.insert(TRANSACTIONS, data, function (err, result) {
+          Buildfire.publicData.insert(TAG_NAMES.TRANSACTIONS, data, function (err, result) {
             if (err) {
               return deferred.reject(err);
             } else if (result) {
@@ -283,7 +283,7 @@
               moneySpent: item.pointsPerProduct * item.quantity,
               currentPointsAmount: currentPointsAmount
             }
-            Buildfire.publicData.insert(TRANSACTIONS, data, function (err, result) {
+            Buildfire.publicData.insert(TAG_NAMES.TRANSACTIONS, data, function (err, result) {
               if (err) {
                 return console.error(err);
               } else if (result) {
@@ -307,7 +307,7 @@
             pointsSpent: pointsSpent,
             currentPointsAmount: currentPointsAmount
           }
-          Buildfire.publicData.insert(TRANSACTIONS, data, function (err, result) {
+          Buildfire.publicData.insert(TAG_NAMES.TRANSACTIONS, data, function (err, result) {
             if (err) {
               return deferred.reject(err);
             } else if (result) {
