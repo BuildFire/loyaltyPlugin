@@ -11,7 +11,8 @@
           pointsToRedeem: "",
           description: "",
           listImage: "",
-          BackgroundImage: ""
+          BackgroundImage: "",
+          pointsPerPurchase: "",
         };
         ContentReward.isInserted = false;
         ContentReward.masterData = null;
@@ -121,6 +122,13 @@
           }
         });
         ContentReward.addingReward = function () {
+
+          // "Hack" for overcoming pointsToRedeem validation if the item can only be bought but not redeemed
+          if(ContentReward.item.pointsPerPurchase && ContentReward.item.pointsPerPurchase.length > 0 
+            && 
+            (!ContentReward.item.pointsToRedeem || ContentReward.item.pointsToRedeem.length === 0 || ContentReward.item.pointsToRedeem === '38762499627')) {
+              ContentReward.item.pointsToRedeem = '38762499627'
+          }
           ContentReward.addReward(JSON.parse(angular.toJson(ContentReward.item)));
         }
         /*Add reward method declaration*/
