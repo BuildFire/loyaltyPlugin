@@ -63,13 +63,13 @@
                         id: "123",
                         name: "Test item 1",
                         quantity: 2,
-                        pointsPerProduct: 2,
+                        pointsPerPurchase: 10,
                     }, 
                     {
                         id: "1233",
                         name: "Test item 2",
                         quantity: 3,
-                        pointsPerProduct: 2,
+                        pointsPerPurchase: 15,
                     }];
                     let totalPointsAmount = 0;
                     items.forEach(function(item) {
@@ -95,6 +95,7 @@
                         title: "Reward Title",
                         pointsToRedeem: "100",
                         description: "Reward description",
+                        pointsPerPurchase: 20,
                         appId: TestsHome.context.appId,
                         loyaltyUnqiueId: TestsHome.context.instanceId,
                         userToken: TestsHome.currentLoggedInUser && TestsHome.currentLoggedInUser._cpUser.userToken,

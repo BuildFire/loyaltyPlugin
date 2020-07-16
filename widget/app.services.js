@@ -243,13 +243,13 @@
         }
       }
     }])
-    .factory("Transactions", ['Buildfire', '$q', 'TAG_NAMES', function (Buildfire, $q, TAG_NAMES ) {
+    .factory("Transactions", ['Buildfire', '$q', 'TAG_NAMES', 'TRANSACTION_TYPES', function (Buildfire, $q, TAG_NAMES, TRANSACTION_TYPES ) {
       return {
         buyPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, pointsPerPurchase, user) {
           const data = {
             createdBy: user,
             createdAt: new Date(),
-            type: "earnPoints",
+            type: TRANSACTION_TYPES.EARN_POINTS,
             purchaseAmount: purchaseAmount,
             pointsEarned: pointsEarned,
             currentPointsAmount: currentPointsAmount,
@@ -274,7 +274,7 @@
             const data = {
               createdBy: user,
               createdAt: new Date(),
-              type: "earnPoints",
+              type: TRANSACTION_TYPES.EARN_POINTS,
               itemTitle: item.name,
               itemId: item.id,
               itemQuantity: item.quantity,
@@ -301,7 +301,7 @@
           const data = {
             createdBy: user,
             createdAt: new Date(),
-            type: "redeemReward",
+            type: TRANSACTION_TYPES.REDEEM_REWARD,
             itemTitle: item.name,
             itemId: item.id,
             pointsSpent: pointsSpent,

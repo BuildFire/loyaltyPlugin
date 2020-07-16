@@ -27,6 +27,10 @@
       LOYALTY_INFO: 'loyaltyInfo',
       TRANSACTIONS: 'transactions'
     })
+    .constant('TRANSACTION_TYPES', {
+      EARN_POINTS: 'earnPoints',
+      REDEEM_REWARD: 'redeemReward'
+    })
     .constant('LAYOUTS', {
       listLayout: [
         {name: "List_Layout_1"},
