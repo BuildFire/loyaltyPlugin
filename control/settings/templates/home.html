@@ -32,3 +32,23 @@
         </div>
     </div>
 </div>
+<div class="item row clearfix margin-top" style="margin-top: 16px">
+    <div class="labels col-md-3 padding-right-zero pull-left">
+        <span>Set How User Gets Points</span>
+    </div>
+    <div class="main col-md-9 pull-right">
+        <div class="dropdown" dropdown>
+            <button class="btn btn-default text-left dropdown-toggle"
+                    data-toggle="dropdown" dropdown-toggle aria-expanded="true">
+                <span class="pull-left">{{SettingsHome.data.settings.purchaseOption.name||SettingsHome.purchaseOptions[0].name}}</span>
+                <span class="chevron icon-chevron-down pull-right"></span>
+            </button  >
+            <ul class="dropdown-menu extended" role="menu">
+                <li ng-repeat="purchaseOption in SettingsHome.purchaseOptions">
+                    <a tabindex="-1"  class="transition-third" ng-click="SettingsHome.changePurchaseOption(purchaseOption)">{{purchaseOption.name}}</a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>

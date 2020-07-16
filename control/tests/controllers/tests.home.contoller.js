@@ -58,7 +58,7 @@
                 }
                 
                 function buyProducts() {
-                    TestsHome.logs.push({ message: "Buying some products..." });
+                    TestsHome.logs.push({ message: "Buying some items..." });
                     const items = [{
                         id: "123",
                         name: "Test item 1",
