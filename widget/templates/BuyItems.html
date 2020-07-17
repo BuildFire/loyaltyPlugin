@@ -1,0 +1,31 @@
+<div class="holder padding-zero" ng-controller="WidgetBuyItemsCtrl as
+     WidgetBuyItems">
+
+  <div class="buy-products-header">
+    <p>Product Name</p>
+    <p>Points Per Product</p>
+    <p class="text-left">Quantity</p>
+  </div>
+
+  <div class="buy-products-body" ng-repeat="item in WidgetBuyItems.items" ng-if="item.pointsPerItem > 0">
+    <p>{{item.title}}</p>
+    <p>{{item.pointsPerItem}}</p>
+    <input min="0" type="number" placeholder="0"
+      class="form-control border-none" ng-model="item.quantity">
+  </div>
+
+  
+  <div class="next-btn margin-top-twenty">
+    <button class="btn btn-primary stretch margin-top"
+            href="javascript:void(0);" ng-click="WidgetBuyItems.confirmCode()"
+            ng-disabled="WidgetBuyItems.isNextDisabled()"
+        >Next
+    </button>
+  </div>
+
+  <div class="alert alert-sm text-center alert-danger"
+        ng-if="WidgetBuyItems.totalLimitExceeded">You have
+    exceeded the total limit.
+  </div>
+
+</div>

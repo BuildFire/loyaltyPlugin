@@ -89,7 +89,7 @@
   <div class="item clearfix row">
     <div class="main col-md-9 pull-right padding-left-zero row">
       <div class="pull-left inner-main col-md-8 padding-zero">
-        <a class="btn btn-success stretch" href="#/reward">Add New Reward</a>
+        <a class="btn btn-success stretch" href="#/reward">Add New Item</a>
       </div>
     </div>
   </div>
@@ -114,7 +114,7 @@
                   <span
                       class="title ellipsis pull-left">{{reward.title}}</span>
                 </a>
-                <span class="title ellipsis pull-left">{{reward.pointsToRedeem}} Points</span>
+                <span class="title ellipsis pull-left" ng-if="reward.pointsToRedeem != '38762499627'">{{reward.pointsToRedeem}} Points</span>
               </div>
               <div class="pull-right padding-top-fifteen">
                 <span

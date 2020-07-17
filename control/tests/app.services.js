@@ -167,7 +167,7 @@
       }])
     .factory("Transactions", ['Buildfire', '$q', 'TAG_NAMES', function (Buildfire, $q, TAG_NAMES ) {
       return {
-        buyPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, pointsPerPurchase, user) {
+        buyPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, pointsPerItem, user) {
           const data = {
             createdBy: user,
             createdAt: new Date(),
@@ -175,7 +175,7 @@
             purchaseAmount: purchaseAmount,
             pointsEarned: pointsEarned,
             currentPointsAmount: currentPointsAmount,
-            pointsPerPurchase: pointsPerPurchase,
+            pointsPerItem: pointsPerItem,
             _buildfire: {
               index: {
                 date1: new Date(),
@@ -198,7 +198,7 @@
           });
           return deferred.promise;
         },
-        buyProducts: function (items, currentPointsAmount, pointsPerPurchase, user) {
+        buyProducts: function (items, currentPointsAmount, pointsPerItem, user) {
           items.forEach(function(item) {
             const data = {
               createdBy: user,
@@ -208,7 +208,7 @@
               itemId: item.id,
               itemQuantity: item.quantity,
               pointsPerProduct: item.pointsPerProduct,
-              pointsPerPurchase: pointsPerPurchase,
+              pointsPerItem: pointsPerItem,
               moneySpent: item.pointsPerProduct * item.quantity,
               currentPointsAmount: currentPointsAmount,
               _buildfire: {

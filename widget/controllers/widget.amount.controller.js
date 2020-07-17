@@ -91,7 +91,7 @@
           else {
             ViewStack.push({
               template: 'Code',
-              amount: WidgetAmount.amount
+              calculatedPoints: calculatedPoints
             });
           }
         };

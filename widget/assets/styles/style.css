@@ -436,3 +436,28 @@ input[type="password"].form-control::placeholder{
 .word-break{
 	word-break: break-word;
 }
+
+.buy-products-header,
+.buy-products-body {
+	display: flex;
+	justify-content: space-around;
+	padding: 16px;
+}
+
+.buy-products-header > p {
+	text-align: center;
+	font-weight: bold;
+	width: 30%;
+}
+
+.buy-products-body {
+	align-items: center;
+}
+
+.buy-products-body > p,
+.buy-products-body > input {
+	width: 30%;
+	margin-bottom: 0 !important;
+	font-size: 16px !important;
+	text-align: center;
+}

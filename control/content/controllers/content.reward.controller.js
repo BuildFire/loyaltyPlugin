@@ -12,7 +12,11 @@
           description: "",
           listImage: "",
           BackgroundImage: "",
-          pointsPerPurchase: "",
+          pointsPerItem: "",
+        };
+        ContentReward.validations = {
+          title: false,
+          points: false
         };
         ContentReward.isInserted = false;
         ContentReward.masterData = null;
@@ -122,14 +126,26 @@
           }
         });
         ContentReward.addingReward = function () {
-
-          // "Hack" for overcoming pointsToRedeem validation if the item can only be bought but not redeemed
-          if(ContentReward.item.pointsPerPurchase && ContentReward.item.pointsPerPurchase.length > 0 
-            && 
-            (!ContentReward.item.pointsToRedeem || ContentReward.item.pointsToRedeem.length === 0 || ContentReward.item.pointsToRedeem === '38762499627')) {
-              ContentReward.item.pointsToRedeem = '38762499627'
+          ContentReward.validations = {
+            title: false,
+            points: false,
+          };
+          if(!ContentReward.item.title || ContentReward.item.title.length == 0) {
+            ContentReward.validations.title = true;
+          } 
+          if ((!ContentReward.item.pointsToRedeem || ContentReward.item.pointsToRedeem.length == 0) && 
+          (!ContentReward.item.pointsPerItem || ContentReward.item.pointsPerItem.length == 0) ){
+            ContentReward.validations.points = true;
+          } 
+           if (!ContentReward.validations.title && !ContentReward.validations.points){
+            // "Hack" for overcoming pointsToRedeem validation if the item can only be bought but not redeemed
+            if(ContentReward.item.pointsPerItem && ContentReward.item.pointsPerItem.length > 0 
+              && 
+              (!ContentReward.item.pointsToRedeem || ContentReward.item.pointsToRedeem.length === 0 || ContentReward.item.pointsToRedeem === '38762499627')) {
+                ContentReward.item.pointsToRedeem = '38762499627'
+            }
+            ContentReward.addReward(JSON.parse(angular.toJson(ContentReward.item)));
           }
-          ContentReward.addReward(JSON.parse(angular.toJson(ContentReward.item)));
         }
         /*Add reward method declaration*/
         ContentReward.addReward = function (newObj) {
@@ -229,6 +245,9 @@
 
         if ($routeParams.id && RewardCache.getReward()) {
           ContentReward.item = RewardCache.getReward();
+          if(ContentReward.item.pointsToRedeem == '38762499627') {
+            ContentReward.item.pointsToRedeem = '';
+          }
           ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: ContentReward.item._id});
           console.log("aaaaaaaaaaaaaaaaaaaaaa", ContentReward.item);
           ContentReward.listImage.loadbackground(ContentReward.item.listImage);

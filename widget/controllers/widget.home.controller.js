@@ -117,13 +117,21 @@
          * Method to show amount page where user can fill in the amount they have made purchase of.
          */
         WidgetHome.openGetPoints = function () {
-          console.log(">>>>>>>>>>>>>>-----------------------");
           if (WidgetHome.currentLoggedInUser) {
-            ViewStack.push({
-              template: 'Amount',
-              loyaltyPoints: $rootScope.loyaltyPoints
-
-            });
+            const settings = WidgetHome.data.settings;
+            if(settings.purchaseOption && settings.purchaseOption.value === 'perProductsPurchased') {
+              ViewStack.push({
+                template: 'BuyItems',
+                loyaltyPoints: $rootScope.loyaltyPoints,
+                loyaltyRewards: WidgetHome.loyaltyRewards
+              });
+            }
+            else {
+                ViewStack.push({
+                  template: 'Amount',
+                  loyaltyPoints: $rootScope.loyaltyPoints
+                });
+            }
           }
           else {
             WidgetHome.openLogin();

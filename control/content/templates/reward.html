@@ -7,6 +7,13 @@
 			<input type="text" class="form-control" placeholder="Item Title" ng-model = "ContentReward.item.title">
 		</div>
 	</div>
+	<div class="item clearfix row" ng-if="ContentReward.validations.title">
+		<div class="labels col-md-3 pull-left"> </div>
+		<div class="col-md-9 margin-top-five pull-right">
+		  <div class="alert alert-sm text-center alert-danger">Title is a required field.
+		  </div>
+		</div>
+	</div>
 	<hr class="none">
 	<div id="listImage"></div>
 	<hr class="none">
@@ -37,10 +44,17 @@
 	<hr class="none">
 	<div class="item clearfix row">
 		<div class="labels col-md-3 pull-left">
-			<span>Points per Purchase <span class ="red">*</span></span>
+			<span>Points per Item <span class ="red">*</span></span>
 		</div>
 		<div class="main col-md-9 pull-right">
-			<input type="text" class="form-control" placeholder="Points per Purchase" ng-model = "ContentReward.item.pointsPerPurchase">
+			<input type="text" class="form-control" placeholder="Points per Item" ng-model = "ContentReward.item.pointsPerItem">
+		</div>
+	</div>
+	<div class="item clearfix row" ng-if="ContentReward.validations.points">
+		<div class="labels col-md-3 pull-left"> </div>
+		<div class="col-md-9 margin-top-five pull-right">
+		  <div class="alert alert-sm text-center alert-danger">Please fill in either Points to Redeem or Points per Purchase
+		  </div>
 		</div>
 	</div>
 	<hr class="none">

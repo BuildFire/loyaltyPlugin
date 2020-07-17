@@ -105,7 +105,7 @@
                 SettingsHome.changePurchaseOption = function(purchaseOption){
                     if(!SettingsHome.data.settings) {
                         SettingsHome.data.settings = {};
-                    }else {
+                    } else {
                         SettingsHome.data.settings.purchaseOption = purchaseOption;
                     }
                 };

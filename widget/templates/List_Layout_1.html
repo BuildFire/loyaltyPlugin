@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="list-grid" ng-if="WidgetHome.loyaltyRewards && WidgetHome.carouselImages">
-      <div class="list-item has-info-bar" ng-repeat="reward in WidgetHome.loyaltyRewards">
+      <div class="list-item has-info-bar" ng-repeat="reward in WidgetHome.loyaltyRewards | filter: { pointsToRedeem: '!38762499627' }">
         <div class="list-item-media text-center" ng-click="WidgetHome.openReward(reward, $index)">
           <div class="list-media-holder">
             <img load-image="1x1"
