@@ -2,9 +2,9 @@
      WidgetBuyItems">
 
   <div class="buy-products-header">
-    <p>Product Name</p>
-    <p>Points Per Product</p>
-    <p class="text-left">Quantity</p>
+    <p>{{WidgetBuyItems.strings["buyItems.productName"]}}</p>
+    <p>{{WidgetBuyItems.strings["buyItems.pointsPerProduct"]}}</p>
+    <p class="text-left">{{WidgetBuyItems.strings["buyItems.quantity"]}}</p>
   </div>
 
   <div class="buy-products-body" ng-repeat="item in WidgetBuyItems.items" ng-if="item.pointsPerItem > 0">
@@ -19,13 +19,12 @@
     <button class="btn btn-primary stretch margin-top"
             href="javascript:void(0);" ng-click="WidgetBuyItems.confirmCode()"
             ng-disabled="WidgetBuyItems.isNextDisabled()"
-        >Next
+        >{{WidgetBuyItems.strings["general.next"]}}
     </button>
   </div>
 
   <div class="alert alert-sm text-center alert-danger"
-        ng-if="WidgetBuyItems.totalLimitExceeded">You have
-    exceeded the total limit.
+        ng-if="WidgetBuyItems.totalLimitExceeded">{{WidgetBuyItems.strings["redeem.quantity"]}}
   </div>
 
 </div>

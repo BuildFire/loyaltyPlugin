@@ -9,6 +9,8 @@
         var WidgetItem = this;
         var breadCrumbFlag = true;
 
+        WidgetItem.strings = $rootScope.strings;
+
         WidgetItem.listeners = {};
         WidgetItem.insufficientPoints = false;
 

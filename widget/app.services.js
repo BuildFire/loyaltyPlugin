@@ -245,7 +245,8 @@
     }])
     .factory("Transactions", ['Buildfire', '$q', 'TAG_NAMES', 'TRANSACTION_TYPES', function (Buildfire, $q, TAG_NAMES, TRANSACTION_TYPES ) {
       return {
-        buyPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, pointsPerItem, user) {
+        buyPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, user) {
+          var pluginTitle = buildfire.getContext().title;
           const data = {
             createdBy: user,
             createdAt: new Date(),
@@ -253,10 +254,16 @@
             purchaseAmount: purchaseAmount,
             pointsEarned: pointsEarned,
             currentPointsAmount: currentPointsAmount,
-            pointsPerItem: pointsPerItem
+            pluginTitle: pluginTitle,
+            _buildfire :{ 
+              index: {
+                text: user.displayName ? user.displayName : user.email,
+                date1: new Date(),
+              }
+            }
           }
           var deferred = $q.defer();
-          Buildfire.publicData.insert(TAG_NAMES.TRANSACTIONS, data, function (err, result) {
+          Buildfire.publicData.insert(data, TAG_NAMES.TRANSACTIONS, function (err, result) {
             if (err) {
               return deferred.reject(err);
             } else if (result) {
@@ -269,25 +276,33 @@
           });
           return deferred.promise;
         },
-        buyProducts: function (items, currentPointsAmount, pointsPerItem, user) {
-          items.forEach(function(item) {
+        buyProducts: function (items, currentPointsAmount, user) {
+          var pluginTitle = buildfire.getContext().title;
+          var itemsToAdd = items.filter(function (item) {
+            return item.quantity > 0
+          })
+          itemsToAdd.forEach(function(item) {
             const data = {
               createdBy: user,
               createdAt: new Date(),
               type: TRANSACTION_TYPES.EARN_POINTS,
-              itemTitle: item.name,
-              itemId: item.id,
-              itemQuantity: item.quantity,
-              pointsPerProduct: item.pointsPerProduct,
-              pointsPerItem: pointsPerItem,
-              moneySpent: item.pointsPerProduct * item.quantity,
-              currentPointsAmount: currentPointsAmount
+              item: item,
+              pointsEarned: item.quantity * item.pointsPerItem,
+              currentPointsAmount: currentPointsAmount,
+              pluginTitle: pluginTitle,
+              _buildfire :{ 
+                index: {
+                  text: user.displayName ? user.displayName : user.email,
+                  date1: new Date(),
+                  array1: [{'itemName': item.title}]
+                }
+              }
             }
-            Buildfire.publicData.insert(TAG_NAMES.TRANSACTIONS, data, function (err, result) {
+            Buildfire.publicData.insert(data, TAG_NAMES.TRANSACTIONS, function (err, result) {
               if (err) {
                 return console.error(err);
               } else if (result) {
-                buildfire.analytics.trackAction('points-earned', { pointsEarned : item.pointsPerProduct * item.quantity });
+                buildfire.analytics.trackAction('points-earned', { pointsEarned : item.pointsPerItem * item.quantity });
                 return console.log(result)
               }
               else{
@@ -298,16 +313,25 @@
           return items;
         },
         redeemReward: function (item, pointsSpent, currentPointsAmount, user) {
+          var pluginTitle = buildfire.getContext().title;
           const data = {
             createdBy: user,
             createdAt: new Date(),
             type: TRANSACTION_TYPES.REDEEM_REWARD,
-            itemTitle: item.name,
-            itemId: item.id,
+            item: item,
             pointsSpent: pointsSpent,
-            currentPointsAmount: currentPointsAmount
+            currentPointsAmount: currentPointsAmount,
+            pluginTitle: pluginTitle,
+            _buildfire :{ 
+              index: {
+                text: user.displayName ? user.displayName : user.email,
+                date1: new Date(),
+                array1: [{'itemName': item.title}]
+              }
+            }
           }
-          Buildfire.publicData.insert(TAG_NAMES.TRANSACTIONS, data, function (err, result) {
+          var deferred = $q.defer();
+          Buildfire.publicData.insert(data, TAG_NAMES.TRANSACTIONS, function (err, result) {
             if (err) {
               return deferred.reject(err);
             } else if (result) {

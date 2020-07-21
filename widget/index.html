@@ -34,6 +34,18 @@
   <script src="../../../scripts/angular/angular-animate.min.js"></script>
   <link rel="stylesheet" href="../../../styles/transitionAnimation.css">
 
+  <script src="js/shared/strings.js"></script>
+  <script src="js/shared/stringsConfig.js"></script>
+  
+  <script>
+    function initStrings() {
+      let strings = new buildfire.services.Strings("en-us", stringsConfig);
+      window.strings = strings;
+    }
+
+    initStrings();
+  </script>
+
   <!-- Meta -->
   <meta charset="utf-8">
 </head>

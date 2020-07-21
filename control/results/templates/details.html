@@ -1,0 +1,14 @@
+<div class="container">
+    <button class="link-button close-button" ng-click="ResultDetails.goBack()">
+        <i class="glyphicon glyphicon-remove"></i>
+    </button>
+    <p><strong>User name: </strong>{{item.createdBy.displayName ? item.createdBy.displayName : item.createdBy.email}}</p>
+    <p><strong>Date: </strong>{{item.createdAt | date:'dd MMM yyyy'}}</p>
+    <p><strong>Type: </strong>{{typesMapping[item.type]}}</p>
+    <p ng-if="item.type == 'earnPoints'"><strong>Item Bought: </strong>{{item.item.title}}</p>
+    <p ng-if="item.type == 'redeemReward'"><strong>Item Redeemed: </strong>{{item.item.title}}</p>
+    <p ng-if="item.type == 'earnPoints'"><strong>Points Earned: </strong>{{item.pointsEarned}}</p>
+    <p ng-if="item.type == 'earnPoints'"><strong>Money Spent: </strong>{{item.purchaseAmount}}</p>
+    <p ng-if="item.type == 'earnPoints'"><strong>Item Quantity: </strong>{{item.item.quantity}}</p>
+    <p ng-if="item.type == 'earnPoints'"><strong>Points per Item: </strong>{{item.item.pointsPerItem}}</p>
+</div>

@@ -1,0 +1,30 @@
+.table > thead > tr > th {
+    font-weight: bold;
+}
+
+.link-button {
+    background: transparent;
+    border: none;
+    text-align: center;
+}
+
+.details-button {
+    color: #00a5ec;
+}
+
+.close-button {
+    position: absolute;
+    right: 50px;
+    top: 10px;
+    width: 20px;
+}
+
+i {
+    font-size: 20px;
+    padding: 10px;
+}
+
+.transactions {
+    height: 400px;
+    overflow-y: scroll;
+}

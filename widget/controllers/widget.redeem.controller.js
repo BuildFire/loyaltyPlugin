@@ -3,11 +3,13 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope', 'Buildfire', 'Context',
-      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire, Context) {
+    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope', 'Buildfire', 'Context', 'Transactions', 
+      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire, Context, Transactions) {
 
         var WidgetRedeem = this;
         var breadCrumbFlag = true;
+
+        WidgetRedeem.strings = $rootScope.strings;
 
         /**
          * Initialize show error message to false
@@ -56,6 +58,11 @@
             ViewStack.push({
               template: 'Success'
             });
+            buildfire.auth.getCurrentUser(function (err, user) {
+              if (user) {
+                Transactions.redeemReward(WidgetRedeem.reward, WidgetRedeem.reward.pointsToRedeem, $rootScope.loyaltyPoints, user);
+              }
+            })
           };
 
           var redeemFailure = function (error) {

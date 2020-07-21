@@ -14,33 +14,29 @@
           <p>{{WidgetRedeem.reward.title}}</p>
 
           <h5 class="margin-zero ellipsis opacity-seventy">
-            {{WidgetRedeem.reward.pointsToRedeem}} Points</h5>
+            {{WidgetRedeem.reward.pointsToRedeem}} {{WidgetRedeem.strings["general.points"]}}</h5>
         </div>
       </div>
       <div class="editor padded">
-        <p>Important: By clicking confirm, you are confirming that the reward
-          has been received and the corresponding points will, therefore, be
-          deducted from the user's account.</p>
+        <p>{{WidgetRedeem.strings["redeem.importantNote"]}}</p>
 
         <div class="confirm-cancel">
           <div class="text-center margin-bottom-fifteen">
             <a class="btn btn-success stretch" href="javascript:void(0);"
-            ng-click="WidgetRedeem.redeemPoints(WidgetRedeem.reward._id)">Confirm</a>
+            ng-click="WidgetRedeem.redeemPoints(WidgetRedeem.reward._id)">{{WidgetRedeem.strings["general.confirm"]}}</a>
           </div>
           <div class="text-center">
             <a class="btn-text bodyTextTheme stretch" href="javascript:void(0);"
-                ng-click="WidgetRedeem.backToHome()">Cancel</a>
+                ng-click="WidgetRedeem.backToHome()">{{WidgetRedeem.strings["general.cancel"]}}</a>
           </div>
         </div>
         <br>
 
         <div class="col-xs-12 margin-top-five">
-          <div class="alert alert-sm text-center alert-danger"  ng-if="WidgetRedeem.redeemFail">Error
-            redeeming reward. Please try again later.
+          <div class="alert alert-sm text-center alert-danger"  ng-if="WidgetRedeem.redeemFail">{{WidgetRedeem.strings["redeem.errorRedeem"]}}
           </div>
           <div class="alert alert-sm text-center alert-danger"
-               ng-if="WidgetRedeem.dailyLimitExceeded">You have
-            exceeded the daily limit.
+               ng-if="WidgetRedeem.dailyLimitExceeded">{{WidgetRedeem.strings["redeem.redeemDailyLimit"]}}
           </div>
         </div>
       </div>

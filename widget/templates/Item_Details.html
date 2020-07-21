@@ -8,11 +8,11 @@
           <p>{{WidgetItem.reward.title}}</p>
 
           <h5 class="ellipsis opacity-seventy">
-            {{WidgetItem.reward.pointsToRedeem}} Points</h5>
+            {{WidgetItem.reward.pointsToRedeem}} {{WidgetItem.strings["general.points"]}}</h5>
         </div>
         <div class="">
           <a class="btn btn-primary stretch" href="javascript:void(0);"
-             ng-click="WidgetItem.confirmCancel()">Redeem</a>
+             ng-click="WidgetItem.confirmCancel()">{{WidgetItem.strings["general.redeem"]}}</a>
         </div>
       </div>
       <div class="editor padded word-break">
@@ -21,8 +21,7 @@
       </div>
     </div>
     <div class="col-xs-12 margin-top-five" ng-if="WidgetItem.insufficientPoints">
-      <div class="alert alert-sm text-center alert-danger">You have
-        insufficient points.Please get points to redeem awards.
+      <div class="alert alert-sm text-center alert-danger">{{WidgetItem.strings["redeem.insufficientFunds"]}}
       </div>
     </div>
   </div>

@@ -3,12 +3,13 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetCodeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', '$rootScope', 'Buildfire', 'Context',
-      function ($scope, ViewStack, LoyaltyAPI, RewardCache, $rootScope, Buildfire, Context) {
+    .controller('WidgetCodeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', '$rootScope', 'Buildfire', 'Context', 'Transactions',
+      function ($scope, ViewStack, LoyaltyAPI, RewardCache, $rootScope, Buildfire, Context, Transactions) {
 
         var WidgetCode = this;
         var breadCrumbFlag = true;
         WidgetCode.listeners = {};
+        WidgetCode.strings = $rootScope.strings;
         /**
          * Initialize variable with current view returned by ViewStack service. In this case it is "Item_Details" view.
          */
@@ -45,10 +46,23 @@
           var success = function (result) {
             Buildfire.spinner.hide();
             $rootScope.$broadcast('POINTS_ADDED', (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit);
+            var pointsAwarded = (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit;
             ViewStack.push({
               template: 'Awarded',
-              pointsAwarded: (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit
+              pointsAwarded: pointsAwarded
             });
+            buildfire.auth.getCurrentUser(function (err, user) {
+              if (user) {
+                console.log(currentView);
+                if(currentView.type === 'buyPoints') {
+                  Transactions.buyPoints(currentView.amount, pointsAwarded, $rootScope.loyaltyPoints, user);
+                } else if(currentView.type === 'buyProducts') {
+                  Transactions.buyProducts(currentView.items, $rootScope.loyaltyPoints, user);
+                } else {
+                  return;
+                }
+              }
+            });            
           };
 
           var error = function (error) {

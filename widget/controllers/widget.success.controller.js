@@ -9,6 +9,8 @@
         var WidgetSuccess = this;
         var breadCrumbFlag = true;
 
+        WidgetSuccess.strings = $rootScope.strings;
+
         if (RewardCache.getReward()) {
           WidgetSuccess.reward = RewardCache.getReward();
         }

@@ -253,12 +253,14 @@
           ContentReward.listImage.loadbackground(ContentReward.item.listImage);
           /* ContentReward.BackgroundImage.loadbackground(ContentReward.item.BackgroundImage);  */  //enable it when you want to show add background on reward add
           ContentReward.isInserted = true;
-          buildfire.messaging.sendMessageToWidget({
-            id: $routeParams.id,
-            index: $routeParams.index || 0,
-            type: 'OpenItem',
-            data: ContentReward.item
-          });
+          if(ContentReward.item.pointsToRedeem === '38762499627') {
+            buildfire.messaging.sendMessageToWidget({
+              id: $routeParams.id,
+              index: $routeParams.index || 0,
+              type: 'OpenItem',
+              data: ContentReward.item
+            });
+          }
           if (!ContentReward.item.carouselImage)
             ContentReward.editor.loadItems([]);
           else

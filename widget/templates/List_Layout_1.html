@@ -11,18 +11,17 @@
       <div class="text-center">
         <p ng-if="!(WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)"><span
             class="text-primary"><a href="javascript:void(0);"
-                                    ng-click="WidgetHome.openLogin()">Log in
-          or register</a></span> to
-          get points</p>
+                                    ng-click="WidgetHome.openLogin()">{{WidgetHome.strings["general.loginOrRegister"]}}</a></span> 
+                                    <span>{{WidgetHome.strings["general.toGetPoints"]}}</span></p>
 
         <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id">
-          You currently have <span
-                class="text-primary">{{loyaltyPoints | number : 2}}</span> points.
+          <span>{{WidgetHome.strings["general.currentlyHave"]}} </span><span
+                class="text-primary">{{loyaltyPoints | number : 2}}</span> <span style="text-transform: lowercase;">{{WidgetHome.strings["general.points"]}}</span>.
         </p>
         <a class="btn btn-primary padding-left-twenty padding-right-twenty"
            href="javascript:void(0);"
            ng-click="WidgetHome.openGetPoints()"
-            >Get More Points</a>
+            >{{WidgetHome.strings["general.getMore"]}}</a>
       </div>
     </div>
     <div class="list-grid" ng-if="WidgetHome.loyaltyRewards && WidgetHome.carouselImages">
@@ -37,7 +36,7 @@
           <div class="info-bar bg-primary">
             <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">
               {{reward.pointsToRedeem}}
-              Points</p>
+              <span class="whiteTheme">{{WidgetHome.strings["general.points"]}}</span></p>
           </div>
         </div>
         <div class="copy margin-top-five text-center">

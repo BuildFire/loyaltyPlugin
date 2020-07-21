@@ -12,6 +12,7 @@
         WidgetBuyItems.data = [];
         WidgetBuyItems.items = [];
         WidgetBuyItems.listeners = {};
+        WidgetBuyItems.strings = $rootScope.strings;
           buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
               if(result && result.length) {
                   result.forEach(function(breadCrumb) {
@@ -97,7 +98,9 @@
           else {
             ViewStack.push({
               template: 'Code',
-              amount: amount
+              amount: amount,
+              type: 'buyProducts',
+              items: WidgetBuyItems.items
             });
           }
         };
