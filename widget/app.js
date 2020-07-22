@@ -16,24 +16,15 @@
                     request: function (config) {
                         console.log('Showing spinner-----------------------------------------------------------------------');
                         buildfire.spinner.show();
-                        counter++;
                         return config;
                     },
                     response: function (response) {
-                        counter--;
-                        if (counter === 0) {
-                            console.log('Hiding spinner-----------------------------Success------------------------------------------');
-                            buildfire.spinner.hide();
-                        }
+                        console.log('Hiding spinner-----------------------------Success------------------------------------------');
+                        buildfire.spinner.hide();
                         return response;
                     },
                     responseError: function (rejection) {
-                        counter--;
-                        if (counter === 0) {
-                            console.log('Hiding spinner-----------------------Rejection------------------------------------------------');
-                            buildfire.spinner.hide();
-                        }
-
+                        buildfire.spinner.hide();
                         return $q.reject(rejection);
                     }
                 };

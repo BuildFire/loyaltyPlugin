@@ -21,6 +21,7 @@
         ContentReward.isInserted = false;
         ContentReward.masterData = null;
         ContentReward.itemSaved = false;
+        ContentReward.loading = false;
         updateMasterItem(ContentReward.item);
         ContentReward.bodyWYSIWYGOptions = {
           plugins: 'advlist autolink link image lists charmap print preview',
@@ -153,6 +154,7 @@
           if (typeof newObj === 'undefined') {
             return;
           }
+          ContentReward.loading = true;
           var data = newObj;
           data.appId = context.appId;
           data.loyaltyUnqiueId = context.instanceId;
@@ -172,6 +174,7 @@
                   data: ContentReward.item
                 });
               }
+              ContentReward.loading = false;
               ContentReward.gotToHome()
 //              if($scope.$$phase) $scope.$digest();
             }
@@ -202,12 +205,14 @@
           data.loyaltyUnqiueId = context.instanceId;
           data.userToken = ContentReward.currentLoggedInUser.userToken;
           data.auth = ContentReward.currentLoggedInUser.auth;
-          buildfire.messaging.sendMessageToWidget({
-            id: $routeParams.id,
-            index: $routeParams.index || 0,
-            type: 'UpdateItem',
-            data: ContentReward.item
-          });
+          if(newObj.pointsToRedeem != '38762499627') {
+            buildfire.messaging.sendMessageToWidget({
+              id: $routeParams.id,
+              index: $routeParams.index || 0,
+              type: 'UpdateItem',
+              data: ContentReward.item
+            });
+          }
           $scope.$digest();
           var success = function (result) {
               console.info('Saved data result: ', result);

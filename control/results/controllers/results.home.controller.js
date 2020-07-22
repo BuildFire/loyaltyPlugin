@@ -28,7 +28,7 @@
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += "User Name,Date,Type,Item Bought,Item Redeemed,Points Earned,Money Spent,Item Quantity,Points per Item,Plugin Name,User's Current Points \r\n"
             ResultsHome.transactions.forEach(function(item) {
-              csvContent += item.createdBy ? item.createdBy.displayName ? item.createdBy.displayName : item.createdBy.email + "," : ",";
+              csvContent += item.createdBy ? item.createdBy.displayName ? item.createdBy.displayName + "," : item.createdBy.email + "," : ",";
               csvContent += item.createdAt ? $filter('date')(item.createdAt, 'dd MMM yyyy') + "," : ",";
               csvContent += item.type === 'earnPoints' ? item.item ? item.item.title + "," : "," : ",";
               csvContent += item.type === 'redeemReward' ? item.item ? item.item.title + ",": "," : ",";
@@ -43,7 +43,7 @@
             var encodedUri = encodeURI(csvContent);
             var link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "my_data.csv");
+            link.setAttribute("download", "Results.csv");
             document.body.appendChild(link);
             link.click();
             link.parentNode.removeChild(link);

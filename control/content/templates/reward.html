@@ -38,7 +38,8 @@
 			<span>Points to Redeem <span class ="red">*</span></span>
 		</div>
 		<div class="main col-md-9 pull-right">
-			<input type="text" class="form-control" placeholder="Points to Redeem" ng-model = "ContentReward.item.pointsToRedeem">
+			<input ng-if="ContentReward.item.pointsToRedeem != '38762499627'" type="text" class="form-control" placeholder="Points to Redeem" ng-model = "ContentReward.item.pointsToRedeem">
+			<input ng-if="ContentReward.loading && ContentReward.item.pointsToRedeem == '38762499627'" type="text" class="form-control" placeholder="Points to Redeem" >
 		</div>
 	</div>
 	<hr class="none">

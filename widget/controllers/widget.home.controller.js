@@ -34,7 +34,7 @@
         }
         
         $window.strings.getLanguage(function(err, response){
-          const obj = response[0].data;
+          const obj = response[0] ? response[0].data : $window.strings._data;
           const strings = {};
            Object.keys(obj).forEach(function (section){
              Object.keys(obj[section]).forEach(function (label) {
