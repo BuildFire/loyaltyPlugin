@@ -27,6 +27,7 @@
           "buyItems.productName": "Product Name",
           "buyItems.pointsPerProduct": "Points Per Product",
           "buyItems.quantity": "Quantity",
+          "buyItems.totalPoints": "Total Points",
           "awarded.awesome": "Awesome",
           "awarded.justEarned": "You just earned yourself",
           "awarded.checkList": "Check out our list of rewards to redeem.",
@@ -41,8 +42,8 @@
                strings[section + '.' + label] = obj[section][label].value || obj[section][label].defaultValue;
              });
            });
-           WidgetHome.strings = strings;
-           $rootScope.strings = strings;
+           WidgetHome.strings = {...WidgetHome.strings, ...strings};
+           $rootScope.strings = {...WidgetHome.strings, ...strings};
         });
 
         $rootScope.deviceHeight = window.innerHeight;

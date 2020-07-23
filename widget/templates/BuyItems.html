@@ -4,15 +4,17 @@
   <div class="buy-products-header">
     <p>{{WidgetBuyItems.strings["buyItems.productName"]}}</p>
     <p>{{WidgetBuyItems.strings["buyItems.pointsPerProduct"]}}</p>
-    <p class="text-left">{{WidgetBuyItems.strings["buyItems.quantity"]}}</p>
+    <p>{{WidgetBuyItems.strings["buyItems.quantity"]}}</p>
   </div>
 
   <div class="buy-products-body" ng-repeat="item in WidgetBuyItems.items" ng-if="item.pointsPerItem > 0">
-    <p class="redeem-title">{{item.title}}</p>
+    <p class="redeem-title" style="text-align: left;">{{item.title}}</p>
     <p>{{item.pointsPerItem}}</p>
     <input min="0" type="number" placeholder="0"
-      class="form-control border-none" ng-model="item.quantity">
+      class="form-control border-none" ng-model="item.quantity" ng-change="WidgetBuyItems.onQuantityChange()">
   </div>
+
+  <p class="total-points"><strong>{{WidgetBuyItems.strings["buyItems.totalPoints"]}}: </strong> {{WidgetBuyItems.totalPoints}}</p>
 
   
   <div class="next-btn margin-top-twenty">

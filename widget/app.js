@@ -264,8 +264,8 @@
           });
       }
     })
-    .run(['Location', '$location', '$rootScope', 'RewardCache', 'ViewStack', 'Context',
-      function (Location, $location, $rootScope, RewardCache, ViewStack, Context) {
+    .run(['Location', '$location', '$rootScope', 'RewardCache', 'ViewStack', 'Context', '$window',
+      function (Location, $location, $rootScope, RewardCache, ViewStack, Context, $window) {
         buildfire.messaging.onReceivedMessage = function (msg) {
           switch (msg.type) {
             case 'AddNewItem':
@@ -320,6 +320,9 @@
             case 'AppCreated':
               $rootScope.$broadcast("REFRESH_APP");
               $rootScope.$apply();
+              break;
+            case 'refresh':
+              $window.location.reload();
               break;
           }
         };

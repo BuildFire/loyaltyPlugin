@@ -12,6 +12,7 @@
         WidgetBuyItems.data = [];
         WidgetBuyItems.items = [];
         WidgetBuyItems.listeners = {};
+        WidgetBuyItems.totalPoints = 0;
         WidgetBuyItems.strings = $rootScope.strings;
           buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
               if(result && result.length) {
@@ -73,6 +74,15 @@
               isDisabled = false;
           });
           return isDisabled;
+        }
+
+        WidgetBuyItems.onQuantityChange = function () {
+          let totalPoints = 0;
+          WidgetBuyItems.items.forEach(function(item) {
+            if(item.quantity && item.quantity > 0)
+              totalPoints += item.quantity * item.pointsPerItem;
+          });
+          WidgetBuyItems.totalPoints = totalPoints;
         }
 
         /**

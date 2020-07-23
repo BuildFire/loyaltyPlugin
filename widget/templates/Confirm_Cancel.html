@@ -10,14 +10,14 @@
     </div>
     <div ng-if="WidgetRedeem.reward">
       <div class="detail-header">
-        <div>
-          <p>{{WidgetRedeem.reward.title}}</p>
+        <div style="width: 100%;">
+          <p class="redeem-title">{{WidgetRedeem.reward.title}}</p>
 
           <h5 class="margin-zero ellipsis opacity-seventy">
             {{WidgetRedeem.reward.pointsToRedeem}} {{WidgetRedeem.strings["general.points"]}}</h5>
         </div>
       </div>
-      <div class="editor padded">
+      <div class="editor padded redeem-title">
         <p>{{WidgetRedeem.strings["redeem.importantNote"]}}</p>
 
         <div class="confirm-cancel">

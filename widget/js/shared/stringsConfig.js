@@ -137,6 +137,12 @@ const stringsConfig = {
                 , placeholder: "Quantity"
                 , maxLength: 10
                 , defaultValue: "Quantity"
+            },
+            totalPoints: {
+                title: "Total Points"
+                , placeholder: "Total Points"
+                , maxLength: 30
+                , defaultValue: "Total Points"
             }
         }
     },

@@ -469,3 +469,9 @@ input[type="password"].form-control::placeholder{
 	overflow-wrap: break-word;
 	-webkit-line-clamp: 3;
 }
+
+.total-points {
+	padding: 16px;
+	text-align: center;
+	font-size: 16px;
+}
