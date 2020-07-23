@@ -461,3 +461,11 @@ input[type="password"].form-control::placeholder{
 	font-size: 16px !important;
 	text-align: center;
 }
+
+.redeem-title {
+	display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+	overflow-wrap: break-word;
+	-webkit-line-clamp: 3;
+}

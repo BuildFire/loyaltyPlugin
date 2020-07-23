@@ -51,7 +51,6 @@
         loading...
     </div>
     <a id="saveButton" class="btn btn-success pull-right hidden" onclick="save()">Save</a>
-    <a id="deleteButton" class="text-danger pull-right hidden" onclick="deleteLanguage(strings.id)">Delete</a>
 
     <script>
 		let strings;
@@ -71,12 +70,10 @@
         }
 		function showNewLanguageState(show){
 			if(show) {
-				deleteButton.classList.remove("hidden");
 				saveButton.classList.remove("hidden");
 				stringsContainer.classList.remove("hidden");
 			}
 			else{
-				deleteButton.classList.add("hidden");
 				saveButton.classList.add("hidden");
 				stringsContainer.classList.add("hidden");
             }

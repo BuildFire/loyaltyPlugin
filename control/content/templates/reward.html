@@ -1,5 +1,8 @@
 <div class="loyalty-plugin">
-	<div class="item clearfix row">
+	<button class="link-button close-button" ng-click="ContentReward.goBack()">
+        <i class="glyphicon glyphicon-remove"></i>
+    </button>
+	<div class="item clearfix row" style="margin-top: 50px;">
 		<div class="labels col-md-3 pull-left">
 			<span>Item Title <span class ="red">*</span></span>
 		</div>
@@ -34,8 +37,9 @@
   </div>
 	<hr class="none">
 	<div class="item clearfix row">
-		<div class="labels col-md-3 pull-left">
+		<div class="labels col-md-3 pull-left tooltip-container">
 			<span>Points to Redeem <span class ="red">*</span></span>
+			<span class="tip btn-info-icon btn-primary"><span class="cp-tooltip">If this field is  blank, then “Points per Item” cannot be blank. If this field has a value greater than zero, then this item will show up as a reward to redeem on the Loyalty feature’s main screen</span>
 		</div>
 		<div class="main col-md-9 pull-right">
 			<input ng-if="ContentReward.item.pointsToRedeem != '38762499627'" type="text" class="form-control" placeholder="Points to Redeem" ng-model = "ContentReward.item.pointsToRedeem">
@@ -44,8 +48,9 @@
 	</div>
 	<hr class="none">
 	<div class="item clearfix row">
-		<div class="labels col-md-3 pull-left">
+		<div class="labels col-md-3 pull-left tooltip-container">
 			<span>Points per Item <span class ="red">*</span></span>
+			<span class="tip btn-info-icon btn-primary"><span class="cp-tooltip second-tooltip">If this field is  blank, then “Points to Redeem” cannot be blank. This item will be treated as an item that can earn users points if all of the following criteria are met: (i) on the settings tab, “Set How Users Get Points” is set to “Per Products Purchased” and (ii) “Points per Item” is set to a value greater than zero.</span>
 		</div>
 		<div class="main col-md-9 pull-right">
 			<input type="text" class="form-control" placeholder="Points per Item" ng-model = "ContentReward.item.pointsPerItem">

@@ -52,7 +52,7 @@
                     value: "perMoneySpent"
                 },
                 {
-                    name: "Per Products Purchased",
+                    name: "Per Items Purchased",
                     value: "perProductsPurchased"
                 }];
 

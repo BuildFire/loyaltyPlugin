@@ -87,7 +87,7 @@
                     LoyaltyAPI.addLoyaltyPoints(
                         TestsHome.currentLoggedInUser._id, 
                         TestsHome.currentLoggedInUser.userToken, 
-                        TestsHome.context.instanceId, '12345', totalPointsAmount).then(success, error);
+                        TestsHome.context.instanceId, '12345', 65).then(success, error);
                 }
 
                 function redeemRewards() {

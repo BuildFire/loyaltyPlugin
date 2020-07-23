@@ -24,20 +24,25 @@
 
         ResultsHome.exportCsv = function() {
           ResultsHome.exporting = true;
+          var typesMapping = {
+            earnPoints: 'Earn Points',
+            redeemReward: 'Redeem Reward'
+          }
           function generateCsv() {
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += "User Name,Date,Type,Item Bought,Item Redeemed,Points Earned,Money Spent,Item Quantity,Points per Item,Plugin Name,User's Current Points \r\n"
             ResultsHome.transactions.forEach(function(item) {
               csvContent += item.createdBy ? item.createdBy.displayName ? item.createdBy.displayName + "," : item.createdBy.email + "," : ",";
               csvContent += item.createdAt ? $filter('date')(item.createdAt, 'dd MMM yyyy') + "," : ",";
+              csvContent += typesMapping[item.type] + ",";
               csvContent += item.type === 'earnPoints' ? item.item ? item.item.title + "," : "," : ",";
               csvContent += item.type === 'redeemReward' ? item.item ? item.item.title + ",": "," : ",";
-              csvContent += item.pointsEarned ? item.pointsEarned + "," : ","
-              csvContent += item.purchaseAmount ? item.purchaseAmount + "," : ","
-              csvContent += item.item ? item.item.quantity + "," : ","
-              csvContent += item.item ? item.item.pointsPerItem + "," : ","
-              csvContent += item.pluginTitle ? item.pluginTitle + "," :  ","
-              csvContent += item.currentPointsAmount ? item.currentPointsAmount + "," : ","
+              csvContent += item.pointsEarned ? item.pointsEarned + "," : ",";
+              csvContent += item.purchaseAmount ? item.purchaseAmount + "," : ",";
+              csvContent += item.item && item.item.quantity ? item.item.quantity + "," : ",";
+              csvContent += item.item && item.item.pointsPerItem ? item.item.pointsPerItem + "," : ",";
+              csvContent += item.pluginTitle ? item.pluginTitle + "," :  ",";
+              csvContent += item.currentPointsAmount ? item.currentPointsAmount + "," : ",";
               csvContent += "\r\n";
             });
             var encodedUri = encodeURI(csvContent);

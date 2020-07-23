@@ -248,6 +248,10 @@
           $location.path('#/');
         };
 
+        ContentReward.goBack = function() {
+          $location.path("/");
+        }
+
         if ($routeParams.id && RewardCache.getReward()) {
           ContentReward.item = RewardCache.getReward();
           if(ContentReward.item.pointsToRedeem == '38762499627') {

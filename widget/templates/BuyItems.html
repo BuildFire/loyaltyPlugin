@@ -8,7 +8,7 @@
   </div>
 
   <div class="buy-products-body" ng-repeat="item in WidgetBuyItems.items" ng-if="item.pointsPerItem > 0">
-    <p>{{item.title}}</p>
+    <p class="redeem-title">{{item.title}}</p>
     <p>{{item.pointsPerItem}}</p>
     <input min="0" type="number" placeholder="0"
       class="form-control border-none" ng-model="item.quantity">
@@ -24,7 +24,7 @@
   </div>
 
   <div class="alert alert-sm text-center alert-danger"
-        ng-if="WidgetBuyItems.totalLimitExceeded">{{WidgetBuyItems.strings["redeem.quantity"]}}
+        ng-if="WidgetBuyItems.totalLimitExceeded">{{WidgetBuyItems.strings["redeem.redeemDailyLimit"]}}
   </div>
 
 </div>

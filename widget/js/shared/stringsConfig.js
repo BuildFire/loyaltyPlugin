@@ -141,7 +141,7 @@ const stringsConfig = {
         }
     },
     awarded: {
-        title: 'Awarded'
+        title: 'Success - Earned Points'
         , subtitle: "Strings in Awarded",
         labels: {
             awesome: {
@@ -165,7 +165,7 @@ const stringsConfig = {
         }
     },
     amount: {
-        title: 'Amount'
+        title: 'Enter Money Spent'
         , subtitle: "Strings in Amount",
         labels: {
             enterAmount: {
