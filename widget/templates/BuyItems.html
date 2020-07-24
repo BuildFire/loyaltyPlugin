@@ -14,8 +14,11 @@
       class="form-control border-none" ng-model="item.quantity" ng-change="WidgetBuyItems.onQuantityChange()">
   </div>
 
-  <p class="total-points"><strong>{{WidgetBuyItems.strings["buyItems.totalPoints"]}}: </strong> {{WidgetBuyItems.totalPoints}}</p>
-
+  <div class="buy-products-body">
+    <p class="redeem-title" style="text-align: left;"><strong>{{WidgetBuyItems.strings["buyItems.totalPoints"]}}</strong></p>
+    <p>{{WidgetBuyItems.totalPoints}}</p>
+    <div></div>
+  </div>
   
   <div class="next-btn margin-top-twenty">
     <button class="btn btn-primary stretch margin-top"

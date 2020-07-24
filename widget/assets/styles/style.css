@@ -455,7 +455,8 @@ input[type="password"].form-control::placeholder{
 }
 
 .buy-products-body > p,
-.buy-products-body > input {
+.buy-products-body > input,
+.buy-products-body > div {
 	width: 30%;
 	margin-bottom: 0 !important;
 	font-size: 16px !important;
