@@ -74,9 +74,9 @@ const stringsConfig = {
             labels: {
                 insufficientFunds: {
                     title: "Insufficient Funds"
-                    , placeholder: "You have insufficient points.Please get points to redeem awards."
+                    , placeholder: "You have insufficient points. Please get points to redeem awards."
                     , maxLength: 80
-		    		, defaultValue: "You have insufficient points.Please get points to redeem awards."
+		    		, defaultValue: "You have insufficient points. Please get points to redeem awards."
                 },
                 importantNote: {
                     title: "Redeem Note"

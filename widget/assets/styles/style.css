@@ -195,9 +195,10 @@
 	padding: 16px;
 	border-radius: 4px;
 	box-shadow: 0 2px 4px rgba(98, 98, 98, 0.3);
+	margin-top: 0px;
 }
 .description{
-	padding: 16px;
+	padding: 0 16px;
 }
 .description:empty,
 .description:empty p{
