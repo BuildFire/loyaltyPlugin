@@ -40,13 +40,15 @@
 
         if (RewardCache.getApplication()) {
           WidgetCode.application = RewardCache.getApplication();
-        }
+        } 
 
         WidgetCode.addPoints = function () {
           var success = function (result) {
             Buildfire.spinner.hide();
             $rootScope.$broadcast('POINTS_ADDED', (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit);
-            var pointsAwarded = (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit;
+            const pointsPerDollar = WidgetCode.application.pointsPerDollar ? WidgetCode.application.pointsPerDollar : 1;
+            const pointsPerVisit = WidgetCode.application.pointsPerVisit ? WidgetCode.application.pointsPerVisit : 1;
+            var pointsAwarded = (currentView.amount * pointsPerDollar) + pointsPerVisit;
             ViewStack.push({
               template: 'Awarded',
               pointsAwarded: pointsAwarded
