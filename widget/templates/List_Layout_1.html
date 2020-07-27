@@ -20,6 +20,7 @@
         </p>
         <a class="btn btn-primary padding-left-twenty padding-right-twenty"
            href="javascript:void(0);"
+           ng-disabled="!WidgetHome.applicationExists"
            ng-click="WidgetHome.openGetPoints()"
             >{{WidgetHome.strings["general.getMore"]}}</a>
       </div>

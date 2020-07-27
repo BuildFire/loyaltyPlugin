@@ -70,6 +70,8 @@
         WidgetHome.PlaceHolderImageHeight = 60*window.devicePixelRatio + 'px';
         WidgetHome.PlaceHolderImageWidth3 = 110*window.devicePixelRatio + 'px';
         WidgetHome.PlaceHolderImageHeight3 = 60*window.devicePixelRatio + 'px';
+
+        WidgetHome.applicationExists = false;
         /**
          * Initialize current logged in user as null. This field is re-initialized if user is already logged in or user login user auth api.
          */
@@ -97,6 +99,7 @@
         WidgetHome.getLoyaltyPoints = function (userId) {
           var success = function (result) {
               $rootScope.loyaltyPoints = result.totalPoints;
+              WidgetHome.applicationExists = true;
             }
             , error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
@@ -129,13 +132,13 @@
             if (result.content && result.content.description)
               WidgetHome.description = result.content.description;
             RewardCache.setApplication(result);
+            WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
           };
 
           var errorApplication = function (error) {
             WidgetHome.carouselImages = [];
             console.error('Error fetching loyalty application---------------------------------------------------',error);
           };
-          WidgetHome.getLoyaltyPoints();
           if(WidgetHome.context && WidgetHome.context.instanceId){
             getLoggedInUser();
             LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
@@ -275,6 +278,7 @@
          * This event listener is bound for "REFRESH_APP" event broadcast
          */
         WidgetHome.listeners['REFRESH_APP'] = $rootScope.$on('REFRESH_APP', function (e) {
+          console.log('REFRESH_APP');
           WidgetHome.getApplicationAndRewards();
         });
 

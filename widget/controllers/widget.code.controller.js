@@ -46,16 +46,13 @@
           var success = function (result) {
             Buildfire.spinner.hide();
             $rootScope.$broadcast('POINTS_ADDED', (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit);
-            const pointsPerDollar = WidgetCode.application.pointsPerDollar ? WidgetCode.application.pointsPerDollar : 1;
-            const pointsPerVisit = WidgetCode.application.pointsPerVisit ? WidgetCode.application.pointsPerVisit : 1;
-            var pointsAwarded = (currentView.amount * pointsPerDollar) + pointsPerVisit;
+            var pointsAwarded = (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit;
             ViewStack.push({
               template: 'Awarded',
               pointsAwarded: pointsAwarded
             });
             buildfire.auth.getCurrentUser(function (err, user) {
               if (user) {
-                console.log(currentView);
                 if(currentView.type === 'buyPoints') {
                   Transactions.buyPoints(currentView.amount, pointsAwarded, $rootScope.loyaltyPoints, user);
                 } else if(currentView.type === 'buyProducts') {
