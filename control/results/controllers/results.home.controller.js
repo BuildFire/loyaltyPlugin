@@ -29,25 +29,28 @@
             redeemReward: 'Redeem Reward'
           }
           function generateCsv() {
-            let csvContent = "data:text/csv;charset=utf-8,";
+            let csvContent = 'data:text/csv; charset=utf-8, ';
             csvContent += "User Name,Date,Type,Item Bought,Item Redeemed,Points Earned,Money Spent,Item Quantity,Points per Item,Plugin Name,User's Current Points \r\n"
             ResultsHome.transactions.forEach(function(item) {
-              csvContent += item.createdBy ? item.createdBy.displayName ? item.createdBy.displayName + "," : item.createdBy.email + "," : ",";
-              csvContent += item.createdAt ? $filter('date')(item.createdAt, 'dd MMM yyyy') + "," : ",";
-              csvContent += typesMapping[item.type] + ",";
-              csvContent += item.type === 'earnPoints' ? item.item ? item.item.title + "," : "," : ",";
-              csvContent += item.type === 'redeemReward' ? item.item ? item.item.title + ",": "," : ",";
-              csvContent += item.pointsEarned ? item.pointsEarned + "," : ",";
-              csvContent += item.purchaseAmount ? item.purchaseAmount + "," : ",";
-              csvContent += item.item && item.item.quantity ? item.item.quantity + "," : ",";
-              csvContent += item.item && item.item.pointsPerItem ? item.item.pointsPerItem + "," : ",";
-              csvContent += item.pluginTitle ? item.pluginTitle + "," :  ",";
-              csvContent += item.currentPointsAmount ? item.currentPointsAmount + "," : ",";
-              csvContent += "\r\n";
+              let line = "";
+              line += item.createdBy ? item.createdBy.displayName ? item.createdBy.displayName + "," : item.createdBy.email + "," : ",";
+              line += item.createdAt ? $filter('date')(item.createdAt, 'dd MMM yyyy') + "," : ",";
+              line += typesMapping[item.type] + ",";
+              line += item.type === 'earnPoints' ? item.item ? item.item.title + "," : "," : ",";
+              line += item.type === 'redeemReward' ? item.item ? item.item.title + ",": "," : ",";
+              line += item.pointsEarned ? item.pointsEarned + "," : ",";
+              line += item.purchaseAmount ? item.purchaseAmount + "," : ",";
+              line += item.item && item.item.quantity ? item.item.quantity + "," : ",";
+              line += item.item && item.item.pointsPerItem ? item.item.pointsPerItem + "," : ",";
+              line += item.pluginTitle ? item.pluginTitle + "," :  ",";
+              line += item.currentPointsAmount ? item.currentPointsAmount + "," : ",";
+              line += "\r\n";
+              csvContent += line;
             });
-            var encodedUri = encodeURI(csvContent);
+            var blob = new Blob([csvContent],{type: 'text/csv;charset=utf-8;'});
+            var url = URL.createObjectURL(blob);
             var link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
+            link.setAttribute("href", url);
             link.setAttribute("download", "Results.csv");
             document.body.appendChild(link);
             link.click();
