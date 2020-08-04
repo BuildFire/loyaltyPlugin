@@ -29,16 +29,17 @@
             redeemReward: 'Redeem Reward'
           }
           function generateCsv() {
-            let csvContent = 'data:text/csv; charset=utf-8, ';
-            csvContent += "User Name,Date,Type,Item Bought,Item Redeemed,Points Earned,Money Spent,Item Quantity,Points per Item,Plugin Name,User's Current Points \r\n"
+            let csvContent = '';
+            csvContent += "User Name,Date,Type,Item Bought,Item Redeemed,Points Earned,Points Spent,Money Spent,Item Quantity,Points per Item,Plugin Name,User's Current Points \r\n"
             ResultsHome.transactions.forEach(function(item) {
               let line = "";
               line += item.createdBy ? item.createdBy.displayName ? item.createdBy.displayName + "," : item.createdBy.email + "," : ",";
-              line += item.createdAt ? $filter('date')(item.createdAt, 'dd MMM yyyy') + "," : ",";
+              line += item.createdAt ? $filter('date')(item.createdAt, 'dd MMM yyyy HH:mm') + "," : ",";
               line += typesMapping[item.type] + ",";
               line += item.type === 'earnPoints' ? item.item ? item.item.title + "," : "," : ",";
               line += item.type === 'redeemReward' ? item.item ? item.item.title + ",": "," : ",";
               line += item.pointsEarned ? item.pointsEarned + "," : ",";
+              line += item.pointsSpent ? item.pointsSpent + "," : ",";
               line += item.purchaseAmount ? item.purchaseAmount + "," : ",";
               line += item.item && item.item.quantity ? item.item.quantity + "," : ",";
               line += item.item && item.item.pointsPerItem ? item.item.pointsPerItem + "," : ",";

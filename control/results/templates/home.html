@@ -20,7 +20,7 @@
         <tbody>
             <tr ng-repeat="transaction in ResultsHome.transactions track by $index">
                 <td>{{transaction.createdBy.displayName}}</td>
-                <td>{{transaction.createdAt | date:'dd MMM yyyy'}}</td>
+                <td>{{transaction.createdAt | date:'dd MMM yyyy HH:mm'}}</td>
                 <td>{{ResultsHome.typesMapping[transaction.type]}}</td>
                 <td ng-switch="transaction.type">
                     <span ng-switch-when="earnPoints">{{transaction.item.title | limitTo: 20 }}{{ transaction.item.title.length > 20 ? '...' : '' }}</span>
