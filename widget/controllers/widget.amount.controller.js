@@ -12,6 +12,8 @@
         WidgetAmount.totalLimitExceeded = false;
         WidgetAmount.data = [];
         WidgetAmount.listeners = {};
+        WidgetAmount.strings = $rootScope.strings;
+        
           buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
               if(result && result.length) {
                   result.forEach(function(breadCrumb) {
@@ -91,7 +93,8 @@
           else {
             ViewStack.push({
               template: 'Code',
-              amount: WidgetAmount.amount
+              amount: WidgetAmount.amount,
+              type: 'buyPoints'
             });
           }
         };

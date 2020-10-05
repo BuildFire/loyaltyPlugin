@@ -1,0 +1,39 @@
+<div
+    class="transactions"
+    infinite-container=".transactions"	
+    infinite-scroll="getMoreTransactions()"
+    infinite-scroll-disabled="ResultsHome.loading || ResultsHome.noMore"
+    infinite-scroll-parent="true" 
+    infinite-scroll-immediate-check="false"
+    infinite-scroll-distance="0">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>User Name</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Item Bought</th>
+                <th>Item Redeemed</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="transaction in ResultsHome.transactions track by $index">
+                <td>{{transaction.createdBy.displayName}}</td>
+                <td>{{transaction.createdAt | date:'dd MMM yyyy HH:mm'}}</td>
+                <td>{{ResultsHome.typesMapping[transaction.type]}}</td>
+                <td ng-switch="transaction.type">
+                    <span ng-switch-when="earnPoints">{{transaction.item.title | limitTo: 20 }}{{ transaction.item.title.length > 20 ? '...' : '' }}</span>
+                    <span ng-switch-when="redeemReward"></span>
+                </td>
+                <td ng-switch="transaction.type">
+                    <span ng-switch-when="earnPoints"></span>
+                    <span ng-switch-when="redeemReward">{{transaction.item.title | limitTo: 20 }}{{ transaction.item.title.length > 20 ? '...' : '' }}</span>
+                </td>
+                <td><button class="link-button details-button" ng-click="ResultsHome.goToDetails(transaction)">View</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<button class="btn btn-primary" style="float: right; margin-top: 10px;" ng-click="ResultsHome.exportCsv()" ng-disabled="ResultsHome.exporting">Export as CSV</button>
+

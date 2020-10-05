@@ -195,9 +195,10 @@
 	padding: 16px;
 	border-radius: 4px;
 	box-shadow: 0 2px 4px rgba(98, 98, 98, 0.3);
+	margin-top: 0px;
 }
 .description{
-	padding: 16px;
+	padding: 0 16px;
 }
 .description:empty,
 .description:empty p{
@@ -435,4 +436,44 @@ input[type="password"].form-control::placeholder{
 }
 .word-break{
 	word-break: break-word;
+}
+
+.buy-products-header,
+.buy-products-body {
+	display: flex;
+	justify-content: space-around;
+	padding: 16px;
+}
+
+.buy-products-header > p {
+	text-align: center;
+	font-weight: bold;
+	width: 30%;
+}
+
+.buy-products-body {
+	align-items: center;
+}
+
+.buy-products-body > p,
+.buy-products-body > input,
+.buy-products-body > div {
+	width: 30%;
+	margin-bottom: 0 !important;
+	font-size: 16px !important;
+	text-align: center;
+}
+
+.redeem-title {
+	display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+	overflow-wrap: break-word;
+	-webkit-line-clamp: 3;
+}
+
+.total-points {
+	padding: 16px;
+	text-align: center;
+	font-size: 16px;
 }

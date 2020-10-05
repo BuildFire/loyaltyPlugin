@@ -1,7 +1,10 @@
 'use strict';
 
 (function (angular) {
-  angular.module('loyaltyPluginWidget')
+  angular.module('loyaltyPluginResults')
+    .constant('TAG_NAMES', {
+      TRANSACTIONS: 'transactions'
+    })
     .constant('STATUS_CODE', {
       INSERTED: 'inserted',
       UPDATED: 'updated',
@@ -20,25 +23,7 @@
       ITEM_ARRAY_FOUND: 'Array of Items provided'
     })
     .constant('SERVER', {
-      URL: 'https://loyalty.buildfire.com',
-      httpURL: 'http://loyalty.kaleoapps.com'
+      URL: 'https://loyalty.buildfire.com'
     })
-    .constant('TAG_NAMES', {
-      LOYALTY_INFO: 'loyaltyInfo',
-      TRANSACTIONS: 'transactions'
-    })
-    .constant('TRANSACTION_TYPES', {
-      EARN_POINTS: 'earnPoints',
-      REDEEM_REWARD: 'redeemReward'
-    })
-    .constant('LAYOUTS', {
-      listLayout: [
-        {name: "List_Layout_1"},
-        {name: "List_Layout_2"},
-        {name: "List_Layout_3"}
-      ]
-    })
-    .constant('DEFAULT_UNIQUEID', {
-      id: '1440042127221-02689074052032083'
-    });
+
 })(window.angular);

@@ -3,9 +3,48 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'Context',
-      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, Context) {
+    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'Context', '$window',
+      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, Context, $window) {
         var WidgetHome = this;
+
+        WidgetHome.strings = {
+          "general.loginOrRegister": "Login or register",
+          "general.toGetPoints": "to get points",
+          "general.currentlyHave": "You currently have",
+          "general.points": "Points",
+          "general.getMore": "Get More Points",
+          "general.redeem": "Redeem",
+          "general.done": "Done",
+          "general.confirm": "Confirm",
+          "general.cancel": "Cancel",
+          "redeem.insufficientFunds": 'You have insufficient points.Please get points to redeem awards.',
+          "redeem.importantNote": "Important: By clicking confirm, you are confirming that the reward has been received and the corresponding points will, therefore, be deducted from the user's account.",
+          "redeem.errorRedeem": 'Error redeeming reward. Please try again later.',
+          "redeem.redeemDailyLimit": "You have exceeded the daily limit.",
+          "redeem.handDevice": "Please hand your device to a staff member for confirmation",
+          "redeem.invalidCode": "Invalid confirmation code.",
+          "redeem.enterCode": "Enter Code",
+          "buyItems.productName": "Product Name",
+          "buyItems.pointsPerProduct": "Points Per Product",
+          "buyItems.quantity": "Quantity",
+          "buyItems.totalPoints": "Total Points",
+          "awarded.awesome": "Awesome",
+          "awarded.justEarned": "You just earned yourself",
+          "awarded.checkList": "Check out our list of rewards to redeem.",
+          "amount.enterAmount": "Enter the Purchase Amount",
+        }
+        
+        $window.strings.getLanguage(function(err, response){
+          const obj = response[0] ? response[0].data : $window.strings._data;
+          const strings = {};
+           Object.keys(obj).forEach(function (section){
+             Object.keys(obj[section]).forEach(function (label) {
+               strings[section + '.' + label] = obj[section][label].value || obj[section][label].defaultValue;
+             });
+           });
+           WidgetHome.strings = {...WidgetHome.strings, ...strings};
+           $rootScope.strings = {...WidgetHome.strings, ...strings};
+        });
 
         $rootScope.deviceHeight = window.innerHeight;
         $rootScope.deviceWidth = window.innerWidth || 320;
@@ -31,6 +70,8 @@
         WidgetHome.PlaceHolderImageHeight = 60*window.devicePixelRatio + 'px';
         WidgetHome.PlaceHolderImageWidth3 = 110*window.devicePixelRatio + 'px';
         WidgetHome.PlaceHolderImageHeight3 = 60*window.devicePixelRatio + 'px';
+
+        WidgetHome.applicationExists = false;
         /**
          * Initialize current logged in user as null. This field is re-initialized if user is already logged in or user login user auth api.
          */
@@ -58,6 +99,7 @@
         WidgetHome.getLoyaltyPoints = function (userId) {
           var success = function (result) {
               $rootScope.loyaltyPoints = result.totalPoints;
+              WidgetHome.applicationExists = true;
             }
             , error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
@@ -90,13 +132,13 @@
             if (result.content && result.content.description)
               WidgetHome.description = result.content.description;
             RewardCache.setApplication(result);
+            WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
           };
 
           var errorApplication = function (error) {
             WidgetHome.carouselImages = [];
             console.error('Error fetching loyalty application---------------------------------------------------',error);
           };
-          WidgetHome.getLoyaltyPoints();
           if(WidgetHome.context && WidgetHome.context.instanceId){
             getLoggedInUser();
             LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
@@ -117,13 +159,21 @@
          * Method to show amount page where user can fill in the amount they have made purchase of.
          */
         WidgetHome.openGetPoints = function () {
-          console.log(">>>>>>>>>>>>>>-----------------------");
           if (WidgetHome.currentLoggedInUser) {
-            ViewStack.push({
-              template: 'Amount',
-              loyaltyPoints: $rootScope.loyaltyPoints
-
-            });
+            const settings = WidgetHome.data.settings;
+            if(settings.purchaseOption && settings.purchaseOption.value === 'perProductsPurchased') {
+              ViewStack.push({
+                template: 'BuyItems',
+                loyaltyPoints: $rootScope.loyaltyPoints,
+                loyaltyRewards: WidgetHome.loyaltyRewards
+              });
+            }
+            else {
+                ViewStack.push({
+                  template: 'Amount',
+                  loyaltyPoints: $rootScope.loyaltyPoints
+                });
+            }
           }
           else {
             WidgetHome.openLogin();
@@ -228,6 +278,7 @@
          * This event listener is bound for "REFRESH_APP" event broadcast
          */
         WidgetHome.listeners['REFRESH_APP'] = $rootScope.$on('REFRESH_APP', function (e) {
+          console.log('REFRESH_APP');
           WidgetHome.getApplicationAndRewards();
         });
 

@@ -1,11 +1,10 @@
 <div class="holder code-holder padding-zero" ng-controller="WidgetCodeCtrl as WidgetCode">
   <!-- <div class="loyalty-plugin"> -->
     <div class="purchase-amount padded margin-top-ten">
-      <h5 class="text-center">Please hand your device to a staff member for
-        confirmation</h5>
+      <h5 class="text-center">{{WidgetCode.strings["redeem.handDevice"]}}</h5>
 
       <div class="enter-price">
-        <input type="password" placeholder="Enter Code"
+        <input type="password" placeholder="{{WidgetCode.strings['redeem.enterCode']}}"
                class="form-control text-center border-none"
                ng-model="WidgetCode.passcode" maxlength="5" get-focus
                ng-click="WidgetCode.preventClickBehavior($event)">
@@ -14,18 +13,16 @@
         <button class="btn btn-success stretch" href="javascript:void(0);"
                 ng-click="WidgetCode.confirmPasscode()"
                 ng-disabled="!WidgetCode.passcode">
-          Confirm
+          {{WidgetCode.strings["general.confirm"]}}
         </button>
       </div>
     </div>
     
     <div class="alert alert-sm text-center alert-danger"
-          ng-if="WidgetCode.passcodeFailure">Invalid confirmation
-      code.
+          ng-if="WidgetCode.passcodeFailure">{{WidgetCode.strings["redeem.invalidCode"]}}
     </div>
     <div class="alert alert-sm text-center alert-danger"
-          ng-if="WidgetCode.dailyLimitExceeded">You have
-      exceeded the daily limit.
+          ng-if="WidgetCode.dailyLimitExceeded">{{WidgetCode.strings["redeem.redeemDailyLimit"]}}
     </div>
     
   <!-- </div> -->

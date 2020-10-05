@@ -26,12 +26,25 @@
   <script src="controllers/widget.home.controller.js"></script>
   <script src="controllers/widget.item.controller.js"></script>
   <script src="controllers/widget.amount.controller.js"></script>
+  <script src="controllers/widget.buyItems.controller.js"></script>
   <script src="controllers/widget.redeem.controller.js"></script>
   <script src="controllers/widget.code.controller.js"></script>
   <script src="controllers/widget.success.controller.js"></script>
   <script src="controllers/widget.awarded.controller.js"></script>
   <script src="../../../scripts/angular/angular-animate.min.js"></script>
   <link rel="stylesheet" href="../../../styles/transitionAnimation.css">
+
+  <script src="js/shared/strings.js"></script>
+  <script src="js/shared/stringsConfig.js"></script>
+  
+  <script>
+    function initStrings() {
+      let strings = new buildfire.services.Strings("en-us", stringsConfig);
+      window.strings = strings;
+    }
+
+    initStrings();
+  </script>
 
   <!-- Meta -->
   <meta charset="utf-8">

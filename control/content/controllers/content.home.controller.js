@@ -128,7 +128,7 @@
               };
               ContentHome.error = function (err) {
                   if (err && err.code == 2100) {
-                      console.log('Error while getting application:', err);
+                      console.error('Error while getting application:', err);
                       var success = function (result) {
                           console.info('Saved data result: ', result);
                           ContentHome.data = result;
@@ -139,6 +139,11 @@
                       }
                           , error = function (err) {
                           console.log('Error while saving data : ', err);
+                          if(err && err.code == 2000) {
+                            buildfire.messaging.sendMessageToWidget({
+                              type: 'AppCreated'
+                            });
+                          }
                       };
                       if (ContentHome.currentLoggedInUser) {
                           _data.userToken = ContentHome.currentLoggedInUser.userToken;

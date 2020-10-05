@@ -1,0 +1,35 @@
+<div class="holder padding-zero" ng-controller="WidgetBuyItemsCtrl as
+     WidgetBuyItems">
+
+  <div class="buy-products-header">
+    <p>{{WidgetBuyItems.strings["buyItems.productName"]}}</p>
+    <p>{{WidgetBuyItems.strings["buyItems.pointsPerProduct"]}}</p>
+    <p>{{WidgetBuyItems.strings["buyItems.quantity"]}}</p>
+  </div>
+
+  <div class="buy-products-body" ng-repeat="item in WidgetBuyItems.items" ng-if="item.pointsPerItem > 0">
+    <p class="redeem-title" style="text-align: left;">{{item.title}}</p>
+    <p>{{item.pointsPerItem}}</p>
+    <input min="0" type="number" placeholder="0"
+      class="form-control border-none" ng-model="item.quantity" ng-change="WidgetBuyItems.onQuantityChange()">
+  </div>
+
+  <div class="buy-products-body">
+    <p class="redeem-title" style="text-align: left;"><strong>{{WidgetBuyItems.strings["buyItems.totalPoints"]}}</strong></p>
+    <p>{{WidgetBuyItems.totalPoints}}</p>
+    <div></div>
+  </div>
+  
+  <div class="next-btn margin-top-twenty">
+    <button class="btn btn-primary stretch margin-top"
+            href="javascript:void(0);" ng-click="WidgetBuyItems.confirmCode()"
+            ng-disabled="WidgetBuyItems.isNextDisabled()"
+        >{{WidgetBuyItems.strings["general.next"]}}
+    </button>
+  </div>
+
+  <div class="alert alert-sm text-center alert-danger"
+        ng-if="WidgetBuyItems.totalLimitExceeded">{{WidgetBuyItems.strings["redeem.redeemDailyLimit"]}}
+  </div>
+
+</div>

@@ -66,8 +66,8 @@
                 }
             };
         }])
-        .run(['$location', '$rootScope', 'RewardCache', function ($location, $rootScope, RewardCache) {
-            buildfire.messaging.onReceivedMessage = function (msg) {
+        .run(['$location', '$rootScope', 'RewardCache', 'Buildfire', function ($location, $rootScope, RewardCache, Buildfire) {
+            Buildfire.messaging.onReceivedMessage = function (msg) {
                 switch (msg.type) {
                     case 'OpenItem':
                         RewardCache.setReward(msg.data);
@@ -80,5 +80,14 @@
                         break;
                 }
             };
+
+              Buildfire.analytics.registerEvent(
+                  { title: "Reward redeemed", key: 'reward-redeemed', description: "User has redeemed a reward" }, 
+                  { silentNotification: true }
+              );
+              Buildfire.analytics.registerEvent(
+                { title: "Points earned", key: 'points-earned', description: "User has earned points" }, 
+                { silentNotification: true }
+              );
         }])
 })(window.angular, window.buildfire);

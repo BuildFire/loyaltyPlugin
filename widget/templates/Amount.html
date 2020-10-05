@@ -1,7 +1,7 @@
 <div class="holder padding-zero amount-holder" ng-controller="WidgetAmountCtrl as
      WidgetAmount">
 
-  <h5 class="text-center margin-bottom-thirty">Enter the Purchase Amount</h5>
+  <h5 class="text-center margin-bottom-thirty">{{WidgetAmount.strings["amount.enterAmount"]}}</h5>
   <form name="myform">
     <div class="enter-price">
       <span class="currency"
@@ -15,13 +15,12 @@
     <button class="btn btn-primary stretch margin-top"
             href="javascript:void(0);" ng-click="WidgetAmount.confirmCode()"
             ng-disabled="!(WidgetAmount.amount > 0) || !myform.$valid"
-        >Next
+        >{{WidgetAmount.strings["general.next"]}}
     </button>
   </div>
 
   <div class="alert alert-sm text-center alert-danger"
-        ng-if="WidgetAmount.totalLimitExceeded">You have
-    exceeded the total limit.
+        ng-if="WidgetAmount.totalLimitExceeded">{{WidgetAmount.strings["redeem.redeemDailyLimit"]}}
   </div>
 
 </div>

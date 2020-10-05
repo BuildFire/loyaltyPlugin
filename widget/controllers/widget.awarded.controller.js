@@ -9,6 +9,7 @@
         var WidgetAwarded = this;
         var breadCrumbFlag = true;
         WidgetAwarded.listeners = {};
+        WidgetAwarded.strings = $rootScope.strings;
         /**
          * Initialize variable with current view returned by ViewStack service. In this case it is "Item_Details" view.
          */

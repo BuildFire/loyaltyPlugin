@@ -1,60 +1,13 @@
 'use strict';
 
 (function (angular, buildfire) {
-  angular.module('loyaltyPluginWidget')
+  angular.module('loyaltyPluginTests')
     .provider('Buildfire', [function () {
       var Buildfire = this;
       Buildfire.$get = function () {
         return buildfire
       };
       return Buildfire;
-    }])
-    .factory('Location', [function () {
-      var _location = window.location;
-      return {
-        goTo: function (path) {
-          _location.href = path;
-        }
-      };
-    }])
-    .factory('ViewStack', ['$rootScope', function ($rootScope) {
-      var views = [];
-      var viewMap = {};
-      return {
-        push: function (view) {
-          if (viewMap[view.template]) {
-            this.pop();
-          } else {
-            viewMap[view.template] = 1;
-            views.push(view);
-            $rootScope.$broadcast('VIEW_CHANGED', 'PUSH', view);
-          }
-          return view;
-        },
-        pop: function () {
-          $rootScope.$broadcast('BEFORE_POP', views[views.length - 1]);
-          var view = views.pop();
-          delete viewMap[view.template];
-          $rootScope.$broadcast('VIEW_CHANGED', 'POP', view);
-
-          return view;
-        },
-        hasViews: function () {
-          return !!views.length;
-        },
-        getPreviousView: function() {
-          return views.length && views[views.length - 2] || {};
-        },
-        getCurrentView: function () {
-          return views.length && views[views.length - 1] || {};
-        },
-        popAllViews: function (noAnimation) {
-          $rootScope.$broadcast('BEFORE_POP', null);
-          $rootScope.$broadcast('VIEW_CHANGED', 'POPALL', views, noAnimation);
-          views = [];
-          viewMap = {};
-        }
-      };
     }])
     .factory('LoyaltyAPI', ['$q', 'STATUS_CODE', 'STATUS_MESSAGES', 'SERVER', '$http',
       function ($q, STATUS_CODE, STATUS_MESSAGES, SERVER, $http) {
@@ -84,6 +37,23 @@
             deferred.reject(new Error('Undefined app id'));
           }
           $http.get(getProxyServerUrl() + '/api/loyaltyApp/' + id).success(function (response) {
+            if (response)
+              deferred.resolve(response);
+            else
+              deferred.resolve(null);
+          })
+            .error(function (error) {
+              deferred.reject(error);
+            });
+          return deferred.promise;
+        };
+
+        var addReward = function (data) {
+          var deferred = $q.defer();
+          if (!data) {
+            deferred.reject(new Error('Undefined reward data'));
+          }
+          $http.post(SERVER.URL + '/api/loyaltyRewards', data).success(function (response) {
             if (response)
               deferred.resolve(response);
             else
@@ -188,77 +158,29 @@
           addApplication: addApplication,
           getApplication: getApplication,
           getRewards: getRewards,
+          addReward: addReward,
           getLoyaltyPoints: getLoyaltyPoints,
           addLoyaltyPoints: addLoyaltyPoints,
           validatePasscode: validatePasscode,
           redeemPoints: redeemPoints
         };
       }])
-    .factory("DataStore", ['Buildfire', '$q', 'STATUS_CODE', 'STATUS_MESSAGES', function (Buildfire, $q, STATUS_CODE, STATUS_MESSAGES) {
+    .factory("Transactions", ['Buildfire', '$q', 'TAG_NAMES', function (Buildfire, $q, TAG_NAMES ) {
       return {
-        get: function (_tagName) {
-          var deferred = $q.defer();
-          Buildfire.datastore.get(_tagName, function (err, result) {
-            if (err) {
-              return deferred.reject(err);
-            } else if (result) {
-              return deferred.resolve(result);
-            }
-            else{
-              return deferred.reject(new Error('Result Not Found'));
-            }
-          });
-          return deferred.promise;
-        },
-        save: function (_item, _tagName) {
-          var deferred = $q.defer();
-          if (typeof _item == 'undefined') {
-            return deferred.reject(new Error({
-              code: STATUS_CODE.UNDEFINED_DATA,
-              message: STATUS_MESSAGES.UNDEFINED_DATA
-            }));
-          }
-          Buildfire.datastore.save(_item, _tagName, function (err, result) {
-            if (err) {
-              return deferred.reject(err);
-            } else if (result) {
-              return deferred.resolve(result);
-            }
-          });
-          return deferred.promise;
-        },
-        onUpdate: function () {
-          var deferred = $q.defer();
-          var onUpdateFn = Buildfire.datastore.onUpdate(function (event) {
-            if (!event) {
-              return deferred.notify(new Error({
-                code: STATUS_CODE.UNDEFINED_DATA,
-                message: STATUS_MESSAGES.UNDEFINED_DATA
-              }), true);
-            } else {
-              return deferred.notify(event);
-            }
-          }, true);
-          return deferred.promise;
-        }
-      }
-    }])
-    .factory("Transactions", ['Buildfire', '$q', 'TAG_NAMES', 'TRANSACTION_TYPES', function (Buildfire, $q, TAG_NAMES, TRANSACTION_TYPES ) {
-      return {
-        buyPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, user) {
-          var pluginTitle = buildfire.getContext().title;
+        buyPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, pointsPerItem, user) {
           const data = {
             createdBy: user,
             createdAt: new Date(),
-            type: TRANSACTION_TYPES.EARN_POINTS,
+            type: "earnPoints",
             purchaseAmount: purchaseAmount,
             pointsEarned: pointsEarned,
             currentPointsAmount: currentPointsAmount,
-            pluginTitle: pluginTitle,
-            _buildfire :{ 
+            pointsPerItem: pointsPerItem,
+            _buildfire: {
               index: {
-                text: user.displayName ? user.displayName : user.email,
                 date1: new Date(),
+                text: user.firstName ? `${user.firstName} ${user.lastName}` : user.email,
+                array1: [{ string1: "earnPoints" }]
               }
             }
           }
@@ -276,62 +198,61 @@
           });
           return deferred.promise;
         },
-        buyProducts: function (items, currentPointsAmount, user) {
-          var pluginTitle = buildfire.getContext().title;
-          var itemsToAdd = items.filter(function (item) {
-            return item.quantity > 0
-          })
-          itemsToAdd.forEach(function(item) {
+        buyProducts: function (items, currentPointsAmount, pointsPerItem, user) {
+          items.forEach(function(item) {
             const data = {
               createdBy: user,
               createdAt: new Date(),
-              type: TRANSACTION_TYPES.EARN_POINTS,
-              item: item,
-              pointsEarned: item.quantity * item.pointsPerItem,
+              type: "earnPoints",
+              itemTitle: item.name,
+              itemId: item.id,
+              itemQuantity: item.quantity,
+              pointsPerProduct: item.pointsPerProduct,
+              pointsPerItem: pointsPerItem,
+              moneySpent: item.pointsPerProduct * item.quantity,
               currentPointsAmount: currentPointsAmount,
-              pluginTitle: pluginTitle,
-              _buildfire :{ 
+              _buildfire: {
                 index: {
-                  text: user.displayName ? user.displayName : user.email,
+                  string1: item.name,
                   date1: new Date(),
-                  array1: [{'itemName': item.title}]
+                  text: user.firstName ? `${user.firstName} ${user.lastName}` : user.email,
+                  array1: [{ string1: "earnPoints" }]
                 }
               }
             }
+            var deferred = $q.defer();
             Buildfire.publicData.insert(data, TAG_NAMES.TRANSACTIONS, function (err, result) {
               if (err) {
-                return console.error(err);
+                return deferred.reject(err);
               } else if (result) {
-                buildfire.analytics.trackAction('points-earned', { pointsEarned : item.pointsPerItem * item.quantity });
-                return console.log(result)
+                buildfire.analytics.trackAction('points-earned', { pointsEarned : item.pointsPerProduct * item.quantity });
+                return deferred.resolve(result);
               }
               else{
-                return console.error("Result not found");
+                return deferred.reject(new Error('Result Not Found'));
               }
             });
           });
           return items;
         },
         redeemReward: function (item, pointsSpent, currentPointsAmount, user) {
-          var pluginTitle = buildfire.getContext().title;
           const data = {
             createdBy: user,
             createdAt: new Date(),
-            type: TRANSACTION_TYPES.REDEEM_REWARD,
-            item: item,
+            type: "redeemReward",
+            itemTitle: item.name,
+            itemId: item.id,
             pointsSpent: pointsSpent,
             currentPointsAmount: currentPointsAmount,
-            pluginTitle: pluginTitle,
-            _buildfire :{ 
+            _buildfire: {
               index: {
-                text: user.displayName ? user.displayName : user.email,
                 date1: new Date(),
-                array1: [{'itemName': item.title}]
+                text: user.firstName ? `${user.firstName} ${user.lastName}` : user.email,
+                array1: [{ string1: "redeemReward" }]
               }
             }
           }
-          var deferred = $q.defer();
-          Buildfire.publicData.insert(data, TAG_NAMES.TRANSACTIONS, function (err, result) {
+          Buildfire.publicData.insert(data, TAG_NAMES.TRANSACTIONS, data, function (err, result) {
             if (err) {
               return deferred.reject(err);
             } else if (result) {
@@ -345,47 +266,5 @@
           return deferred.promise;
         }
       }
-    }])
-    .factory('RewardCache', ['$rootScope', function ($rootScope) {
-      var reward = {};
-      var application = {};
-      return {
-        setReward: function (data) {
-          reward = data;
-        },
-        getReward: function () {
-          return reward;
-        },
-        setApplication: function (data) {
-          application = data;
-        },
-        getApplication: function () {
-          return application;
-        }
-      };
-    }])
-    .factory('Context', ['$q', function ($q) {
-      var context = null;
-      return {
-        getContext: function (cb) {
-          if (context) {
-            cb && cb(context);
-            return context;
-          }
-          else {
-            buildfire.getContext(function (err, _context) {
-              if (err) {
-                cb && cb(null);
-                return null;
-              }
-              else {
-                context = _context;
-                cb && cb(_context);
-                return context;
-              }
-            });
-          }
-        }
-      };
     }])
 })(window.angular, window.buildfire);

@@ -10,23 +10,25 @@
     <div class="current-points" ng-if="WidgetHome.carouselImages && WidgetHome.loyaltyRewards">
       <div class="text-center">
         <p ng-if="!(WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)"><span
-            class="text-primary"><a href="javascript:void(0);"
-                                    ng-click="WidgetHome.openLogin()">Log in
-          or register</a></span> to
-          get points</p>
+          class="text-primary"><a href="javascript:void(0);"
+                                  ng-click="WidgetHome.openLogin()">{{WidgetHome.strings["general.loginOrRegister"]}}</a></span> 
+                                  <span>{{WidgetHome.strings["general.toGetPoints"]}}</span></p>
 
         <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id">
-          You currently have <span
-            class="text-primary">{{loyaltyPoints | number : 2}}</span> points.
+          <span>{{WidgetHome.strings["general.currentlyHave"]}} </span>
+          <span
+            class="text-primary">{{loyaltyPoints | number : 2}}</span>
+            <span style="text-transform: lowercase;">{{WidgetHome.strings["general.points"]}}</span>.
         </p>
         <a class="btn btn-primary padding-left-twenty padding-right-twenty"
            href="javascript:void(0);"
            ng-click="WidgetHome.openGetPoints()"
-            >Get More Points</a>
+           ng-disabled="!WidgetHome.applicationExists"
+           >{{WidgetHome.strings["general.getMore"]}}</a>
       </div>
     </div>
     <div class="list" ng-if="WidgetHome.loyaltyRewards && WidgetHome.carouselImages">
-      <div class="list-item" ng-repeat="reward in WidgetHome.loyaltyRewards" ng-click="WidgetHome.openReward(reward, $index)">
+      <div class="list-item" ng-repeat="reward in WidgetHome.loyaltyRewards | filter: { pointsToRedeem: '!38762499627' }" ng-click="WidgetHome.openReward(reward, $index)">
         <div class="list-media-holder"
               ng-if="reward.listImage">
           <img load-image="16x9"
@@ -41,7 +43,8 @@
           </p>
 
           <p class="ellipsis margin-zero opacity-seventy">
-            {{reward.pointsToRedeem}} Points</p>
+            {{reward.pointsToRedeem}} 
+            <span class="opacity-seventy">{{WidgetHome.strings["general.points"]}}</span></p>
         </div>
       </div>
     </div>

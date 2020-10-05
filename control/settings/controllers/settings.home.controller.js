@@ -47,6 +47,15 @@
                     symbol:"ZAR"
                 }];
 
+                SettingsHome.purchaseOptions = [{
+                    name: "Per Money Spent",
+                    value: "perMoneySpent"
+                },
+                {
+                    name: "Per Items Purchased",
+                    value: "perProductsPurchased"
+                }];
+
 
                 SettingsHome.newCurrency = [];
 
@@ -91,6 +100,15 @@
                         SettingsHome.data.settings = {};
                     }else {
                         SettingsHome.data.settings.currency = currency;
+                    }
+                };
+                SettingsHome.changePurchaseOption = function(purchaseOption){
+                    if(!SettingsHome.data.settings) {
+                        SettingsHome.data.settings = {
+                            purchaseOption: purchaseOption
+                        };
+                    } else {
+                        SettingsHome.data.settings.purchaseOption = purchaseOption;
                     }
                 };
                 SettingsHome.saveData = function (newObj, tag) {

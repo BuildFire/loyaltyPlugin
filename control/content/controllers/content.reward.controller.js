@@ -11,11 +11,17 @@
           pointsToRedeem: "",
           description: "",
           listImage: "",
-          BackgroundImage: ""
+          BackgroundImage: "",
+          pointsPerItem: "",
+        };
+        ContentReward.validations = {
+          title: false,
+          points: false
         };
         ContentReward.isInserted = false;
         ContentReward.masterData = null;
         ContentReward.itemSaved = false;
+        ContentReward.loading = false;
         updateMasterItem(ContentReward.item);
         ContentReward.bodyWYSIWYGOptions = {
           plugins: 'advlist autolink link image lists charmap print preview',
@@ -121,7 +127,26 @@
           }
         });
         ContentReward.addingReward = function () {
-          ContentReward.addReward(JSON.parse(angular.toJson(ContentReward.item)));
+          ContentReward.validations = {
+            title: false,
+            points: false,
+          };
+          if(!ContentReward.item.title || ContentReward.item.title.length == 0) {
+            ContentReward.validations.title = true;
+          } 
+          if ((!ContentReward.item.pointsToRedeem || ContentReward.item.pointsToRedeem.length == 0) && 
+          (!ContentReward.item.pointsPerItem || ContentReward.item.pointsPerItem.length == 0) ){
+            ContentReward.validations.points = true;
+          } 
+           if (!ContentReward.validations.title && !ContentReward.validations.points){
+            // "Hack" for overcoming pointsToRedeem validation if the item can only be bought but not redeemed
+            if(ContentReward.item.pointsPerItem && ContentReward.item.pointsPerItem.length > 0 
+              && 
+              (!ContentReward.item.pointsToRedeem || ContentReward.item.pointsToRedeem.length === 0 || ContentReward.item.pointsToRedeem === '38762499627')) {
+                ContentReward.item.pointsToRedeem = '38762499627'
+            }
+            ContentReward.addReward(JSON.parse(angular.toJson(ContentReward.item)));
+          }
         }
         /*Add reward method declaration*/
         ContentReward.addReward = function (newObj) {
@@ -129,6 +154,7 @@
           if (typeof newObj === 'undefined') {
             return;
           }
+          ContentReward.loading = true;
           var data = newObj;
           data.appId = context.appId;
           data.loyaltyUnqiueId = context.instanceId;
@@ -148,6 +174,7 @@
                   data: ContentReward.item
                 });
               }
+              ContentReward.loading = false;
               ContentReward.gotToHome()
 //              if($scope.$$phase) $scope.$digest();
             }
@@ -178,12 +205,14 @@
           data.loyaltyUnqiueId = context.instanceId;
           data.userToken = ContentReward.currentLoggedInUser.userToken;
           data.auth = ContentReward.currentLoggedInUser.auth;
-          buildfire.messaging.sendMessageToWidget({
-            id: $routeParams.id,
-            index: $routeParams.index || 0,
-            type: 'UpdateItem',
-            data: ContentReward.item
-          });
+          if(newObj.pointsToRedeem != '38762499627') {
+            buildfire.messaging.sendMessageToWidget({
+              id: $routeParams.id,
+              index: $routeParams.index || 0,
+              type: 'UpdateItem',
+              data: ContentReward.item
+            });
+          }
           $scope.$digest();
           var success = function (result) {
               console.info('Saved data result: ', result);
@@ -219,19 +248,28 @@
           $location.path('#/');
         };
 
+        ContentReward.goBack = function() {
+          $location.path("/");
+        }
+
         if ($routeParams.id && RewardCache.getReward()) {
           ContentReward.item = RewardCache.getReward();
+          if(ContentReward.item.pointsToRedeem == '38762499627') {
+            ContentReward.item.pointsToRedeem = '';
+          }
           ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: ContentReward.item._id});
           console.log("aaaaaaaaaaaaaaaaaaaaaa", ContentReward.item);
           ContentReward.listImage.loadbackground(ContentReward.item.listImage);
           /* ContentReward.BackgroundImage.loadbackground(ContentReward.item.BackgroundImage);  */  //enable it when you want to show add background on reward add
           ContentReward.isInserted = true;
-          buildfire.messaging.sendMessageToWidget({
-            id: $routeParams.id,
-            index: $routeParams.index || 0,
-            type: 'OpenItem',
-            data: ContentReward.item
-          });
+          if(ContentReward.item.pointsToRedeem === '38762499627') {
+            buildfire.messaging.sendMessageToWidget({
+              id: $routeParams.id,
+              index: $routeParams.index || 0,
+              type: 'OpenItem',
+              data: ContentReward.item
+            });
+          }
           if (!ContentReward.item.carouselImage)
             ContentReward.editor.loadItems([]);
           else

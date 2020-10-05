@@ -11,11 +11,11 @@
     </div>
     <div ng-if="WidgetSuccess.reward">
       <div class="detail-header">
-        <div>
-          <p class="margin-zero ellipsis">{{WidgetSuccess.reward.title}}</p>
+        <div style="width: 100%">
+          <p class="margin-zero redeem-title">{{WidgetSuccess.reward.title}}</p>
 
           <h5 class="margin-zero ellipsis opacity-seventy">
-            {{WidgetSuccess.reward.pointsToRedeem}} Points</h5>
+            {{WidgetSuccess.reward.pointsToRedeem}} {{WidgetSuccess.strings["general.points"]}}</h5>
         </div>
       </div>
       <div class="editor padded text-center">
@@ -24,7 +24,7 @@
         <div class="padding-top-thirty">
           <a class="btn btn-primary padding-left-thirty padding-right-thirty"
             href="javascript:void(0);"
-            ng-click="WidgetSuccess.goToHome()">Done</a>
+            ng-click="WidgetSuccess.goToHome()">{{WidgetSuccess.strings["general.done"]}}</a>
         </div>
       </div>
     </div>
