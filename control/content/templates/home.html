@@ -38,7 +38,7 @@
     </div>
   </div>
   <hr class="none">
-  <div class="item clearfix row">
+  <div class="item clearfix row" ng-if="ContentHome.settings.purchaseOption.value !== 'perProductsPurchased'">
     <div class="labels col-xs-3 pull-left">
       <span>Points per Dollar</span>
     </div>
@@ -47,7 +47,7 @@
              ng-model="ContentHome.data.pointsPerDollar">
     </div>
   </div>
-  <hr class="none">
+  <hr class="none" ng-if="ContentHome.settings.purchaseOption.value !== 'perProductsPurchased'">
   <div class="item clearfix row">
     <div class="labels col-xs-3 pull-left">
       <span>Daily Limit</span>
