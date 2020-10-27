@@ -21,5 +21,9 @@
     })
     .constant('SERVER', {
       URL : 'https://loyalty.buildfire.com'
+    })
+    .constant('TAG_NAMES', {
+      LOYALTY_INFO: 'loyaltyInfo',
+      NEW_CURRENCY: 'newCurrency'
     });
 })(window.angular);

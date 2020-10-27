@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal', 'RewardCache', '$location', '$timeout', 'context',
-      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache, $location, $timeout, context) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal', 'RewardCache', '$location', '$timeout', 'context', 'TAG_NAMES',
+      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache, $location, $timeout, context, TAG_NAMES) {
         console.log("---------------------", context);
         var ContentHome = this;
         var _data = {
@@ -17,6 +17,12 @@
           pointsPerDollar: 1,
           totalLimit: 5000,
           dailyLimit: 1000,
+          settings: {
+            purchaseOption: {
+              name: "Per Money Spent",
+              value: "perMoneySpent"
+            }
+          },
           image: []
         };
 
@@ -123,8 +129,16 @@
                       ContentHome.editor.loadItems([]);
                   else
                       ContentHome.editor.loadItems(ContentHome.data.image);
-                  updateMasterItem(ContentHome.data);
                   if (tmrDelay) clearTimeout(tmrDelay);
+
+                  buildfire.datastore.get(TAG_NAMES.LOYALTY_INFO,function(err,data){
+                    ContentHome.settings = data.data.settings;
+                    updateMasterItem(ContentHome.data); 
+                    if(Number(ContentHome.data.pointsPerDollar) <= 0) {
+                      ContentHome.data.pointsPerDollar = 1;
+                      saveData(JSON.parse(angular.toJson(ContentHome.data)));
+                    }
+                  });
               };
               ContentHome.error = function (err) {
                   if (err && err.code == 2100) {
