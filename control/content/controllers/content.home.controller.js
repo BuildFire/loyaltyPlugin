@@ -133,7 +133,6 @@
 
                   buildfire.datastore.get(TAG_NAMES.LOYALTY_INFO,function(err,data){
                     ContentHome.settings = data.data.settings;
-                    console.log({pointsPerDollar: ContentHome.data.pointsPerDollar});
                     updateMasterItem(ContentHome.data); 
                     if(Number(ContentHome.data.pointsPerDollar) <= 0) {
                       ContentHome.data.pointsPerDollar = 1;
