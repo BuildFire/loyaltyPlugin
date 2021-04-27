@@ -175,6 +175,7 @@
                   ContentHome.loyaltyRewards = result;
                   if (!ContentHome.loyaltyRewards)
                       ContentHome.loyaltyRewards = [];
+                  ContentHome.addDeepLinks(result);
                   console.info('init success result loyaltyRewards:', result);
                   if (tmrDelay) clearTimeout(tmrDelay);
               };
@@ -196,6 +197,33 @@
           };
 
 
+        ContentHome.addDeepLinks = function(list){
+          Deeplink.getAll({},(err,result)=>{
+            if(err)console.err(err);
+            for (let i = 0; i < list.length; i++) {
+              var reward = list[i];
+              var exits=false;
+              for (let n = 0; n < result.length; n++) {
+                var deeplink = result[n];
+                if(deeplink.id==reward._id)exits=true;
+              }
+              if(!exits){
+                ContentHome.createDeepLink(reward);
+              }
+            }
+          });
+        }
+
+        ContentHome.createDeepLink = function(reward){
+          if(reward._id && reward.title){
+            new Deeplink({
+                deeplinkId:reward._id,
+                name:reward.title,
+                deeplinkData:{id:reward._id},
+                imageUrl:(reward.listImage)?reward.listImage:null
+            }).save();
+          }
+        }
         /*SortRewards method declaration*/
         ContentHome.sortRewards = function (data) {
 
@@ -294,6 +322,7 @@
                 auth: ContentHome.currentLoggedInUser.auth,
                 appId: context.appId
               };
+              ContentHome.removeDeeplink(loyaltyId);
               LoyaltyAPI.removeReward(loyaltyId, data).then(ContentHome.success, ContentHome.error);
 
             }
@@ -302,6 +331,10 @@
           });
         };
 
+        ContentHome.removeDeeplink =function(loyaltyId){
+          Deeplink.deleteById(loyaltyId);
+        }
+        
         ContentHome.openReward = function (data, index) {
           RewardCache.setReward(data);
           $location.path('/reward/' + data._id + '/' + index);

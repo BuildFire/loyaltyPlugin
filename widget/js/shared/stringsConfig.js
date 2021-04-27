@@ -182,5 +182,16 @@ const stringsConfig = {
             },
             
         }
-    }
+    },
+    deeplink: {
+      title: "Deep link",
+      labels: {
+        deeplinkRewardNotFound: {
+          title: "Deep link to reward that does not exist",
+          placeholder: "Reward does not exist!",
+          maxLength: 50,
+          defaultValue: "Reward does not exist!",
+        },
+      },
+    },
 	};

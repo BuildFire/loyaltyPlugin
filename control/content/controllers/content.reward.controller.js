@@ -217,6 +217,7 @@
           var success = function (result) {
               console.info('Saved data result: ', result);
               ContentReward.itemSaved = true;
+              ContentReward.updateDeepLink(newObj);
             }
             , error = function (err) {
               console.error('Error while saving data : ', err);
@@ -235,6 +236,17 @@
         ContentReward.getRewards = function (rewardId) {
 
         };
+
+        ContentReward.updateDeepLink = function (reward){
+          if(reward._id && reward.title){
+            new Deeplink({
+                deeplinkId:reward._id,
+                name:reward.title,
+                deeplinkData:{id:reward._id},
+                imageUrl:(reward.listImage)?reward.listImage:null
+            }).save();
+          }
+        }
 
 
         console.log(">>>>>>>>>>><<<<<<<<<<", RewardCache.getReward());
