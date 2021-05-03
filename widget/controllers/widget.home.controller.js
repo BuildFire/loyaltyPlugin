@@ -6,6 +6,7 @@
     .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'Context', '$window',
       function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, Context, $window) {
         var WidgetHome = this;
+        WidgetHome.deepLinkingDone = false;
 
         WidgetHome.strings = {
           "general.loginOrRegister": "Login or register",
@@ -32,6 +33,7 @@
           "awarded.justEarned": "You just earned yourself",
           "awarded.checkList": "Check out our list of rewards to redeem.",
           "amount.enterAmount": "Enter the Purchase Amount",
+          "deeplink.deeplinkRewardNotFound":"Reward does not exist!"
         }
         
         $window.strings.getLanguage(function(err, response){
@@ -86,11 +88,13 @@
             template: 'Item_Details',
             totalPoints: $rootScope.loyaltyPoints
           });
-          buildfire.messaging.sendMessageToControl({
-            type: 'OpenItem',
-            data: reward,
-            index: index
-          });
+          if(index!=-1){
+            buildfire.messaging.sendMessageToControl({
+              type: 'OpenItem',
+              data: reward,
+              index: index
+            });
+          }
         };
 
         /**
@@ -118,6 +122,18 @@
               WidgetHome.loyaltyRewards = result;
               if (!WidgetHome.loyaltyRewards)
                 WidgetHome.loyaltyRewards = [];
+              buildfire.deeplink.getData(function(data){
+                if(data && data.id && !WidgetHome.deepLinkingDone){
+                    WidgetHome.deepLinkingDone = true;
+                    var reward=WidgetHome.loyaltyRewards.find(el=>el._id==data.id);
+                    if(reward)
+                      WidgetHome.openReward(reward,-1);
+                    else 
+                      buildfire.dialog.toast({
+                        message: WidgetHome.strings["deeplink.deeplinkRewardNotFound"]
+                      });
+                }
+              });
             }
             , errorLoyaltyRewards = function (err) {
                 if (err && err.code !== STATUS_CODE.NOT_FOUND) {
