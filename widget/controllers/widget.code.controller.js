@@ -89,17 +89,65 @@
             WidgetCode.addPoints();
           };
 
-          var error = function () {
+          var error = function (error) {
             Buildfire.spinner.hide();
-            console.log("Error: Invalid passcode");
-            WidgetCode.passcodeFailure = true;
-            setTimeout(function () {
-              WidgetCode.passcodeFailure = false;
+            console.log("Error while adding points:", error);
+            if (error.code == 2103) {
+              WidgetCode.dailyLimitExceeded = true;
               $scope.$digest();
-            }, 3000);
+              setTimeout(function () {
+                WidgetCode.dailyLimitExceeded = false;
+                $scope.$digest();
+              }, 3000);
+            }
+
           };
-          Buildfire.spinner.show();
-          LoyaltyAPI.validatePasscode(WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode).then(success, error);
+
+          var addPointsCheck = function(currentView, WidgetCode, callback){
+            if(currentView.amount > WidgetCode.application.dailyLimit) return callback({code:2103});
+            else{
+              buildfire.userData.get(`userPointsLoyalty${WidgetCode.currentLoggedInUser._id}`,(err,r) =>{
+                if(err || Object.keys(r.data).length == 0){
+                  var pointsAwarded = currentView.amount
+                  let date = new Date();
+                  date = date.toLocaleDateString();
+                  buildfire.userData.save({dailyPointsAwarded:pointsAwarded,date:date},`userPointsLoyalty${WidgetCode.currentLoggedInUser._id}`,(err,r) => err?console.log(err):console.log(r));
+                  return callback(null, true);
+                }
+                else{
+                  let data = r.data;
+                  if(data.date === new Date().toLocaleDateString()){
+                    // check for daily limit
+                    var pointsAwarded = currentView.amount;
+                    if(pointsAwarded + data.dailyPointsAwarded > WidgetCode.application.dailyLimit) return callback({code:2103});
+                    else{
+                      var pointsAwarded = currentView.amount
+                      let date = new Date();
+                      date = date.toLocaleDateString();
+                      buildfire.userData.save({dailyPointsAwarded:pointsAwarded+data.dailyPointsAwarded,date:date},`userPointsLoyalty${WidgetCode.currentLoggedInUser._id}`,(err,r) => err?console.log(err):console.log(r));
+                      return callback(null, true)
+                      
+                    }
+                  }
+                  else{
+                    var pointsAwarded = currentView.amount
+                    let date = new Date();
+                    date = date.toLocaleDateString();
+                    buildfire.userData.save({dailyPointsAwarded:pointsAwarded,date:date},`userPointsLoyalty${WidgetCode.currentLoggedInUser._id}`,(err,r) => err?console.log(err):console.log(r));
+                    return callback(null, true)
+                  }
+                }
+              })
+            }
+          }
+          addPointsCheck(currentView, WidgetCode, function (err, res){
+              if(err){ 
+                WidgetCode.dailyLimitExceeded = true;
+                $scope.$digest();
+                 error(err);
+              }
+              else LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode, currentView.amount).then(success, error);
+          });
         };
 
         WidgetCode.preventClickBehavior = function (event) {
