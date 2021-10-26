@@ -1,6 +1,4 @@
-class pointsLimit {
-    constructor(data = {}) {
-        this.pointsAwarded = data.pointsAwarded;
-        this.pointsRedeemDate = data.pointsRedeemDate;
-    }
-}
+function pointsLimit(data ={}) {
+    this.pointsAwarded = data.pointsAwarded;
+    this.pointsRedeemDate = data.pointsRedeemDate;
+ }
