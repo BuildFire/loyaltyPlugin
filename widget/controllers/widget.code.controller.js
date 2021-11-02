@@ -69,6 +69,7 @@
             console.log("Error while adding points:", error);
             if (error.code == 2103) {
               WidgetCode.dailyLimitExceeded = true;
+              $scope.$digest();
               setTimeout(function () {
                 WidgetCode.dailyLimitExceeded = false;
                 $scope.$digest();
@@ -77,8 +78,11 @@
 
           };
           Buildfire.spinner.show();
-          LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode, currentView.amount)
-            .then(success, error);
+          checkIfUserDailyLimitExceeded(currentView, WidgetCode, function (err, res){
+            if(err) error(err);
+            else LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode, currentView.amount).then(success, error);
+        });
+
         };
 
         WidgetCode.confirmPasscode = function () {
@@ -89,16 +93,21 @@
             WidgetCode.addPoints();
           };
 
-          var error = function () {
+          var error = function (error) {
             Buildfire.spinner.hide();
-            console.log("Error: Invalid passcode");
-            WidgetCode.passcodeFailure = true;
-            setTimeout(function () {
-              WidgetCode.passcodeFailure = false;
+            console.log("Error while adding points:", error);
+            if (error.code == 2103) {
+              WidgetCode.dailyLimitExceeded = true;
               $scope.$digest();
-            }, 3000);
+              setTimeout(function () {
+                WidgetCode.dailyLimitExceeded = false;
+                $scope.$digest();
+              }, 3000);
+            }
+
           };
-          Buildfire.spinner.show();
+
+          
           LoyaltyAPI.validatePasscode(WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode).then(success, error);
         };
 
