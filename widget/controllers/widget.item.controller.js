@@ -3,8 +3,8 @@
 (function (angular, window) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetItemCtrl', ['$scope', 'ViewStack', 'RewardCache', '$sce', '$rootScope', '$timeout',
-      function ($scope, ViewStack, RewardCache, $sce, $rootScope, $timeout) {
+    .controller('WidgetItemCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', 'Context', '$sce', '$rootScope', '$timeout',
+      function ($scope, LoyaltyAPI, ViewStack, RewardCache, Context, $sce, $rootScope, $timeout) {
 
         var WidgetItem = this;
         var breadCrumbFlag = true;
@@ -14,26 +14,29 @@
         WidgetItem.listeners = {};
         WidgetItem.insufficientPoints = false;
 
+        WidgetItem.currentLoggedInUser = null;
+
         //create new instance of buildfire carousel viewer
         WidgetItem.view = null;
 
         buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
-            if(result && result.length) {
-                result.forEach(function(breadCrumb) {
-                    if(breadCrumb.label == 'Item') {
-                        breadCrumbFlag = false;
-                    }
-                });
-            }
-            if(breadCrumbFlag) {
-                buildfire.history.push('Item', { elementToShow: 'Item' });
-            }
+          if (result && result.length) {
+            result.forEach(function (breadCrumb) {
+              if (breadCrumb.label == 'Item') {
+                breadCrumbFlag = false;
+              }
+            });
+          }
+          if (breadCrumbFlag) {
+            buildfire.history.push('Item', {
+              elementToShow: 'Item'
+            });
+          }
         });
 
-          //Refresh item details on pulling the tile bar
+        //Refresh item details on pulling the tile bar
 
-          buildfire.datastore.onRefresh(function () {
-          });
+        buildfire.datastore.onRefresh(function () {});
 
         /**
          * Initialize variable with current view returned by ViewStack service. In this case it is "Item_Details" view.
@@ -51,16 +54,59 @@
          * Check if user's total loyalty points are enough to redeem the reward, if yes redirect to next page.
          */
         WidgetItem.confirmCancel = function () {
-          if (WidgetItem.reward.pointsToRedeem <= currentView.totalPoints) {
-            ViewStack.push({
-              template: 'Confirm_Cancel'
-            });
+          if (currentView.totalPoints) {
+            if (WidgetItem.reward.pointsToRedeem <= currentView.totalPoints) {
+              ViewStack.push({
+                template: 'Confirm_Cancel'
+              });
+            } else {
+              WidgetItem.insufficientPoints = true;
+              $timeout(function () {
+                WidgetItem.insufficientPoints = false;
+              }, 3000);
+            }
           } else {
-            WidgetItem.insufficientPoints = true;
-            $timeout(function () {
-              WidgetItem.insufficientPoints = false;
-            }, 3000);
+            WidgetItem.getLoyaltyPoints();
           }
+        };
+
+        WidgetItem.getLoyaltyPoints = function () {
+          buildfire.auth.getCurrentUser(function (err, user) {
+            if (user) {
+              Context.getContext(function (ctx) {
+                WidgetItem.currentLoggedInUser = user;
+                var success = function (result) {
+                    if (WidgetItem.reward.pointsToRedeem <= result.totalPoints) {
+                      ViewStack.push({
+                        template: 'Confirm_Cancel'
+                      });
+                    } else {
+                      WidgetItem.insufficientPoints = true;
+                      $timeout(function () {
+                        WidgetItem.insufficientPoints = false;
+                      }, 3000);
+                    }
+                  },
+                  error = function (err) {
+                    if (err && err.code !== STATUS_CODE.NOT_FOUND) {
+                      console.error('Error while getting points data----------------------------------------', err);
+                    }
+                    WidgetItem.insufficientPoints = true;
+                    $timeout(function () {
+                      WidgetItem.insufficientPoints = false;
+                    }, 3000);
+                  };
+                if (user._id)
+                  LoyaltyAPI.getLoyaltyPoints(user._id, WidgetItem.currentLoggedInUser.userToken, ctx.instanceId).then(success, error);
+
+              });
+            } else {
+              WidgetItem.insufficientPoints = true;
+              $timeout(function () {
+                WidgetItem.insufficientPoints = false;
+              }, 3000);
+            }
+          });
         };
 
         /**
@@ -116,12 +162,11 @@
           }
         });
 
-          WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
-              if (ViewStack.getCurrentView().template == 'Item') {
-                  buildfire.datastore.onRefresh(function () {
-                  });
-              }
-          });
+        WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+          if (ViewStack.getCurrentView().template == 'Item') {
+            buildfire.datastore.onRefresh(function () {});
+          }
+        });
 
         $scope.$on("$destroy", function () {
           console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
@@ -136,5 +181,6 @@
           }
         });
 
-      }])
+      }
+    ])
 })(window.angular, window);
