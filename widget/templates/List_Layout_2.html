@@ -30,7 +30,7 @@
         <div class="list-media-holder square-icon pull-left" ng-click="WidgetHome.openReward(reward, $index)" ng-if="reward.listImage">
           <img load-image="1x1"
                 crop-width="60" crop-height="60" crop-type="crop"
-                data-final-src="{{reward.listImage}}">
+                data-final-src="{{reward.listImage}}" alt="{{reward.title}}">
         </div>
         <div class="list-item-copy ellipsis">
           <a class="text-primary ellipsis" href="javascript:void(0);">{{reward.title}}</a>

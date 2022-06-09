@@ -31,8 +31,8 @@
           <div class="list-media-holder">
             <img load-image="1x1"
                   crop-width="380" crop-height="380" crop-type="crop"
-                  data-final-src="{{reward.listImage}}" ng-if="reward.listImage">
-            <img src="../../../styles/media/holder-1x1.png" ng-if="!reward.listImage">
+                  data-final-src="{{reward.listImage}}" ng-if="reward.listImage" alt="{{reward.title}}">
+            <img src="../../../styles/media/holder-1x1.png" ng-if="!reward.listImage" alt="reward">
           </div>
           <div class="info-bar bg-primary">
             <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">
