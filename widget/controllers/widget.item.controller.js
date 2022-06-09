@@ -4,7 +4,7 @@
   angular
     .module('loyaltyPluginWidget')
     .controller('WidgetItemCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', 'Context', '$sce', '$rootScope', '$timeout',
-      function ($scope, LoyaltyAPI, ViewStack, RewardCache, Context, $sce, $rootScope, $timeout) {
+      function ($scope, ViewStack, LoyaltyAPI, RewardCache, Context, $sce, $rootScope, $timeout) {
 
         var WidgetItem = this;
         var breadCrumbFlag = true;
