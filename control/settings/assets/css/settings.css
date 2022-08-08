@@ -1,3 +1,119 @@
-.body-height{
-    height: 100%;
+
+.tooltip-container{
+	display: flex;
+	align-items: center;
+}
+.tooltip-container .btn-info-icon:after{
+	content: 'i';
+	font-weight: 400;
+	font-size: 12px;
+	font-style: normal;
+	left: 0;
+	top: auto !important;
+	left: auto;
+}
+.tooltip-container .btn-info-icon{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: 8px;
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+	color: #fff;
+    position: relative;
+    margin-bottom: 5px;
+}
+.tooltip-container .btn-info-icon .cp-tooltip{
+	background-color: rgba(0, 0, 0, .75);
+	color: #fff;
+	padding: 8px;
+	border-radius: 4px;
+	position: absolute;
+	left: calc(100% + 12px);
+	cursor: auto;
+	font-size: 12px;
+	min-width: 160px;
+	opacity: 0;
+	transform: scale(.1);
+	transition: opacity ease .1s, transform ease .1s;
+	transform-origin: left;
+    pointer-events: none;
+    z-index: 100;
+    top: -29px;
+}
+
+.tooltip-container .btn-info-icon .cp-tooltip2{
+	background-color: rgba(0, 0, 0, .75);
+	color: #fff;
+	padding: 8px;
+	border-radius: 4px;
+	position: absolute;
+	left: calc(100% + 12px);
+	cursor: auto;
+	font-size: 12px;
+	min-width: 160px;
+	opacity: 0;
+	transform: scale(.1);
+	transition: opacity ease .1s, transform ease .1s;
+	transform-origin: left;
+    pointer-events: none;
+    z-index: 100;
+    top: -73px !important;
+}
+
+.tooltip-container .btn-info-icon .cp-tooltip.second-tooltip{
+    top: -105px;
+}
+
+.tooltip-container .btn-info-icon:hover .cp-tooltip{
+	opacity: 1;
+	transform: scale(1);
+}
+.tooltip-container .btn-info-icon .cp-tooltip::before{
+	content: '';
+	width: 4px;
+	height: 4px;
+	border-left: 4px solid rgba(0, 0, 0, .75);
+	border-bottom: 4px solid rgba(0, 0, 0, .75);
+	border-right: 4px solid transparent;
+	border-top: 4px solid transparent;
+	position: absolute;
+	left: -7px;
+	transform: rotate(45deg) translateY(-50%);
+	top: 50%;
+	bottom: 50%;
+}
+
+.tooltip-container .btn-info-icon .cp-tooltip2.second-tooltip{
+    top: -105px;
+}
+
+.tooltip-container .btn-info-icon:hover .cp-tooltip2{
+	opacity: 1;
+	transform: scale(1);
+}
+.tooltip-container .btn-info-icon .cp-tooltip2::before{
+	content: '';
+	width: 4px;
+	height: 4px;
+	border-left: 4px solid rgba(0, 0, 0, .75);
+	border-bottom: 4px solid rgba(0, 0, 0, .75);
+	border-right: 4px solid transparent;
+	border-top: 4px solid transparent;
+	position: absolute;
+	left: -7px;
+	transform: rotate(45deg) translateY(-50%);
+	top: 50%;
+	bottom: 50%;
+}
+
+
+
+.icon-cross2 {
+	color: black;
+}
+
+.icon-cross2:hover {
+	cursor: pointer;
 }

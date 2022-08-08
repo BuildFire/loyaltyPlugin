@@ -243,8 +243,87 @@
         }
       }
     }])
-    .factory("Transactions", ['Buildfire', '$q', 'TAG_NAMES', 'TRANSACTION_TYPES', function (Buildfire, $q, TAG_NAMES, TRANSACTION_TYPES ) {
+    .factory("Transactions", ['Buildfire', '$q', 'TAG_NAMES', 'TRANSACTION_TYPES', 'STATUS', function (Buildfire, $q, TAG_NAMES, TRANSACTION_TYPES, STATUS ) {
       return {
+        requestPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, user, title, imageUrl) {
+          var pluginTitle = buildfire.getContext().title;
+          const data = {
+            createdBy: user,
+            createdAt: new Date(),
+            type: TRANSACTION_TYPES.EARN_POINTS,
+            purchaseAmount: purchaseAmount,
+            pointsEarned: pointsEarned,
+            status: STATUS.Processing,
+            currentPointsAmount: currentPointsAmount,
+            item: {
+              title: title,
+              listImage: imageUrl
+            },
+            imageUrl: imageUrl,
+            pluginTitle: pluginTitle,
+            _buildfire :{ 
+              index: {
+                text: user.displayName ? user.displayName : user.email,
+                date1: new Date(),
+              }
+            }
+          }
+          var deferred = $q.defer();
+          Buildfire.publicData.insert(data, TAG_NAMES.TRANSACTIONS, function (err, result) {
+            if (err) {
+              return deferred.reject(err);
+            } else if (result) {
+              return deferred.resolve(result);
+            }
+            else{
+              return deferred.reject(new Error('Result Not Found'));
+            }
+          });
+          return deferred.promise;
+        },
+
+        requestPointsForPurhasedItems:  function (items, currentPointsAmount, user) {
+          var pluginTitle = buildfire.getContext().title;
+          var itemsToAdd = items.filter(function (item) {
+            return item.quantity > 0
+          })
+          var deferred = $q.defer();
+          let pointsEarned = 0;
+          itemsToAdd.forEach(function(item) {
+            pointsEarned += item.quantity * item.pointsPerItem
+          })
+            const data = {
+              createdBy: user,
+              createdAt: new Date(),
+              type: TRANSACTION_TYPES.EARN_POINTS,
+              items: itemsToAdd,
+              status: STATUS.Processing,
+              pointsEarned: pointsEarned,
+              currentPointsAmount: currentPointsAmount,
+              pluginTitle: pluginTitle,
+              approvedOn: null,
+              approvedBy: null,
+              _buildfire :{ 
+                index: {
+                  text: user.displayName ? user.displayName : user.email,
+                  date1: new Date()
+                }
+              }
+            }
+            Buildfire.publicData.insert(data, TAG_NAMES.TRANSACTIONS, function (err, result) {
+              if (err) {
+                return deferred.reject(err);
+              } else if (result) {
+                return deferred.resolve(result);
+              }
+              else{
+                return deferred.reject(new Error('Result Not Found'));
+              }
+            });
+            return deferred.promise;
+        },
+
+
         buyPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, user) {
           var pluginTitle = buildfire.getContext().title;
           const data = {
@@ -253,6 +332,7 @@
             type: TRANSACTION_TYPES.EARN_POINTS,
             purchaseAmount: purchaseAmount,
             pointsEarned: pointsEarned,
+            status: STATUS.Approved,
             currentPointsAmount: currentPointsAmount,
             pluginTitle: pluginTitle,
             _buildfire :{ 
@@ -281,36 +361,40 @@
           var itemsToAdd = items.filter(function (item) {
             return item.quantity > 0
           })
+          var deferred = $q.defer();
+          let pointsEarned = 0;
           itemsToAdd.forEach(function(item) {
+            pointsEarned += item.quantity * item.pointsPerItem
+          })
             const data = {
               createdBy: user,
               createdAt: new Date(),
               type: TRANSACTION_TYPES.EARN_POINTS,
-              item: item,
-              pointsEarned: item.quantity * item.pointsPerItem,
+              items: itemsToAdd,
+              status: STATUS.Approved,
+              pointsEarned: pointsEarned,
               currentPointsAmount: currentPointsAmount,
               pluginTitle: pluginTitle,
+              approvedOn: null,
+              approvedBy: null,
               _buildfire :{ 
                 index: {
                   text: user.displayName ? user.displayName : user.email,
-                  date1: new Date(),
-                  array1: [{'itemName': item.title}]
+                  date1: new Date()
                 }
               }
             }
             Buildfire.publicData.insert(data, TAG_NAMES.TRANSACTIONS, function (err, result) {
               if (err) {
-                return console.error(err);
+                return deferred.reject(err);
               } else if (result) {
-                buildfire.analytics.trackAction('points-earned', { pointsEarned : item.pointsPerItem * item.quantity });
-                return console.log(result)
+                return deferred.resolve(result);
               }
               else{
-                return console.error("Result not found");
+                return deferred.reject(new Error('Result Not Found'));
               }
             });
-          });
-          return items;
+            return deferred.promise;
         },
         redeemReward: function (item, pointsSpent, currentPointsAmount, user) {
           var pluginTitle = buildfire.getContext().title;
@@ -343,7 +427,182 @@
             }
           });
           return deferred.promise;
+        },
+        
+        requestRedeem: function (item, pointsSpent, currentPointsAmount, user) {
+          var pluginTitle = buildfire.getContext().title;
+          const data = {
+            createdBy: user,
+            createdAt: new Date(),
+            type: TRANSACTION_TYPES.REDEEM_REWARD,
+            item: item,
+            status: STATUS.Processing,
+            approvedOn: null,
+            approvedBy: null,
+            pointsSpent: pointsSpent,
+            currentPointsAmount: currentPointsAmount,
+            pluginTitle: pluginTitle,
+            _buildfire :{ 
+              index: {
+                text: user.displayName ? user.displayName : user.email,
+                date1: new Date(),
+                array1: [{'itemName': item.title}]
+              }
+            }
+          }
+          var deferred = $q.defer();
+          Buildfire.publicData.insert(data, TAG_NAMES.TRANSACTIONS, function (err, result) {
+            if (err) {
+              return deferred.reject(err);
+            } else if (result) {
+              return deferred.resolve(result);
+            }
+            else{
+              return deferred.reject(new Error('Result Not Found'));
+            }
+          });
+          return deferred.promise;
+        },
+        updateRequestedRedeemStatus: function (item, status, user) {
+          item.data.status = status;
+          item.data.approvedBy = user;
+          item.data.approvedOn = new Date();
+          var deferred = $q.defer();
+          buildfire.publicData.update(
+            item.id, 
+            item.data,
+            TAG_NAMES.TRANSACTIONS,
+            (err, result) => {
+              if (err) return deferred.reject(err);
+          
+              return deferred.resolve(result);
+            }
+          );
+          return deferred.promise;
+        },
+        getRequestedRedeems: function() {
+          var deferred = $q.defer();
+          buildfire.publicData.search(
+            {
+              filter: {
+                $and: [
+                  { "$json.status": { $eq: STATUS.Processing} },
+                  { "$json.type" : {$eq: TRANSACTION_TYPES.REDEEM_REWARD}}
+                ],
+              },
+              sort: { createdAt: -1 },
+              skip: 0,
+              limit: 50,
+            },
+            TAG_NAMES.TRANSACTIONS,
+            (err, result) => {
+                if (err) {
+                  return deferred.reject(err);
+                } else if (result) {
+                  return deferred.resolve(result);
+                }
+                else{
+                  return deferred.reject(new Error('Result Not Found'));
+                }
+            }
+          );
+          return deferred.promise;
+        },
+        getRequestedPoints : function() {
+          var deferred = $q.defer();
+          buildfire.publicData.search(
+            {
+              filter: {
+                $and: [
+                  { "$json.status": { $eq: STATUS.Processing } },
+                  { "$json.type" : {$eq: TRANSACTION_TYPES.EARN_POINTS}}
+                ],
+              },
+              sort: { createdAt: -1 },
+              skip: 0,
+              limit: 50,
+            },
+            TAG_NAMES.TRANSACTIONS,
+            (err, result) => {
+                if (err) {
+                  return deferred.reject(err);
+                } else if (result) {
+                  return deferred.resolve(result);
+                }
+                else{
+                  return deferred.reject(new Error('Result Not Found'));
+                }
+            }
+          );
+          return deferred.promise;
+        },
+
+
+        getRewardsByUserId: function(userId, page){
+          var deferred = $q.defer();
+          buildfire.publicData.search(
+            {
+              filter: {
+                $and: [
+                  { "$json.createdBy.userId" : {$eq: userId}}
+                ],
+              },
+              sort: { createdAt: -1 },
+              page: page,
+              pageSize: 20,
+            },
+            TAG_NAMES.TRANSACTIONS,
+            (err, result) => {
+                if (err) {
+                  return deferred.reject(err);
+                } else if (result) {
+                  return deferred.resolve(result);
+                }
+                else{
+                  return deferred.reject(new Error('Result Not Found'));
+                }
+            }
+          );
+          return deferred.promise;
+        },
+
+        getPointsWaitingForApproval: function(userId){
+          var deferred = $q.defer();
+          buildfire.publicData.search(
+            {
+              filter: {
+                $and: [
+                  { "$json.createdBy.userId" : {$eq: userId}},
+                  { "$json.status": { $eq: STATUS.Processing } },
+                ],
+              },
+              skip: 0,
+              limit: 50,
+            },
+            TAG_NAMES.TRANSACTIONS,
+            (err, result) => {
+                if (err) {
+                  return deferred.reject(err);
+                } else if (result) {
+                  let points = 0;
+                  result.forEach(element => {
+                    if(element.data.pointsEarned){
+                      points += parseInt(element.data.pointsEarned)
+                    } else if(element.data.pointsSpent){
+                      points += parseInt(element.data.pointsSpent)
+                    }
+                  });
+                  return deferred.resolve(points);
+                }
+                else{
+                  return deferred.reject(new Error('Result Not Found'));
+                }
+            }
+          );
+          return deferred.promise;
         }
+
+
       }
     }])
     .factory('RewardCache', ['$rootScope', function ($rootScope) {

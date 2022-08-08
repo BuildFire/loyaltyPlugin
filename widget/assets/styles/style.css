@@ -470,6 +470,12 @@ input[type="password"].form-control::placeholder{
     overflow: hidden;
 	overflow-wrap: break-word;
 	-webkit-line-clamp: 3;
+	font-weight: bold;
+	font-size: 20px;
+}
+.redeem-points {
+	font-size: 14px;
+	font-weight: bold;
 }
 
 .total-points {
@@ -477,3 +483,116 @@ input[type="password"].form-control::placeholder{
 	text-align: center;
 	font-size: 16px;
 }
+
+#empty_state {
+    display: flex;
+    align-items: center;
+	flex-direction: column;
+    justify-content: center;
+    height: 80%;
+}
+
+/* Admin -- Approval Request */
+
+.tab {
+	overflow: hidden;
+	border: 1px solid #ccc;
+	display: flex;
+	justify-content: space-around;
+  }
+  
+  /* Style the buttons inside the tab */
+  .tab button {
+	width: 100%;
+	background-color: inherit;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 16px 0 11px 0;
+	font-size: 14px;
+	font-weight: 500;
+	letter-spacing: 1.25px;
+  }
+  
+  /* Create an active/current tablink class */
+  .tab button.active {
+	border-bottom: 2px solid white;
+  }
+  
+  /* Style the tab content */
+  .tabcontent {
+	display: none;
+	padding: 6px 12px;
+	border-top: none;
+  }
+  .icon-button {
+	margin-top: 18px;
+	margin-bottom: 11px;
+	margin-right: 11.5px;
+	text-align: right;
+  }
+
+  .icon {
+	background-color: transparent;
+	padding: 5px;
+	border: none;
+	font-size: 17px;
+	color: var(--c-) ;
+  }
+
+  .listViewItemTitle {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 500;
+	color: black !important;
+  }
+
+  .listViewItemSubtitle {
+	margin: 0;
+	font-size: 14px;
+  }
+
+  .listViewItemDescription{
+	margin: 0;
+	font-size: 12px;
+
+  }
+ .reward-title {
+	margin: 0 16px;
+ }
+
+  .listViewItemImg {
+	width: 48px !important;
+	height: 48px !important;
+  }
+
+  .listViewContainer {
+	padding-top: 8px !important;
+	margin: 0 16px;
+  }
+
+
+  .title-item-purchased {
+	color: black !important;
+	font-weight: bold;
+	font-size: 20px;
+	margin: 16px 8px 0 8px;;
+}
+.total-points-item-purchased {
+	color: black !important;
+	font-weight: bold;
+	font-size: 16px;
+}
+.btn-deny {
+	background-color: transparent;
+	margin-bottom: 42px;
+	border: none;
+	margin-top: 26px;
+}
+  .material-inject--more:after {
+    content: "more_horiz";
+    color: var(--bf-theme-icons);
+	font-size: 24px;
+}
+

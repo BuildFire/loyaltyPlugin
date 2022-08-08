@@ -35,10 +35,20 @@
       listLayout: [
         {name: "List_Layout_1"},
         {name: "List_Layout_2"},
-        {name: "List_Layout_3"}
+        {name: "List_Layout_3"},
+      ]
+    })
+    .constant('AdminApproval', {
+      layout: [
+        {name: "APPROVAL_REQUESTS"}
       ]
     })
     .constant('DEFAULT_UNIQUEID', {
       id: '1440042127221-02689074052032083'
+    })
+    .constant('STATUS', {
+      Approved: "APPROVED",
+      Denied: "DENIED",
+      Processing: "PROCESSING"
     });
 })(window.angular);

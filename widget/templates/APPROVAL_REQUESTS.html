@@ -1,0 +1,28 @@
+<div class="holder padding-zero" ng-controller="ApprovalRequestsCtrl as ApprovalRequests">
+    <div class="tab">
+        <button class="tablinks active" ng-click="ApprovalRequests.openTab(0)">Points</button>
+        <button class="tablinks" ng-click="ApprovalRequests.openTab(1)">Redeems</button>
+    </div>
+    
+    <div ng-show="ApprovalRequests.approvalRequestsTab == 0">
+        <div id="pointsContainer"></div> 
+        <div ng-show="!ApprovalRequests.isPointItemsLoading && ApprovalRequests.PointItems.length == 0">
+            <div id="empty_state">
+              <img src="./assets/.images/ic_bookmark_empty.svg" />
+              <label style="color:black;font-weight: bold;margin-top: 32px;font-size: 16px;">All Done!</label>
+              <label style="margin-top: 8px;font-size:14px;font-weight: 400;">There's nothing left to approve!</label>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-show="ApprovalRequests.approvalRequestsTab == 1">
+        <div id="redeemsContainer"></div>
+        <div ng-show="!ApprovalRequests.isRedeemItemsLoading && ApprovalRequests.RedeemItems.length == 0">
+            <div id="empty_state">
+              <img src="./assets/.images/ic_bookmark_empty.svg" />
+              <label style="color:black;font-weight: bold;margin-top: 32px;font-size: 16px;">All Done!</label>
+              <label style="margin-top: 8px;font-size:14px;font-weight: 400;">There's nothing left to approve!</label>
+            </div>
+        </div>
+    </div>
+</div>

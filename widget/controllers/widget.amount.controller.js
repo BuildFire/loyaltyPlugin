@@ -3,8 +3,8 @@
 (function (angular) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetAmountCtrl', ['$scope', 'ViewStack', 'RewardCache', 'TAG_NAMES', 'DataStore', '$sce', '$rootScope',
-      function ($scope, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce, $rootScope) {
+    .controller('WidgetAmountCtrl', ['$scope', 'ViewStack', 'RewardCache', 'TAG_NAMES', 'DataStore', '$sce', '$rootScope', 'Transactions',
+      function ($scope, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce, $rootScope, Transactions) {
 
         var WidgetAmount = this;
         var breadCrumbFlag = true;
@@ -13,7 +13,8 @@
         WidgetAmount.data = [];
         WidgetAmount.listeners = {};
         WidgetAmount.strings = $rootScope.strings;
-        
+        WidgetAmount.currentUser = null;
+
           buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
               if(result && result.length) {
                   result.forEach(function(breadCrumb) {
@@ -50,7 +51,17 @@
             console.error('Error while getting data', err);
           };
           DataStore.get(TAG_NAMES.LOYALTY_INFO).then(WidgetAmount.success, WidgetAmount.error);
+          WidgetAmount.getCurrentUser();
         };
+
+
+        WidgetAmount.getCurrentUser = function() {
+          buildfire.auth.getCurrentUser(function (err, user) {
+            if(user){
+              WidgetAmount.currentUser = user;
+            }
+          })
+        }
 
         /*covert html symbols to currency symbol*/
         WidgetAmount.safeHtml = function (html) {
@@ -90,7 +101,27 @@
               $scope.$digest();
             }, 3000);
           }
-          else {
+          else if(WidgetAmount.data.settings && WidgetAmount.data.settings.approvalType 
+                && WidgetAmount.data.settings.approvalType == "REMOVE_VIA_APP") {
+              Transactions.requestPoints(WidgetAmount.amount, WidgetAmount.amount, $rootScope.loyaltyPoints, WidgetAmount.currentUser, "POINTS PURCHASE", null)
+              buildfire.notifications.pushNotification.schedule(
+                {
+                  title: "Points Approval Request",
+                  text:  WidgetAmount.currentUser.displayName + " requests " + WidgetAmount.amount + " points earned",
+                  groupName: "employerGroup"
+                , at: new Date()
+                },
+                (err, result) => {
+                  if (err) return console.error(err);
+                })
+                buildfire.dialog.toast({
+                  message: "Points awaiting for approval",
+                  duration: 3000,
+                  type: "warning"
+                });
+                $rootScope.$broadcast('POINTS_WAITING_APPROVAL_ADDED', (WidgetAmount.amount * WidgetAmount.application.pointsPerDollar) + WidgetAmount.application.pointsPerVisit);
+                ViewStack.pop();
+          } else {
             ViewStack.push({
               template: 'Code',
               amount: WidgetAmount.amount,

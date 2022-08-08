@@ -52,37 +52,19 @@
          * Method to redeem points from user's account using Loyalty api. Redirect to success page if redeemed successfully.
          */
         WidgetRedeem.redeemPoints = function (rewardId) {
-          var redeemSuccess = function () {
-            Buildfire.spinner.hide();
-            $rootScope.$broadcast('POINTS_REDEEMED', WidgetRedeem.reward.pointsToRedeem);
-            ViewStack.push({
-              template: 'Success'
-            });
-            buildfire.auth.getCurrentUser(function (err, user) {
-              if (user) {
-                Transactions.redeemReward(WidgetRedeem.reward, WidgetRedeem.reward.pointsToRedeem, $rootScope.loyaltyPoints, user);
-              }
-            })
-          };
-
-          var redeemFailure = function (error) {
-            Buildfire.spinner.hide();
-            if (error && error.code == 2103) {
-              WidgetRedeem.dailyLimitExceeded = true;
-              $timeout(function () {
-                WidgetRedeem.dailyLimitExceeded = false;
-              }, 3000);
-            } else {
-              WidgetRedeem.redeemFail = true;
-              $timeout(function () {
-                WidgetRedeem.redeemFail = false;
-              }, 3000);
-            }
-          };
           if (WidgetRedeem.currentLoggedInUser) {
             if (WidgetRedeem.application.dailyLimit > WidgetRedeem.reward.pointsToRedeem) {
               Buildfire.spinner.show();
-              LoyaltyAPI.redeemPoints(WidgetRedeem.currentLoggedInUser._id, WidgetRedeem.currentLoggedInUser.userToken, WidgetRedeem.context.instanceId, rewardId).then(redeemSuccess, redeemFailure);
+              ViewStack.push({
+                template: 'Success'
+              });
+              buildfire.auth.getCurrentUser(function (err, user) {
+                if (user) {
+                  Transactions.requestRedeem(WidgetRedeem.reward, WidgetRedeem.reward.pointsToRedeem, $rootScope.loyaltyPoints, user);
+                  $rootScope.$broadcast('POINTS_WAITING_APPROVAL_ADDED', WidgetRedeem.reward.pointsToRedeem);
+          
+                }
+              })
             }
             else {
               WidgetRedeem.dailyLimitExceeded = true;

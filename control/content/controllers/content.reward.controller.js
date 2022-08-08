@@ -76,7 +76,7 @@
         };
 
         /* list image add <start>*/
-        ContentReward.listImage = new Buildfire.components.images.thumbnail("#listImage", {title: "List Image", dimensionsLabel : " "});
+        ContentReward.listImage = new Buildfire.components.images.thumbnail("#listImage", {title: "List Image", dimensionsLabel : "Recommended: 1200 x 1200px"});
         ContentReward.listImage.onChange = function (url) {
           ContentReward.item.listImage = url;
           if (!$scope.$$phase && !$scope.$root.$$phase) {
@@ -249,7 +249,6 @@
         }
 
 
-        console.log(">>>>>>>>>>><<<<<<<<<<", RewardCache.getReward());
 
         /*Go back to home on done button click*/
         ContentReward.gotToHome = function () {
@@ -270,7 +269,6 @@
             ContentReward.item.pointsToRedeem = '';
           }
           ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: ContentReward.item._id});
-          console.log("aaaaaaaaaaaaaaaaaaaaaa", ContentReward.item);
           ContentReward.listImage.loadbackground(ContentReward.item.listImage);
           /* ContentReward.BackgroundImage.loadbackground(ContentReward.item.BackgroundImage);  */  //enable it when you want to show add background on reward add
           ContentReward.isInserted = true;

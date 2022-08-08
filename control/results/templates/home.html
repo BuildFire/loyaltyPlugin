@@ -1,26 +1,76 @@
+
+
 <div
-    class="transactions"
+ >
+
+    <div class="col-md-12">
+        <div class="input-group margin-bottom-twenty">
+            <input type="text" id="searchItemText" ng-model="ResultsHome.title" class="form-control" placeholder="Search" />
+            <span class="input-group-btn">
+            <button class="btn btn-info stretch margin-left-zero" ng-click="ResultsHome.search()">
+                <span class="icon icon-magnifier"></span>
+            </button>
+            </span>
+        </div>
+    </div>
+    
+    <br/>
+    <br/>
+    <div style="margin: 5px 16px 20px 16px">
+            <div class="col-md-2" style="padding:0">
+                <label >Date Range</label>
+            </div>
+            <div class='col-md-5' style="display:flex;justify-content:space-between">
+                <input ng-model="ResultsHome.dateSearch.from"
+                    type="date"
+                    class="form-control" />
+                <span style="align-self:center;margin-right:24px;margin-left:24px">to</span>
+                <input ng-model="ResultsHome.dateSearch.to"
+                    type="date"
+                    class="form-control" />
+            </div>
+            <div class='col-md-2'></div>
+            <div class="col-md-3 btn-group " id="export-bulk-dropdown" style="padding:0">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false"
+                    ng-click="ResultsHome.openExportActions()"
+                    style="display:flex;justify-content:space-between;float:right;width:130px">
+                    Bulk Actions
+                    <span class='caret'></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li ng-click="ResultsHome.exportCsv()" ng-disabled="ResultsHome.exporting"><a>Export as CSV</a></li>
+                </ul>
+        </div>
+    </div>
+    <div    class="transactions transaction-tb"
     infinite-container=".transactions"	
     infinite-scroll="getMoreTransactions()"
     infinite-scroll-disabled="ResultsHome.loading || ResultsHome.noMore"
-    infinite-scroll-parent="true" 
     infinite-scroll-immediate-check="false"
-    infinite-scroll-distance="0">
+    infinite-scroll-distance="0"
+    ng-if="ResultsHome.transactions.length > 0"
+    >
     <table class="table table-striped">
         <thead>
-            <tr>
-                <th>User Name</th>
-                <th>Date</th>
+            <tr class="firstRow">
+                <th style="text-align: center !important"  class="date-th" ng-click="ResultsHome.sortData()">Date   <span ng-if="ResultsHome.dateSort === -1" style="margin-left: 5px;"
+                    class="btn-icon icon-chevron-down transition-third"
+                    ></span> 
+                    <span ng-if="ResultsHome.dateSort === 1" style="margin-left: 5px;"
+                    class="btn-icon icon-chevron-up transition-third"
+                    ></span> </th>
+                <th>User </th>
                 <th>Type</th>
                 <th>Item Bought</th>
                 <th>Item Redeemed</th>
-                <th></th>
+                <th>Approved On</th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="transaction in ResultsHome.transactions track by $index">
-                <td>{{transaction.createdBy.displayName}}</td>
-                <td>{{transaction.createdAt | date:'dd MMM yyyy HH:mm'}}</td>
+                <td style="width: 110px; text-align:center">{{transaction.createdAt | date:'dd MMM yyyy HH:mm'}}</td>
+                <td><button class="link-button details-button" ng-click="ResultsHome.goToDetails(transaction)">{{transaction.createdBy.displayName}}</button></td>
                 <td>{{ResultsHome.typesMapping[transaction.type]}}</td>
                 <td ng-switch="transaction.type">
                     <span ng-switch-when="earnPoints">{{transaction.item.title | limitTo: 20 }}{{ transaction.item.title.length > 20 ? '...' : '' }}</span>
@@ -30,10 +80,22 @@
                     <span ng-switch-when="earnPoints"></span>
                     <span ng-switch-when="redeemReward">{{transaction.item.title | limitTo: 20 }}{{ transaction.item.title.length > 20 ? '...' : '' }}</span>
                 </td>
-                <td><button class="link-button details-button" ng-click="ResultsHome.goToDetails(transaction)">View</button></td>
+                <td style="width: 110px; text-align:center">{{transaction.approvedOn | date:'dd MMM yyyy HH:mm'}}</td>
             </tr>
         </tbody>
     </table>
+    </div>
+    <br/>
+    <div class="well empty-state-lg" style="margin-top: 20px" ng-if="!ResultsHome.loading && ResultsHome.transactions.length == 0">
+        <h5 class="text-center">
+          <span>You haven't added anything yet</span>
+        </h5>
+    </div>
+    <div class="spin well empty-state-lg" style="margin-top: 20px" ng-if="ResultsHome.loading">
+        <h5 class="text-center">
+          <span>Loading</span>
+        </h5>
+    </div>
 </div>
-<button class="btn btn-primary" style="float: right; margin-top: 10px;" ng-click="ResultsHome.exportCsv()" ng-disabled="ResultsHome.exporting">Export as CSV</button>
+
 

@@ -3,8 +3,8 @@
 (function (angular, window) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetItemCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', 'Context', '$sce', '$rootScope', '$timeout',
-      function ($scope, ViewStack, LoyaltyAPI, RewardCache, Context, $sce, $rootScope, $timeout) {
+    .controller('WidgetItemCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', 'Context', '$sce', '$rootScope', '$timeout', 'Transactions',
+      function ($scope, ViewStack, LoyaltyAPI, RewardCache, Context, $sce, $rootScope, $timeout, Transactions) {
 
         var WidgetItem = this;
         var breadCrumbFlag = true;
@@ -15,7 +15,7 @@
         WidgetItem.insufficientPoints = false;
 
         WidgetItem.currentLoggedInUser = null;
-
+        WidgetItem.isReward = false;
         //create new instance of buildfire carousel viewer
         WidgetItem.view = null;
 
@@ -43,32 +43,124 @@
          */
         var currentView = ViewStack.getCurrentView();
 
+        if(currentView.item && currentView.isReward){
+          WidgetItem.reward = currentView.item;
+          WidgetItem.isReward = true;
+        }
         /**
          * Initialize WidgetItem.reward with reward details set in home controller
          */
-        if (RewardCache.getReward()) {
+        if (RewardCache.getReward() && !WidgetItem.isReward) {
           WidgetItem.reward = RewardCache.getReward();
         }
 
+
+        if (RewardCache.getApplication()) {
+          WidgetItem.application = RewardCache.getApplication();
+        }
+      
         /**
          * Check if user's total loyalty points are enough to redeem the reward, if yes redirect to next page.
          */
         WidgetItem.confirmCancel = function () {
-          if (currentView.totalPoints) {
-            if (WidgetItem.reward.pointsToRedeem <= currentView.totalPoints) {
-              ViewStack.push({
-                template: 'Confirm_Cancel'
-              });
-            } else {
-              WidgetItem.insufficientPoints = true;
+          buildfire.dialog.confirm(
+            {
+              title: WidgetItem.strings["redeem.confirmRedemptionModalTitle"],
+              message: WidgetItem.strings["redeem.confirmRedemptionModalImportantNote"],
+              confirmButton: {
+                text: WidgetItem.strings["redeem.confirmRedemptionModalConfirm"],
+                type: "primary",
+              },
+              cancelButtonText: WidgetItem.strings["redeem.confirmRedemptionModalCancel"],
+            },
+            (err, isConfirmed) => {
+              if (err) return;
+              if(isConfirmed){
+                if (currentView.totalPoints) {
+                    if (WidgetItem.reward.pointsToRedeem <= currentView.totalPoints) {
+                      WidgetItem.redeemPoints()
+                      return;
+                    } else {
+                      WidgetItem.insufficientPoints = true;
+                      $timeout(function () {
+                        WidgetItem.insufficientPoints = false;
+                      }, 3000);
+                      return;
+                    }
+                } else {
+                  WidgetItem.getLoyaltyPoints();
+                }
+              }
+            }
+          );
+        };
+
+
+        WidgetItem.redeemPoints = function () {
+          if (WidgetItem.currentLoggedInUser) {
+            if (WidgetItem.application.dailyLimit > WidgetItem.reward.pointsToRedeem) {
+              buildfire.spinner.show();
+              buildfire.auth.getCurrentUser(function (err, user) {
+                if (user) {
+                  Transactions.requestRedeem(WidgetItem.reward, WidgetItem.reward.pointsToRedeem, $rootScope.loyaltyPoints, user);
+                  buildfire.notifications.pushNotification.schedule(
+                    {
+                      title: "Item Redeem Approval Request",
+                      text: user.displayName + " would like to redeem " + WidgetItem.reward.title,
+                      groupName: "employerGroup",
+                      queryString: "toEmployer=true"
+                    , at: new Date()
+                    },
+                    (err, result) => {
+                      if (err) return console.error(err);
+                    })
+                  buildfire.spinner.hide();
+                  buildfire.dialog.show(
+                    {
+                      title: WidgetItem.strings["redeem.itemRedeemedModalTitle"],
+                      message: WidgetItem.strings["redeem.itemRedeemedBody"],
+                      showCancelButton: false,
+                      actionButtons: [
+                        {
+                          text: WidgetItem.strings["redeem.closeitemRedeemedAction"],
+                          type: "primary",
+                          action: () => {
+                              buildfire.history.pop();
+                              ViewStack.push({
+                                template: 'Rewards'
+                              });
+                              $scope.$apply();
+                          },
+                        }
+                      ],
+                    },
+                    (err, actionButton) => {
+                    }
+                  );
+                
+                } else {
+                  buildfire.spinner.hide();
+                }
+              })
+            }
+            else {
+              WidgetItem.dailyLimitExceeded = true;
               $timeout(function () {
-                WidgetItem.insufficientPoints = false;
+                WidgetItem.dailyLimitExceeded = false;
               }, 3000);
             }
-          } else {
-            WidgetItem.getLoyaltyPoints();
+          }
+          else {
+            buildfire.auth.login({}, function () {
+
+            });
           }
         };
+        buildfire.auth.getCurrentUser(function (err, user) {
+          if (user) {
+            WidgetItem.currentLoggedInUser = user;
+          }
+        });
 
         WidgetItem.getLoyaltyPoints = function () {
           buildfire.auth.getCurrentUser(function (err, user) {
@@ -77,9 +169,7 @@
                 WidgetItem.currentLoggedInUser = user;
                 var success = function (result) {
                     if (WidgetItem.reward.pointsToRedeem <= result.totalPoints) {
-                      ViewStack.push({
-                        template: 'Confirm_Cancel'
-                      });
+                      WidgetItem.redeemPoints()
                     } else {
                       WidgetItem.insufficientPoints = true;
                       $timeout(function () {

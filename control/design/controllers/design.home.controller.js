@@ -68,7 +68,6 @@
         /* item Details background image add <end>*/
         var init = function () {
           var success = function (result) {
-              console.log("---------------------------", result);
               DesignHome.data = result.data;
               if (DesignHome.data && !DesignHome.data.design) {
                 DesignHome.data.design = {};

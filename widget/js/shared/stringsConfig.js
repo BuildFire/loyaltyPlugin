@@ -70,52 +70,92 @@ const stringsConfig = {
     },
     redeem: {
             title: "Redeem"
-            , subtitle: "Strings in Redeem",
-            labels: {
-                insufficientFunds: {
-                    title: "Insufficient Funds"
-                    , placeholder: "You have insufficient points. Please get points to redeem awards."
-                    , maxLength: 80
-		    		, defaultValue: "You have insufficient points. Please get points to redeem awards."
+            , subtitle: "Strings in Redeem"
+            , 
+            labels: [
+                {
+                    title: "Confirm Redemption Modal",
+                    subLabels: {
+                        titleNote: {
+                            title: "Title"
+                            , placeholder: "Redeem Item"
+                            , maxLength: 30
+                            , defaultValue: "Redeem Item"
+                        },
+        
+                        importantNote: {
+                            title: "Body"
+                            , placeholder: "By clicking redeem, you are confirming that the reward has been received and the coresponding points will, therefore, be deducted from your account."
+                            , maxLength: 200
+                            , defaultValue: "By clicking redeem, you are confirming that the reward has been received and the coresponding points will, therefore, be deducted from your account."
+                        },
+        
+                        cancelActionNote: {
+                            title: "Cancel action link"
+                            , placeholder: "CANCEL"
+                            , maxLength: 20
+                            , defaultValue: "CANCEL"
+                        },
+        
+                        confirmActionNote: {
+                            title: "Confirm action link"
+                            , placeholder: "REDEEM"
+                            , maxLength: 20
+                            , defaultValue: "REDEEM"
+                        },
+                    }
                 },
-                importantNote: {
-                    title: "Redeem Note"
-                    , placeholder: "Redeem Note"
-                    , maxLength: 200
-                    , defaultValue: "Important: By clicking confirm, you are confirming that the reward has been received and the corresponding points will, therefore, be deducted from the user's account."
+                {
+                    title: "Item Redeemed Modal",
+                    subLabels: {
+                        itemRedeemedTitle: {
+                            title: 'Title'
+                            , placeholder: "Item Redeemed"
+                            , maxLength: 60
+                            , defaultValue: 'Item Redeemed'
+                        },
+                        itemRedeemedBody: {
+                            title: 'Body'
+                            , placeholder: "Rewards can take up to 24 hours to process. You can check the status of your reward by tapping on rewards icon in the upper right corner on the home screen."
+                            , maxLength: 200
+                            , defaultValue: 'Rewards can take up to 24 hours to process. You can check the status of your reward by tapping on rewards icon in the upper right corner on the home screen.'
+                        },
+                        closeitemRedeemedAction: {
+                            title: 'Close modal action link'
+                            , placeholder: "Thanks"
+                            , maxLength: 50
+                            , defaultValue: 'Thanks'
+                        },
+
+                       
+                    }
                 },
-                errorRedeem: {
-                    title: 'Redeem Error Message'
-                    , placeholder: "Redeem Error Message"
-                    , maxLength: 60
-                    , defaultValue: 'Error redeeming reward. Please try again later.'
+                {
+                    title: "Error Messages",
+                    subLabels: {
+                        errorRedeem: {
+                            title: 'Redeem Error'
+                            , placeholder: "Redeem Error"
+                            , maxLength: 60
+                            , defaultValue: 'Error redeeming reward. Please try again later.'
+                        },
+                        redeemDailyLimit: {
+                            title: 'Exceeded Daily Limit Message'
+                            , placeholder: "You have exceeded the daily limit."
+                            , maxLength: 60
+                            , defaultValue: 'You have exceeded the daily limit.'
+                        }, 
+                        insufficientFunds: {
+                            title: "Insufficient Funds"
+                            , placeholder: "You have insufficient points. Please get points to redeem awards."
+                            , maxLength: 80
+                            , defaultValue: "You have insufficient points. Please get points to redeem awards."
+                        },
+                    }
                 },
-                redeemDailyLimit: {
-                    title: 'Exceeded Daily Limit Message'
-                    , placeholder: "You have exceeded the daily limit."
-                    , maxLength: 60
-                    , defaultValue: 'You have exceeded the daily limit.'
-                }, 
-                handDevice: {
-                    title: 'Hand Device Message'
-                    , placeholder: "Please hand your device to a staff member for confirmation"
-                    , maxLength: 70
-                    , defaultValue: "Please hand your device to a staff member for confirmation"
-                },
-                invalidCode: {
-                    title: 'Invalid Confirmation Code Message'
-                    , placeholder: "Invalid confirmation code."
-                    , maxLength: 40
-                    , defaultValue: "Invalid confirmation code."
-                },
-                enterCode: {
-                    title: 'Enter Code'
-                    , placeholder: "Enter Code"
-                    , maxLength: 20
-                    , defaultValue: "Enter Code"
-                },
-            }
-        },
+                
+            ],
+         },
     buyItems: {
         title: 'Buy Items'
         , subtitle: "Strings in Buy Items",
@@ -167,6 +207,12 @@ const stringsConfig = {
                 , placeholder: "Check out our list of rewards to redeem."
                 , maxLength: 50
                 , defaultValue: "Check out our list of rewards to redeem."
+            },
+            totalPoints: {
+                title: "Total Points"
+                , placeholder: "Total Points"
+                , maxLength: 30
+                , defaultValue: "Total Points"
             }
         }
     },
@@ -193,5 +239,53 @@ const stringsConfig = {
           defaultValue: "Reward does not exist!",
         },
       },
+    },
+    staffApproval: {
+        title: 'Staff Approval'
+        , subtitle: "",
+        labels: [
+        {   title: "",
+            subLabels: {
+                approve: {
+                    title: "Approve"
+                    , placeholder: "Approve"
+                    , maxLength: 20
+                    , defaultValue: "Approve"
+                },
+                deny: {
+                    title: "Deny"
+                    , placeholder: "Deny"
+                    , maxLength: 20
+                    , defaultValue: "Deny"
+                },
+            }
+        },
+        {
+            title: "Staff On-Site Confirmation",
+            subLabels: {
+                handDevice: {
+                    title: 'Hand Device Message'
+                    , placeholder: "Please hand your device to a staff member for confirmation"
+                    , maxLength: 70
+                    , defaultValue: "Please hand your device to a staff member for confirmation"
+                },
+                invalidCode: {
+                    title: 'Invalid Confirmation Code'
+                    , placeholder: "Invalid confirmation code."
+                    , maxLength: 40
+                    , defaultValue: "Invalid confirmation code."
+                },
+                enterCode: {
+                    title: "Enter Code"
+                    , placeholder: "Enter Code"
+                    , maxLength: 30
+                    , defaultValue: "Enter Code"
+                }
+            }
+        }
+
+          
+            
+        ]
     },
 	};

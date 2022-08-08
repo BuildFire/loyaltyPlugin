@@ -1,5 +1,15 @@
 
 <div class="holder padding-zero layout2">
+  <div class="icon-button" ng-if="WidgetHome.isEmployer">
+    <button ng-click="WidgetHome.openApprovalRequests()" class="icon ">
+      <span class="material-icons">manage_accounts</span>
+    </button>
+  </div>
+  <div class="icon-button" ng-if="WidgetHome.isClient">
+    <button ng-click="WidgetHome.openRewardsPage()" class="icon ">
+      <span class="material-icons">stars</span>
+    </button>
+  </div>
 	<div class="loyalty-plugin" data-ng-init="setWidth()">
     <div id="carousel" ng-if="WidgetHome.carouselImages.length" build-fire-carousel=""
          ng-style="WidgetHome.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
@@ -17,6 +27,9 @@
           <span>{{WidgetHome.strings["general.currentlyHave"]}} </span><span
             class="text-primary">{{loyaltyPoints | number : 2}}</span> 
             <span style="text-transform: lowercase;">{{WidgetHome.strings["general.points"]}}</span>.
+        </p>
+        <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id && PointsWaitingForApproval > 0">
+          <span class="text-primary">{{PointsWaitingForApproval | number : 2}}</span> <span style="text-transform: lowercase;">points waiting for approval</span>.
         </p>
         <a class="btn btn-primary padding-left-twenty padding-right-twenty"
            href="javascript:void(0);"
@@ -39,5 +52,24 @@
         </div>
 			</div>
 		</div>
+    <div ng-show="WidgetHome.loyaltyRewards.length == 0">
+      <div id="empty_state">
+        <img src="./assets/.images/ic_bookmark_empty.svg" />
+        <label style="color:black;font-weight: bold;margin-top: 32px;font-size: 16px;">Nothing To Redeem Yet</label>
+        <label style="margin-top: 8px;font-size:14px;font-weight: 400;">Rewards will appear here</label>
+      </div>
+
+    </div>
 	</div>
 </div>
+<script>
+  buildfire.appearance.getAppTheme((err, appTheme) => {
+       if (err) return console.error(err);
+       let icons = document.querySelectorAll(".icon");
+       icons.forEach(el => {
+        el.style.color = appTheme.colors.icons
+        })
+       
+       
+     });
+</script>

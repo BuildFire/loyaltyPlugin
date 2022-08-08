@@ -52,7 +52,17 @@ const stringsUI = {
 	}
 	,onSave(prop,value){
 		this.strings.set(prop,value);
-	}
+	},
+
+	createElement(elementType, appendTo, innerHTML, classNameArray, id) {
+    let e = document.createElement(elementType);
+    if (innerHTML) e.innerHTML = innerHTML;
+    if (Array.isArray(classNameArray))
+      classNameArray.forEach((c) => e.classList.add(c));
+    if (appendTo) appendTo.appendChild(e);
+    if (id) e.setAttribute('id', id);
+    return e;
+  	}
 
 	, createAndAppend(elementType, innerHTML, classArray, parent) {
 		let e = document.createElement(elementType);
@@ -69,37 +79,50 @@ const stringsUI = {
 	, buildSection(container, sectionProp, sectionObj) {
 		let sec = this.createAndAppend("section", "", [], container);
 
-		this.createIfNotEmpty("h3", sectionObj.title, [], sec);
-		this.createIfNotEmpty("div", sectionObj.subtitle, ["subTitle"], sec);
-		for (let key in sectionObj.labels) this.buildLabel(sec, sectionProp + "." + key, sectionObj.labels[key]);
+		this.createIfNotEmpty("h1", sectionObj.title, [], sec);
+		console.log(sectionObj.labels)
+		if(sectionObj.labels.length && sectionObj.labels.length > 0){
+			sectionObj.labels.forEach(element => {
+				this.createIfNotEmpty("h5",element.title, ["sub_label_title"], sec);
+				for (let key in element.subLabels) { 
+					this.buildLabel(sec, sectionProp + "." + key, element.subLabels[key]);
+				}
+			});
+			
+		} else {
+			for (let key in sectionObj.labels) { 
+				this.buildLabel(sec, sectionProp + "." + key, sectionObj.labels[key]);
+
+			}
+		}
 		container.appendChild(sec);
 	}
 	, buildLabel(container, prop, labelObj) {
 
-		let div = this.createAndAppend('div', '', ["form-group"], container);
-		this.createAndAppend('label', labelObj.title, [], div);
+		let div = this.createElement("div", container, "", ["form-group", "row"]);
+		let divCol1 = this.createElement("div", div, "", ["col-md-4"]);
+		let divCol2 = this.createElement("div", div, "", ["col-md-8"]);
+		this.createElement("label", divCol1, labelObj.title, []);
 		let inputElement;
-		let id= prop ;
-		let inputType= labelObj.inputType?labelObj.inputType.toLowerCase():"";
+		let id = prop;
+		let inputType = labelObj.inputType ? labelObj.inputType.toLowerCase() : "";
 
-		if (
-			labelObj.inputType &&
-			["textarea","wysiwyg"].indexOf(inputType)>=0
-		)
-			inputElement = this.createAndAppend('textarea', '', ["form-control","bf" + inputType], div);
+		if (labelObj.inputType && ["textarea", "wysiwyg"].indexOf(inputType) >= 0)
+		inputElement = this.createElement("textarea", divCol2, "", [
+			"form-control",
+			"bf" + inputType,
+		]);
 		else {
-			inputElement = this.createAndAppend('input', '', ["form-control"], div);
-			inputElement.type = labelObj.inputType || "text";
+		inputElement = this.createElement("input", divCol2, "", ["form-control"]);
+		inputElement.type = labelObj.inputType || "text";
 		}
 
 		inputElement.id = id;
 
-		inputElement.autocomplete=false;
+		inputElement.autocomplete = false;
 		inputElement.placeholder = labelObj.placeholder || "";
 
-
-		if(labelObj.maxLength>0)
-			inputElement.maxLength = labelObj.maxLength;
+		if (labelObj.maxLength > 0) inputElement.maxLength = labelObj.maxLength;
 
 		inputElement.required = labelObj.required;
 

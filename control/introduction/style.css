@@ -1,0 +1,28 @@
+html[buildfire] {
+  padding-top: 0 !important;
+}
+
+.btn-plus-icon-with-text {
+  float: right !important;
+}
+
+.draggable-list-view .d-item span.icon {
+  font-size: 20px !important;
+  top: 0.25rem;
+}
+
+.copy > .pull-right > .icon {
+  margin-right: 0 !important;
+  margin-left: 0.4rem;
+}
+
+.draggable-list-view .d-item a.text {
+  font-size: 14px;
+  color: var(--c-primary);
+}
+.icon-cross2 {
+  margin-left: 38px !important;
+}
+.icon-cross2:hover {
+  color: var(--c-danger) !important;
+}

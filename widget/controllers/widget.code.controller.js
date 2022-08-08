@@ -54,7 +54,7 @@
             buildfire.auth.getCurrentUser(function (err, user) {
               if (user) {
                 if(currentView.type === 'buyPoints') {
-                  Transactions.buyPoints(currentView.amount, pointsAwarded, $rootScope.loyaltyPoints, user);
+                  Transactions.buyPoints(currentView.amount, pointsAwarded, $rootScope.loyaltyPoints, user, "");
                 } else if(currentView.type === 'buyProducts') {
                   Transactions.buyProducts(currentView.items, $rootScope.loyaltyPoints, user);
                 } else {

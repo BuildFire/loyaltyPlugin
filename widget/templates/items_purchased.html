@@ -1,0 +1,17 @@
+<div class="holder padding-zero" sty ng-controller="itemsPurchasedCtrl as ItemsPurchased">
+    <div style="margin: 16px;display: flex;flex-direction: column;">
+        <div >
+            <label class="title-item-purchased">Items Purchased</label>
+            <div id="itemsPurchasedContainer"></div> 
+            <label class="total-points-item-purchased">Total Points: {{ItemsPurchased.TotalPoints}}</label>
+    
+        </div>
+    
+        <div style="position: absolute;bottom:0;width: 100%;text-align: center;margin-top: 16px;">
+            <button class="btn btn-primary btn-approve" ng-click="ItemsPurchased.Update('APPROVED')">{{ItemsPurchased.strings["staffApproval.approve"]}}</button>
+            <br>
+            <button class="btn-deny" ng-click="ItemsPurchased.Update('DENIED')">{{ItemsPurchased.strings["staffApproval.deny"]}}</button>
+        </div>
+    </div>
+ 
+</div>

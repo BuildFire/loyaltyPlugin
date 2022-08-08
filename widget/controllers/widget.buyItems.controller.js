@@ -3,8 +3,8 @@
 (function (angular) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetBuyItemsCtrl', ['$scope', 'ViewStack', 'RewardCache', 'TAG_NAMES', 'DataStore', '$sce', '$rootScope',
-      function ($scope, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce, $rootScope) {
+    .controller('WidgetBuyItemsCtrl', ['$scope', 'ViewStack', 'RewardCache', 'TAG_NAMES', 'DataStore', '$sce', '$rootScope', 'Transactions',
+      function ($scope, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce, $rootScope, Transactions) {
 
         var WidgetBuyItems = this;
         var breadCrumbFlag = true;
@@ -32,6 +32,27 @@
           buildfire.datastore.onRefresh(function () {
           });
 
+          WidgetBuyItems.getCurrentUser = function() {
+            buildfire.auth.getCurrentUser(function (err, user) {
+              if(user){
+                WidgetBuyItems.currentUser = user;
+              }
+            })
+          }
+
+
+          WidgetBuyItems.onUpdateCallback = function (event) {
+          setTimeout(function () {
+            if (event && event.tag) {
+              switch (event.tag) {
+                case TAG_NAMES.LOYALTY_INFO:
+                  WidgetBuyItems.data = event.data;
+                  break;
+              }
+              $scope.$digest();
+            }
+          }, 0);
+        };
         /**
          * Initialize variable with current view returned by ViewStack service. In this case it is "Item_Details" view.
          */
@@ -54,6 +75,7 @@
             console.error('Error while getting data', err);
           };
           DataStore.get(TAG_NAMES.LOYALTY_INFO).then(WidgetBuyItems.success, WidgetBuyItems.error);
+          WidgetBuyItems.getCurrentUser();
         };
 
         /*covert html symbols to currency symbol*/
@@ -105,6 +127,36 @@
               $scope.$digest();
             }, 3000);
           }
+          else if(WidgetBuyItems.data.settings && WidgetBuyItems.data.settings.approvalType 
+            && WidgetBuyItems.data.settings.approvalType == "REMOVE_VIA_APP") {
+              let items = [];
+              let points = 0
+              WidgetBuyItems.items.forEach(element => {
+                  if(element.quantity != ""){
+                    items.push(element)
+                    points += element.quantity * parseInt(element.pointsPerItem)
+                  }
+              });
+
+              Transactions.requestPointsForPurhasedItems(items, $rootScope.loyaltyPoints, WidgetBuyItems.currentUser);
+              buildfire.notifications.pushNotification.schedule(
+                {
+                  title: "Points Approval Request",
+                  text: (WidgetBuyItems.currentUser.displayName != "" ? WidgetBuyItems.currentUser.displayName : WidgetBuyItems.currentUser.email)+ " requests " + points + " points earned for "  + (items.length == 1 ? "1 item" : items.length + " items"),
+                  groupName: "employerGroup"
+                , at: new Date()
+                },
+                (err, result) => {
+                  if (err) return console.error(err);
+                })
+                buildfire.dialog.toast({
+                  message: "Points awaiting for approval",
+                  duration: 3000,
+                  type: "warning"
+                });
+                $rootScope.$broadcast('POINTS_WAITING_APPROVAL_ADDED', (points * WidgetBuyItems.application.pointsPerDollar) + WidgetBuyItems.application.pointsPerVisit);
+                ViewStack.pop();
+          } 
           else {
             ViewStack.push({
               template: 'Code',
@@ -113,6 +165,9 @@
               items: WidgetBuyItems.items
             });
           }
+
+         
+
         };
 
         /**

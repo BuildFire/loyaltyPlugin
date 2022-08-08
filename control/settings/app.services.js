@@ -1,7 +1,7 @@
 'use strict';
 
 (function (angular, buildfire) {
-  angular.module('loyaltyPluginContent')
+  angular.module('loyaltyPluginSettings')
     .provider('Buildfire', [function () {
       var Buildfire = this;
       Buildfire.$get = function () {

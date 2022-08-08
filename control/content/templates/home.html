@@ -6,94 +6,29 @@
       </div>
     </div>
   </div>
-  <br ng-if="ContentHome.needToLoginInCP">
-  <div id="carousel"></div>
-  <br ng-if="!ContentHome.data.image.length">
-  <div class="padded" ng-if="!ContentHome.data.image.length">
-    <div class="well text-center">No images found.</div>
-  </div>
-  <hr class="none">
-  <div class="item clearfix row">
-    <div class="labels col-md-3 padding-right-zero pull-left">
-      <span>Text</span>
-    </div>
-  </div>
-  <hr class="none">
-  <div class="item clearfix row">
-    <div class="main col-md-12 pull-right">
-    <textarea id="text" ui-tinymce="ContentHome.bodyWYSIWYGOptions"
-              class="form-control" rows="5" width="100%"
-              ng-model="ContentHome.data.content.description"></textarea>
-    </div>
-  </div>
-  <hr class="none">
-  <div class="item clearfix row">
-    <div class="labels col-xs-3 pull-left">
-      <span>Points per Purchase</span>
-    </div>
-    <div class="main col-xs-9 pull-right">
-      <input type="number" class="form-control"
-             placeholder="Points per Purchase"
-             ng-model="ContentHome.data.pointsPerVisit">
-    </div>
-  </div>
-  <hr class="none">
-  <div class="item clearfix row" ng-if="ContentHome.settings.purchaseOption.value !== 'perProductsPurchased'">
-    <div class="labels col-xs-3 pull-left">
-      <span>Points per Dollar</span>
-    </div>
-    <div class="main col-xs-9 pull-right">
-      <input type="number" class="form-control" placeholder="Points per Dollar"
-             ng-model="ContentHome.data.pointsPerDollar">
-    </div>
-  </div>
-  <hr class="none" ng-if="ContentHome.settings.purchaseOption.value !== 'perProductsPurchased'">
-  <div class="item clearfix row">
-    <div class="labels col-xs-3 pull-left">
-      <span>Daily Limit</span>
-    </div>
-    <div class="main col-xs-9 pull-right">
-      <input type="number" class="form-control" placeholder="Daily Limit"
-             ng-model="ContentHome.data.dailyLimit">
-    </div>
-  </div>
-  <hr class="none">
-  <div class="item clearfix row">
-    <div class="labels col-xs-3 pull-left">
-      <span>Total Limit</span>
-    </div>
-    <div class="main col-xs-9 pull-right">
-      <input type="number" class="form-control" placeholder="Total Limit"
-             ng-model="ContentHome.data.totalLimit">
-    </div>
-  </div>
-  <hr class="none">
-  <div class="item clearfix row">
-    <div class="labels col-xs-3 pull-left">
-      <span>Add Points Passcode</span>
-    </div>
-    <div class="main col-xs-9 pull-right">
-      <input type="text" class="form-control"
-             placeholder="Add Points Passcode"
-             ng-model="ContentHome.data.redemptionPasscode" maxlength="5">
-    </div>
-  </div>
-  <hr>
-  <div class="item clearfix row">
-    <div class="col-xs-12 margin-top-five" ng-if="ContentHome.invalidApplicationParameters">
-      <div class="alert alert-sm text-center alert-danger">Please enter valid data.
+  <p class="info-note margin-bottom-twenty font-size-12">
+    Add redemption items here. You can set how user earns points and reedmes items in the  <a class="link" ng-click="ContentHome.openSettingsPage()">Settings</a> tab.
+  </p>
+  <div class="row">
+    <div class="col-md-10">
+      <div class="input-group margin-bottom-twenty">
+        <input ng-model="ContentHome.title" type="text" id="searchItemText" class="form-control" placeholder="Search" />
+        <span class="input-group-btn">
+          <button ng-click="ContentHome.search()" class="btn btn-info stretch margin-left-zero" id="searchProductsBtn">
+            <span class="icon icon-magnifier"></span>
+          </button>
+        </span>
       </div>
     </div>
-  </div>
-  <hr>
-  <div class="item clearfix row">
-    <div class="main col-md-9 pull-right padding-left-zero row">
-      <div class="pull-left inner-main col-md-8 padding-zero">
-        <a class="btn btn-success stretch" href="#/reward">Add New Item</a>
-      </div>
+    <div class="col-md-2">
+      <button class="btn btn-success" id="openSubItemPageBtn">
+        <span class="icon icon-plus margin-right-ten">
+          <a class="add-item-a" href="#/reward">Add Item</a>
+        </span>
+      </button>
+      
     </div>
   </div>
-  <hr>
   <div class="item clearfix">
     <div ng-if="ContentHome.loyaltyRewards.length"
         class="tab-order draggable-list-view wide-list has-btn-link border-grey border-radius-four">
@@ -110,15 +45,16 @@
             </div>
             <div class="copy pull-right">
               <div class="col-md-7 padding-zero pull-left">
-                <a class="text-primary" href="javascript:void(0);" ng-click="ContentHome.openReward(reward, $index)">
-                  <span
-                      class="title ellipsis pull-left">{{reward.title}}</span>
-                </a>
-                <span class="title ellipsis pull-left" ng-if="reward.pointsToRedeem != '38762499627'">{{reward.pointsToRedeem}} Points</span>
+                <span
+                class="title ellipsis pull-left black-color">{{reward.title}}</span>
+                <span class="title ellipsis pull-left font-size-12 gray-color" ng-if="reward.pointsToRedeem != '38762499627'">{{reward.pointsToRedeem}} Points</span>
               </div>
               <div class="pull-right padding-top-fifteen">
                 <span
-                    class="btn-icon btn-delete-icon btn-danger transition-third"
+                class="btn-icon icon-pencil icon-edit transition-third"
+                ng-click="ContentHome.openReward(reward, $index)"></span>
+                <span
+                    class="btn-icon icon-cross2 icon-remove transition-third"
                     ng-click="ContentHome.removeLoyalty(reward._id, $index)"></span>
               </div>
             </div>
@@ -127,7 +63,8 @@
       </div>
     </div>
     <div class="padded" ng-if="!ContentHome.loyaltyRewards.length">
-      <div class="well text-center">No rewards found.</div>
+      <div class="well text-center padding-100">You haven't added anything yet</div>
     </div>
   </div>
 </div>
+
