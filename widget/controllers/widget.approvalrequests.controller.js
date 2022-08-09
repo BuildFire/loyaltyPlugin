@@ -168,7 +168,7 @@
             buildfire.notifications.pushNotification.schedule(
               {
                 title: "Reward Approved",
-                text:  (updatedItem.data.title == '' ? "BUY POINTS" : updatedItem.data.title) + " has been approved",
+                text:  ( (updatedItem.data.item.title && updatedItem.data.item.title == '') ? "BUY POINTS" : updatedItem.data.item.title) + " has been approved",
                 users: [updatedItem.data.createdBy._id]
               , at: new Date()
               },

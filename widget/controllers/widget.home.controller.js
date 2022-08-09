@@ -129,10 +129,48 @@
         /**
          * Method to fetch logged in user's loyalty points
          */
+        var isLoyaltyPointsUpdated = false;
+
+        const saveLoyaltyPointsInAppData = function(userId, totalPoints){
+          buildfire.appData.search(
+            {
+              filter: {
+                $or: [
+                  { "$json.userId": userId },
+                ],
+              },
+            },
+            "userLoyaltyPoints1",
+            (err, res) => {
+              if (err) return console.error("there was a problem retrieving your data");
+              if(res && res.length > 0){
+                buildfire.appData.update(
+                  res[0].id, // Replace this with your object id
+                  { userId: userId, totalPoints: totalPoints },
+                  "userLoyaltyPoints1",
+                  () => {}
+                );
+              } else {
+                buildfire.appData.insert(
+                  { userId: userId , totalPoints: totalPoints },
+                  "userLoyaltyPoints1",
+                  false,
+                  () => {}
+                );
+              }
+            }
+          );
+        }
+
+
         WidgetHome.getLoyaltyPoints = function (userId) {
           var success = function (result) {
               $rootScope.loyaltyPoints = result.totalPoints;
               WidgetHome.applicationExists = true;
+              if(!isLoyaltyPointsUpdated){
+                isLoyaltyPointsUpdated = true  
+                saveLoyaltyPointsInAppData(userId, result.totalPoints)
+              }
             }
             , error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
@@ -241,9 +279,6 @@
                     (err, result) => {
                       if (err) return console.error(err);
                       buildfire.components.drawer.closeDrawer();
-                      buildfire.localStorage.setItem("selectedFeature", result, (error) => {
-                        if (error) return console.error("something went wrong!", error);
-                      });
                       buildfire.navigation.navigateTo({
                         instanceId: result.instanceId,
                       });
@@ -408,33 +443,30 @@
         }
 
         var init = function () {
-
           var success = function (result) {
               let ftqScore = new URLSearchParams(window.location.search).get('score');
               if(ftqScore && ftqScore != null){
-                buildfire.localStorage.getItem("selectedFeature", (error, value) => {
-                  if (error) return console.error("something went wrong!", error);
-                  if (value) {
-                    let feature = JSON.parse(value);
                     let score = JSON.parse(ftqScore).score
-                    Transactions.requestPoints("", score, $rootScope.loyaltyPoints, WidgetHome.currentLoggedInUser, feature.text, feature.iconUrl);
-                    $rootScope.PointsWaitingForApproval += score;
-                    buildfire.notifications.pushNotification.schedule(
-                      {
-                        title: "Points Approval Request",
-                        text: WidgetHome.currentLoggedInUser.displayName + " requests " + score + " points earned from "  + feature.text,
-                        groupName: "employerGroup"
-                      , at: new Date()
-                      },
-                      (err, result) => {
-                        if (err) return console.error(err);
-                      })
-                    buildfire.localStorage.removeItem("selectedFeature", (error) => {
-                      if (error) return console.error("something went wrong!", error);
-                    });
-                  }
-                });
-               
+                    let instanceId = JSON.parse(ftqScore).instanceId
+
+                    buildfire.pluginInstance.get(instanceId, function(error, instance){
+                      if (error) {
+                          console.error(error);
+                      } else if (instance) {
+                          Transactions.requestPoints("", score, $rootScope.loyaltyPoints, WidgetHome.currentLoggedInUser, instance.title, instance.iconUrl);
+                          $rootScope.PointsWaitingForApproval += parseInt(score);
+                          buildfire.notifications.pushNotification.schedule(
+                            {
+                              title: "Points Approval Request",
+                              text: WidgetHome.currentLoggedInUser.displayName + " requests " + score + " points earned from "  + instance.title,
+                              groupName: "employerGroup"
+                            , at: new Date()
+                            },
+                            (err, result) => {
+                              if (err) return console.error(err);
+                            })
+                      }
+                  });
               }
 
                 if(result && result.data){

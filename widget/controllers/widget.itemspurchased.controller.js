@@ -159,12 +159,12 @@
             ItemsPurchased.Item = currentView.item;
             let items = []
             ItemsPurchased.Item.data.items.forEach(element => {
-                ItemsPurchased.TotalPoints += element.quantity  * element.pointsToRedeem
+                ItemsPurchased.TotalPoints += element.quantity  * element.pointsPerItem
                 items.push({
                     id: element.id,
                     title: element.title,
                     imageUrl: element.listImage,
-                    subtitle: element.pointsToRedeem + " Points",
+                    subtitle: element.pointsPerItem + " Points",
                     description: "Quantity: " + element.quantity 
                 })
             })
