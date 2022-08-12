@@ -53,52 +53,103 @@
                 {{typesMapping[item.type]}}
             </div>
         </div>
-
-        <div class="row">
+        <div ng-if="item.item">
+            <div class="row">
+                <div class="col-md-4 title">
+                    Item Bought:
+                </div>
+                <div class="col-md-8">
+                    {{item.item.title}}
+                </div>
+            </div>
+    
+           <div class="row">
+                <div class="col-md-4 title">
+                    Points Earned:
+                </div>
+                <div class="col-md-8">
+                    {{item.pointsEarned}}
+                </div>
+           </div>
+    
+           <div class="row"> 
+                <div class="col-md-4 title">
+                    Money Spent:
+                </div>
+                <div class="col-md-8">
+                    {{item.purchaseAmount}}
+                </div>
+           </div>
+    
+           <div class="row">
+                <div class="col-md-4 title">
+                    Item Quantity:
+                </div>
+    
+                <div class="col-md-8">
+                    {{item.item.quantity}}
+                </div>
+           </div>
+    
+           <div class="row">
             <div class="col-md-4 title">
-                Item Bought:
+                Points per Item:
             </div>
             <div class="col-md-8">
-                {{item.item.title}}
+                {{item.item.pointsPerItem}}
+            </div>
+           </div>
+        </div>
+        <div ng-if="item.items">
+            <div ng-repeat="item in item.items" style="margin-top: 16px;">
+                <div class="row">
+                    <div class="col-md-4 title">
+                        Item Bought:
+                    </div>
+                    <div class="col-md-8">
+                        {{item.title}}
+                    </div>
+                </div>
+        
+               <div class="row">
+                    <div class="col-md-4 title">
+                        Points Earned:
+                    </div>
+                    <div class="col-md-8">
+                        {{item.pointEarned}}
+
+                    </div>
+               </div>
+               <div class="row">
+                    <div class="col-md-4 title">
+                        Item Quantity:
+                    </div>
+        
+                    <div class="col-md-8">
+                        {{item.quantity}}
+                    </div>
+               </div>
+        
+               <div class="row">
+                <div class="col-md-4 title">
+                    Points per Item:
+                </div>
+                <div class="col-md-8">
+                    {{item.pointsPerItem}}
+                </div>
+               </div>
+            </div>
+            <div ng-if="item.items.length > 1" style="margin-top: 16px;">
+                <div class="row">
+                    <div class="col-md-4 title">
+                        Total Points Earned:
+                    </div>
+                    <div class="col-md-8">
+                        {{item.pointsEarned}}
+                    </div>
+                   </div>
             </div>
         </div>
-
-       <div class="row">
-            <div class="col-md-4 title">
-                Points Earned:
-            </div>
-            <div class="col-md-8">
-                {{item.pointsEarned}}
-            </div>
-       </div>
-
-       <div class="row"> 
-            <div class="col-md-4 title">
-                Money Spent:
-            </div>
-            <div class="col-md-8">
-                {{item.purchaseAmount}}
-            </div>
-       </div>
-
-       <div class="row">
-            <div class="col-md-4 title">
-                Item Quantity:
-            </div>
-
-            <div class="col-md-8">
-                {{item.item.quantity}}
-            </div>
-       </div>
-
-       <div class="row">
-        <div class="col-md-4 title">
-            Points per Item:
-        </div>
-        <div class="col-md-8">
-            {{item.item.pointsPerItem}}
-        </div>
-       </div>
 
     </div>
 

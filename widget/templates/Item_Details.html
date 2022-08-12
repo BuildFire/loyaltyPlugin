@@ -38,9 +38,11 @@
           redeemTitle.style.color = appTheme.colors.titleBar;
 
           let redeemPoints = document.querySelector(".redeem-points");
-          redeemPoints.style.color = appTheme.colors.primaryTheme + " !important";
-
-          let redeemBtn = document.querySelector(".btn-primary")
-          redeemBtn.style.backgroundColor = appTheme.colors.primaryTheme;
+          redeemPoints.style.color = appTheme.colors.primaryTheme
+          
+          let btnPrimaries = document.querySelectorAll(".btn-primary")
+          btnPrimaries.forEach(el => {
+            el.style.backgroundColor = appTheme.colors.primaryTheme
+          })
         })
 </script>

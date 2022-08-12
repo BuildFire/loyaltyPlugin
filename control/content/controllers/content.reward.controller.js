@@ -42,6 +42,7 @@
           if (!ContentReward.item.carouselImage)
             ContentReward.item.carouselImage = [];
           ContentReward.item.carouselImage.push.apply(ContentReward.item.carouselImage, items);
+          changeCarouselActionItemDesign();
           $scope.$digest();
         };
         // this method will be called when an item deleted from the list
@@ -90,6 +91,20 @@
             $scope.$apply();
           }
         };
+
+        function changeCarouselActionItemDesign(){
+          Array.from(document.querySelectorAll(".btn-icon.btn-delete-icon")).forEach(
+            (el) => {
+            el.classList.remove("btn-icon", "btn-delete-icon", "btn-danger");
+            el.classList.add("icon", "icon-cross2");
+            }
+          );
+          Array.from(document.querySelectorAll(".text-primary.text")).forEach(
+            (el) => {
+              el.style.marginRight = "32px"
+            }
+          );
+        }
 
         /* list image add <end>*/
 
@@ -280,10 +295,14 @@
               data: ContentReward.item
             });
           }
-          if (!ContentReward.item.carouselImage)
+          if (!ContentReward.item.carouselImage){
             ContentReward.editor.loadItems([]);
+            changeCarouselActionItemDesign()
+          }
+            
           else
             ContentReward.editor.loadItems(ContentReward.item.carouselImage);
+            changeCarouselActionItemDesign()
         }
 
         /*Save the data on .5 sec delay*/

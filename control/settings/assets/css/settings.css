@@ -117,3 +117,43 @@
 .icon-cross2:hover {
 	cursor: pointer;
 }
+
+div.col-md-5.text-right.pull-right.padding-right-zero > a {
+    display: none;
+}
+
+.btn.btn-success{
+	width: 9rem !important;
+	font-family: 'Conv_apercu_regular';
+}
+
+.action-item-container {
+	border: 1px solid #DDDDDD;
+	display: flex;
+	justify-content: space-between;
+	padding:8px;
+	border-radius: 4px;
+	margin-top: 6px;
+	align-items: center;
+}
+
+.title {
+	color: black;
+	font-size: 13px;
+	font-weight: 400;
+	font-family: 'Conv_apercu_regular';
+
+}
+
+.subTitle {
+	color: #5f5f5f;
+	font-size: 12px;
+	font-weight: bold;
+	font-family: 'Conv_apercu_regular';
+
+}
+
+.icon-cross2 {
+	font-size: 20px !important;
+	margin-right: 20px;
+}

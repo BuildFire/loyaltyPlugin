@@ -324,7 +324,7 @@
         },
 
 
-        buyPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, user) {
+        buyPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, user, title, iconUrl) {
           var pluginTitle = buildfire.getContext().title;
           const data = {
             createdBy: user,
@@ -332,6 +332,10 @@
             type: TRANSACTION_TYPES.EARN_POINTS,
             purchaseAmount: purchaseAmount,
             pointsEarned: pointsEarned,
+            item: {
+              title: title,
+              listImage: iconUrl
+            },
             status: STATUS.Approved,
             currentPointsAmount: currentPointsAmount,
             pluginTitle: pluginTitle,
@@ -403,6 +407,8 @@
             createdAt: new Date(),
             type: TRANSACTION_TYPES.REDEEM_REWARD,
             item: item,
+            approvedOn: null,
+            approvedBy: null,
             pointsSpent: pointsSpent,
             currentPointsAmount: currentPointsAmount,
             pluginTitle: pluginTitle,
@@ -419,7 +425,7 @@
             if (err) {
               return deferred.reject(err);
             } else if (result) {
-              buildfire.analytics.trackAction('reward-redeemed', { pointsSpent : point});
+              buildfire.analytics.trackAction('reward-redeemed', { pointsSpent : pointsSpent});
               return deferred.resolve(result);
             }
             else{

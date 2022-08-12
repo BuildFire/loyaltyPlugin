@@ -6,10 +6,9 @@ class IntroductionItem {
 }
 
 const Introduction = {
-  TAG: "Introduction",
   save: (introduction) => {
       return new Promise((resolve, reject) => {
-          buildfire.datastore.save(introduction, this.TAG, function (err, result) {
+          buildfire.datastore.save(introduction, "Introduction", function (err, result) {
               if (err) {
                   reject(err);
               } else {
@@ -20,7 +19,7 @@ const Introduction = {
   },
   get: () => {
       return new Promise((resolve, reject) => {
-        buildfire.datastore.get(this.TAG, function (err, result) {
+        buildfire.datastore.get("Introduction", function (err, result) {
               if (err) {
                   reject(err);
               } else {

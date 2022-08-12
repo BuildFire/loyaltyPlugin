@@ -150,6 +150,7 @@
             var transactions = result.map(function (result){
               return result.data
             });
+            console.log(transactions)
             ResultsHome.transactions = transactions;
             $rootScope.transactions = transactions;
             if(transactions.length < 50) {

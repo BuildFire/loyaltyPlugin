@@ -55,7 +55,7 @@
 <div ng-show="SettingsHome.data.settings.approvalType=='REMOVE_VIA_APP'">
   <div class="item clearfix row">
     <div class="labels col-md-3 pull-left tooltip-container">
-      <span>Points Approver User Tag <span class ="red">*</span></span>
+      <span>Points Approver User Tag<span class="text-danger">*</span></span>
       <span class="tip btn-info-icon btn-primary"><span class="cp-tooltip">Specify a user tag assigned to the user who will be allowed to approve or deny points</span>
     </div>
     <div class="main col-xs-9 pull-right">
@@ -68,7 +68,7 @@
       </div>
       <div class="main col-xs-9 pull-right">
         <div  style="margin-top: 6px;">
-          <div style="font-weight: bold;padding: 10px;color: black;">
+          <div style="font-weight: bold;padding: 10px;color: black;margin-left: 12px;">
             Tag Name
           </div>
         </div>
@@ -78,9 +78,8 @@
       <div class="labels col-md-3 pull-left tooltip-container">
       </div>
       <div class="main col-xs-9 pull-right">
-        <div  style="border: 1px solid #DDDDDD;display: flex;justify-content: space-between;padding:14px;
-          border-radius: 4px;margin-top: 6px;" ng-repeat="tag in SettingsHome.tags" >
-          <div>
+        <div class="action-item-container"  ng-repeat="tag in SettingsHome.tags" >
+          <div class="title" style="margin-left:12px">
             {{tag.tagName}}
           </div>
           <div class="pull-right">
@@ -133,7 +132,7 @@
   <hr class="none">
   <div class="item clearfix row">
       <div class="labels col-md-3 pull-left tooltip-container">
-        <span>Extra Points Per Purchase <span class ="red">*</span></span>
+        <span>Extra Points Per Purchase<span class="text-danger">*</span></span>
         <span class="tip btn-info-icon btn-primary"><span class="cp-tooltip">Reward extra points for every purchas made by user</span>
       </div>
       <div class="main col-xs-9 pull-right">
@@ -144,7 +143,7 @@
     <hr class="none">
     <div class="item clearfix row" ng-if="SettingsHome.data.settings.purchaseOption.value !== 'perProductsPurchased'">
       <div class="labels col-md-3 pull-left tooltip-container">
-        <span>Points Per Dollar Spent<span class ="red">*</span></span>
+        <span>Points Per Dollar Spent<span class="text-danger">*</span></span>
         <span class="tip btn-info-icon btn-primary"><span class="cp-tooltip">Set how many points user can earn per every $1 (or other currency) spent</span>
       </div>
       <div class="main col-xs-9 pull-right">
@@ -173,25 +172,50 @@
       </div>
     </div>
  
-    <hr>
+    <hr class="none">
     <div class="item clearfix row">
       <div class="col-xs-12 margin-top-five" ng-if="ContentHome.invalidApplicationParameters">
         <div class="alert alert-sm text-center alert-danger">Please enter valid data.
         </div>
       </div>
     </div>
-    <hr>
 </div>
 <div ng-show="SettingsHome.data.settings.purchaseOption.value == 'scoreFromFreeTextQuestionnaire'">
   <hr class="none">
-  <div class="item clearfix row">
-    <div class="labels col-md-3 pull-left tooltip-container">
-      <span>Free Text Questionnaire <span class ="red">*</span></span>
-      <span class="tip btn-info-icon btn-primary"><span class="cp-tooltip2">You must enable “Calculate score” and “Save Submissions to App Data” options on connected Free Text Questionnaire. Points will be calculated and updated after you enter Leaderboard plugin again.</span>
+    <div>
+      <div class="item clearfix row">
+        <div class="labels col-md-3 pull-left tooltip-container">
+          <span>Free Text Questionnaire<span class="text-danger">*</span></span>
+          <span class="tip btn-info-icon btn-primary"><span class="cp-tooltip2">You must enable “Calculate score” and “Save Submissions to App Data” options on connected Free Text Questionnaire. Points will be calculated and updated after you enter Leaderboard plugin again.</span>
+         </div>
+        <div class="main col-xs-9 pull-right">
+          <button class="btn btn-success pull-right btn-plus-icon-with-text" ng-click="SettingsHome.openActionItemsDialog()">Add Features</button>
+        </div>
+      </div>
+      <div class="item clearfix row">
+        <div class="labels col-md-3 pull-left tooltip-container">
+        </div>
+        <div class="main col-xs-9 pull-right">
+          <div   class="action-item-container"  ng-repeat="feature in SettingsHome.ftqFeatureItems" >
+            <div style="display: flex;align-items:center;margin-left:12px">
+              <img style="width: 42px;height:38px;border-radius: 4px;" ng-src={{feature.iconUrl}}/>
+              <div  style="display: flex;flex-direction: column;justify-content: center; margin-left: 16px;">
+                <span class="title">{{feature.title}}</span>
+                <span class="subTitle">{{feature.pluginTypeName}}</span>
+              </div>
+            </div>
+            <div class="pull-right">
+              <span
+                  class="btn-icon icon-cross2 icon-remove transition-third "
+                  ng-click="SettingsHome.removeActionItemFeature($index)"></span>
+            </div>
+          </div>
+         
+        </div>
+      </div>
     </div>
-     <div class="main col-xs-9 pull-right">
-      <div class="ftqFeatures"></div>
-    </div>
+  </div>
+   
 
 
 

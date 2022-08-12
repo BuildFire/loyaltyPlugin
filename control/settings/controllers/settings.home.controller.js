@@ -61,11 +61,7 @@
                     name: "Score from Free Text Questionnaire",
                     value: "scoreFromFreeTextQuestionnaire"
                 }];
-                let ftqFeatures = new buildfire.components.actionItems.sortableList(
-                    ".ftqFeatures"
-                  );
-                document.querySelector(".add-new-item").innerHTML = "Add Feature"
-                
+
                   buildfire.datastore.get("Features",function (err, result) {
                     if (err || !result) {
                       console.error(err, 'Error while getting datastore.');
@@ -81,64 +77,46 @@
                   
                     if(result && result.data && result.data.length > 0){
                         console.log(result)
-                    ftqFeatures.loadItems(result.data);
                     SettingsHome.ftqFeatureItems = result.data;
-
+                    $scope.$digest();
+                    changeActionItemIcon();
                     }
                 })
 
-                ftqFeatures.onAddItems = function (item) {
-                    item.order = SettingsHome.ftqFeatureItems.length;
-                    SettingsHome.ftqFeatureItems.push(item)
+            var changeActionItemIcon = function(){
+                Array.from(document.querySelectorAll(".btn-icon.btn-delete-icon")).forEach(
+                    (el) => {
+                    el.classList.remove("btn-icon", "btn-delete-icon", "btn-danger");
+                    el.classList.add("icon", "icon-cross2");
+                    }
+                );
+            }
+
+              SettingsHome.openActionItemsDialog = function() {
+                window.buildfire.pluginInstance.showDialog({}, (error, response) => {
+                    let croppedImage = buildfire.imageLib.cropImage(
+                        response[0].iconUrl,
+                        { size: "half_width", aspect: "16:9" }
+                      );
+                    response[0].iconUrl = croppedImage;
+                    SettingsHome.ftqFeatureItems.push(response[0])
+                    $scope.$digest();
                     buildfire.datastore.save(SettingsHome.ftqFeatureItems,"Features", function (err, result) {
                         if (err || !result) {
                             console.error("Error saving the widget details: ", err);
                         }
                     });
-                };
-
-                ftqFeatures.onDeleteItem = function (item, index) {
+                })
+              }
+              SettingsHome.removeActionItemFeature = function(index){
                     SettingsHome.ftqFeatureItems.splice(index, 1);
                     buildfire.datastore.save(SettingsHome.ftqFeatureItems,"Features", function (err, result) {
                         if (err || !result) {
                             console.error("Error saving the widget details: ", err);
                         }
                     });
-                };
-
-                ftqFeatures.onOrderChange = function (item, oldIndex, newIndex) {
-                    var items =  SettingsHome.ftqFeatureItems;
-
-                    items[oldIndex].order = newIndex;
-
-                    var tmp = items[oldIndex];
-
-                    if (oldIndex < newIndex) {
-                        for (var i = oldIndex + 1; i <= newIndex; i++) {
-                            items[i - 1] = items[i];
-                        }
-                    } else {
-                        for (var i = oldIndex - 1; i >= newIndex; i--) {
-                            items[i + 1] = items[i];
-                        }
-                    }
-
-                    items[newIndex] = tmp;
-                    buildfire.datastore.save(items,"Features", function (err, result) {
-                        if (err || !result) {
-                            console.error("Error saving the widget details: ", err);
-                        }
-                    });
-               };
-
-               ftqFeatures.onItemChange = (item, index) => {
-                SettingsHome.ftqFeatureItems[index]= item;
-                buildfire.datastore.save(SettingsHome.ftqFeatureItems,"Features", function (err, result) {
-                    if (err || !result) {
-                        console.error("Error saving the widget details: ", err);
-                    }
-                });
-              };
+                    
+              }
                
                SettingsHome.currentLoggedInUser = null;
                SettingsHome.context = null;
@@ -207,29 +185,20 @@
                             });
                         }
                     });
-                    let ftqContainer = ftqFeatures.selector.childNodes[0]
-                    ftqContainer.removeChild(ftqContainer.childNodes[0])
-                    ftqContainer.childNodes[0].classList.remove("col-md-9")
-                    ftqContainer.childNodes[0].classList.add("col-md-12")
-
-                    let ftqButton = ftqContainer.childNodes[0].childNodes[0]
-                    ftqButton.childNodes[0].style.float = "right !important"
-                    ftqButton.childNodes[0].classList.remove("pull-left")
-                    ftqButton.childNodes[0].classList.add("pull-right")
-
-
                 };
 
                 SettingsHome.openTagDialog = function() {
                     buildfire.auth.showTagsSearchDialog(null, (err, result) => {
                         if (err) return console.error(err);
-                        SettingsHome.tags = result;
-                        $scope.$apply();
-                        buildfire.datastore.save(SettingsHome.tags,"Tags", function (err, result) {
-                            if (err || !result) {
-                                console.error("Error saving the widget details: ", err);
-                            }
-                        });
+                        if(result && result != null){
+                            SettingsHome.tags = result;
+                            $scope.$apply();
+                            buildfire.datastore.save(SettingsHome.tags,"Tags", function (err, result) {
+                                if (err || !result) {
+                                    console.error("Error saving the widget details: ", err);
+                                }
+                            });
+                        }
                       });
                 }
 

@@ -102,41 +102,59 @@
               buildfire.spinner.show();
               buildfire.auth.getCurrentUser(function (err, user) {
                 if (user) {
-                  Transactions.requestRedeem(WidgetItem.reward, WidgetItem.reward.pointsToRedeem, $rootScope.loyaltyPoints, user);
-                  buildfire.notifications.pushNotification.schedule(
-                    {
-                      title: "Item Redeem Approval Request",
-                      text: user.displayName + " would like to redeem " + WidgetItem.reward.title,
-                      groupName: "employerGroup",
-                      queryString: "toEmployer=true"
-                    , at: new Date()
-                    },
-                    (err, result) => {
-                      if (err) return console.error(err);
-                    })
-                  buildfire.spinner.hide();
-                  buildfire.dialog.show(
-                    {
-                      title: WidgetItem.strings["redeem.itemRedeemedModalTitle"],
-                      message: WidgetItem.strings["redeem.itemRedeemedBody"],
-                      showCancelButton: false,
-                      actionButtons: [
+                  if(currentView.settings && currentView.settings.approvalType 
+                    && currentView.settings.approvalType == "REMOVE_VIA_APP"){
+                      Transactions.requestRedeem(WidgetItem.reward, WidgetItem.reward.pointsToRedeem, $rootScope.loyaltyPoints, user);
+                      buildfire.notifications.pushNotification.schedule(
                         {
-                          text: WidgetItem.strings["redeem.closeitemRedeemedAction"],
-                          type: "primary",
-                          action: () => {
-                              buildfire.history.pop();
-                              ViewStack.push({
-                                template: 'Rewards'
-                              });
-                              $scope.$apply();
-                          },
+                          title: "Item Redeem Approval Request",
+                          text: user.displayName + " would like to redeem " + WidgetItem.reward.title,
+                          groupName: "employerGroup",
+                          queryString: "toEmployer=true"
+                        , at: new Date()
+                        },
+                        (err, result) => {
+                          if (err) return console.error(err);
+                        })
+                      buildfire.spinner.hide();
+                      buildfire.dialog.show(
+                        {
+                          title: WidgetItem.strings["redeem.itemRedeemedModalTitle"],
+                          message: WidgetItem.strings["redeem.itemRedeemedBody"],
+                          showCancelButton: false,
+                          actionButtons: [
+                            {
+                              text: WidgetItem.strings["redeem.closeitemRedeemedAction"],
+                              type: "primary",
+                              action: () => {
+                                console.log(" ")
+                                  buildfire.history.pop();
+                                  ViewStack.push({
+                                    template: 'Rewards'
+                                  });
+                                  $scope.$apply();
+                              },
+                            }
+                          ],
+                        },
+                        (err, actionButton) => {
+                          console.log(" ")
+
                         }
-                      ],
-                    },
-                    (err, actionButton) => {
-                    }
-                  );
+                      );
+                   } 
+                  else {
+                    ViewStack.push({
+                      template: 'Code',
+                      reward: WidgetItem.reward,
+                      type: 'redeemPoints',
+                      pointsToRedeem: WidgetItem.reward.pointsToRedeem
+                    });
+                    $scope.$apply();
+                  }
+
+
+                 
                 
                 } else {
                   buildfire.spinner.hide();

@@ -125,7 +125,9 @@
             ViewStack.push({
               template: 'Code',
               amount: WidgetAmount.amount,
-              type: 'buyPoints'
+              type: 'buyPoints',
+              title: "BUY POINTS",
+              iconUrl: ""
             });
           }
         };

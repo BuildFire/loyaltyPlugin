@@ -6,11 +6,11 @@
       </div>
     </div>
   </div>
-  <p class="info-note margin-bottom-twenty font-size-12">
+  <p class="info-note margin-bottom-twenty" style="font-size: 13px;">
     Add redemption items here. You can set how user earns points and reedmes items in the  <a class="link" ng-click="ContentHome.openSettingsPage()">Settings</a> tab.
   </p>
   <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-9">
       <div class="input-group margin-bottom-twenty">
         <input ng-model="ContentHome.title" type="text" id="searchItemText" class="form-control" placeholder="Search" />
         <span class="input-group-btn">
@@ -20,13 +20,12 @@
         </span>
       </div>
     </div>
-    <div class="col-md-2">
-      <button class="btn btn-success" id="openSubItemPageBtn">
-        <span class="icon icon-plus margin-right-ten">
-          <a class="add-item-a" href="#/reward">Add Item</a>
-        </span>
-      </button>
-      
+    <div class="col-md-3">
+      <a class="add-item-a" href="#/reward">
+        <button class="btn btn-success stretch"  href="#/reward">
+          <span class="icon icon-plus margin-right-ten"></span>  Add Item
+        </button>
+      </a>
     </div>
   </div>
   <div class="item clearfix">

@@ -11,6 +11,7 @@
         WidgetHome.isClient = false;
         WidgetHome.approvalRequestsTab = 0
         WidgetHome.tags = null;
+        
         WidgetHome.strings = {
           "general.loginOrRegister": "Login or register",
           "general.toGetPoints": "to get points",
@@ -52,6 +53,7 @@
           "staffApproval.enterCode":"Enter Code",
 
         }
+        var features = []
         
         $window.strings.getLanguage(function(err, response){
           const obj = response[0] ? response[0].data : $window.strings._data;
@@ -103,7 +105,8 @@
           RewardCache.setReward(reward);
           ViewStack.push({
             template: 'Item_Details',
-            totalPoints: $rootScope.loyaltyPoints
+            totalPoints: $rootScope.loyaltyPoints,
+            settings: WidgetHome.data.settings
           });
           if(index!=-1){
             buildfire.messaging.sendMessageToControl({
@@ -140,20 +143,20 @@
                 ],
               },
             },
-            "userLoyaltyPoints1",
+            "userLoyaltyPoints",
             (err, res) => {
               if (err) return console.error("there was a problem retrieving your data");
               if(res && res.length > 0){
                 buildfire.appData.update(
                   res[0].id, // Replace this with your object id
                   { userId: userId, totalPoints: totalPoints },
-                  "userLoyaltyPoints1",
+                  "userLoyaltyPoints",
                   () => {}
                 );
               } else {
                 buildfire.appData.insert(
                   { userId: userId , totalPoints: totalPoints },
-                  "userLoyaltyPoints1",
+                  "userLoyaltyPoints",
                   false,
                   () => {}
                 );
@@ -262,30 +265,34 @@
                 loyaltyRewards: WidgetHome.loyaltyRewards
               });
             } else if(settings.purchaseOption && settings.purchaseOption.value === 'scoreFromFreeTextQuestionnaire') {
-              buildfire.datastore.get("Features",function (err, result) {
-                if(result && result.data && result.data.length > 0){
-                  let items = [];
-                  result.data.forEach(element => {
-                    items.push({
-                      text: element.title,
-                      instanceId: element.instanceId,
-                      iconUrl: element.iconUrl
-                    })
-                  });
-                  buildfire.components.drawer.open(
-                    {
-                      listItems: items
-                    },
-                    (err, result) => {
-                      if (err) return console.error(err);
-                      buildfire.components.drawer.closeDrawer();
-                      buildfire.navigation.navigateTo({
-                        instanceId: result.instanceId,
-                      });
-                    }
-                  );
+                if(features.length > 0){
+                  if(features.length == 1){
+                    buildfire.navigation.navigateTo({
+                      instanceId: features[0].instanceId,
+                    });
+                  } else {
+                    let items = [];
+                    features.forEach(element => {
+                      items.push({
+                        text: element.title,
+                        instanceId: element.instanceId,
+                        iconUrl: element.iconUrl
+                      })
+                    });
+                    buildfire.components.drawer.open(
+                      {
+                        listItems: items
+                      },
+                      (err, result) => {
+                        if (err) return console.error(err);
+                        buildfire.components.drawer.closeDrawer();
+                        buildfire.navigation.navigateTo({
+                          instanceId: result.instanceId,
+                        });
+                      }
+                    );
+                  }
                 }
-              })
           
             } 
             else {
@@ -441,45 +448,71 @@
             }
           })
         }
+
+        var getFTQPointsIfAnyAndUpdate = function(){
+          buildfire.datastore.get("Features",function (err, result) {
+            if(result && result.data && result.data.length > 0){
+              features = result.data;
+              result.data.forEach(element => {
+                buildfire.appData.search({
+                  filter: { "$json.user._id": {$eq: WidgetHome.currentLoggedInUser._id} },
+                  sort:   {"finishedDateTime": -1},
+                  skip:   0,
+                  limit:  1
+                },
+                "freeTextQuestionnaireSubmissions_" + element.instanceId,
+                (err, res) => { 
+                  if(res && res.length > 0 && !res[0].data.isEarnedPoints){
+                    let selectedFTQ = res[0].data;
+                    selectedFTQ.isEarnedPoints = true;
+                    buildfire.appData.update(
+                      res[0].id, // Replace this with your object id
+                      selectedFTQ,
+                      "freeTextQuestionnaireSubmissions_" + element.instanceId,
+                      (err, result) => {
+                        if (err) return console.error("Error while inserting your data", err);
+                        let score = 0 
+                        selectedFTQ.answers.forEach(answer => {
+                          score += answer.score
+                        });
+                        if(WidgetHome.data && WidgetHome.data.settings && WidgetHome.data.settings.approvalType &&
+                          WidgetHome.data.settings.approvalType == "ON_SITE_VIA_PASSCODE"){
+                            ViewStack.push({
+                              template: 'Code',
+                              amount: score,
+                              type: 'buyPoints',
+                              title: element.title,
+                              iconUrl:  element.iconUrl
+                            });
+                        } else {
+                          Transactions.requestPoints("", score, $rootScope.loyaltyPoints, WidgetHome.currentLoggedInUser, element.title, element.iconUrl);
+                          buildfire.notifications.pushNotification.schedule(
+                          {
+                            title: "Points Approval Request",
+                            text: WidgetHome.currentLoggedInUser.displayName + " requests " + score + " points earned from "  + element.title,
+                            groupName: "employerGroup"
+                          , at: new Date()
+                          },
+                          () => {})
+                          if($rootScope.PointsWaitingForApproval){
+                            $rootScope.PointsWaitingForApproval += parseInt(score);
+                          } else {
+                            $rootScope.PointsWaitingForApproval = parseInt(score);
+                          }
+                          $rootScope.$digest();
+                        }
+                      }
+                    );
+                  }
+                })
+              });
+            }
+          })
+        }
+
         var init = function () {
           var success = function (result) {
-              let data = new URLSearchParams(window.location.search).get('data');
-              if(data && data != null){
-                let instanceId = JSON.parse(data).instanceId
-                if(instanceId){
-                  buildfire.appData.search({
-                    filter: { "_buildfire.index.string1": WidgetHome.currentLoggedInUser._id },
-                    sort:   {"_buildfire.index.date1": -1},
-                    skip:   0,
-                    limit:  1
-                  },
-                  "freeTextQuestionnaireSubmissions_" +instanceId,
-                   (err, res) => {
-                      if(res && res.length > 0){
-                        buildfire.pluginInstance.get(instanceId, function(error, instance){
-                          if (error) {
-                              console.error(error);
-                          } else if (instance) {
-                              let score = res[0].data.maxScore;
-                              Transactions.requestPoints("", score, $rootScope.loyaltyPoints, WidgetHome.currentLoggedInUser, instance.title, instance.iconUrl);
-                              $rootScope.PointsWaitingForApproval += parseInt(score);
-                              buildfire.notifications.pushNotification.schedule(
-                                {
-                                  title: "Points Approval Request",
-                                  text: WidgetHome.currentLoggedInUser.displayName + " requests " + score + " points earned from "  + instance.title,
-                                  groupName: "employerGroup"
-                                , at: new Date()
-                                },
-                                (err, result) => {
-                                  if (err) return console.error(err);
-                                })
-                          }
-                      });
-                      }
-                   })
-                }
-              }
-
+             
                 if(result && result.data){
                   console.log('BUILDFIRE GET--------------------------LOYALTY---------RESULT',result);
                   WidgetHome.data = result.data;
@@ -491,6 +524,7 @@
                     }
                   };
                 }
+                getFTQPointsIfAnyAndUpdate();
               if (!WidgetHome.data.design)
                 WidgetHome.data.design = {};
               if (!WidgetHome.data.settings)
@@ -563,12 +597,8 @@
                 }
               );
             }
-            console.log("_______________________", user);
-           // if (user) {
               WidgetHome.currentLoggedInUser = null;
-             // WidgetHome.getLoyaltyPoints(user._id);
               $scope.$digest();
-           // }
           });
         };
 
@@ -653,6 +683,19 @@
                     $rootScope.itemDetailsBackgroundImage = WidgetHome.data.design.itemDetailsBackgroundImage;
                   }
                   break;
+
+                case "Introduction":
+                    if(event.data.images){
+                      WidgetHome.carouselImages = event.data.images;
+                    } else {
+                      WidgetHome.carouselImages = [];
+                    }
+                    WidgetHome.description = event.data.description;
+                  break;
+
+               case "Features":
+                console.log(event)
+                  features = event.data;
               }
               $scope.$digest();
               $rootScope.$digest();
@@ -676,13 +719,11 @@
          */
         var getLoggedInUser = function(){
           buildfire.auth.getCurrentUser(function (err, user) {
-          console.log("_______________________", user);
           if (user) {
             WidgetHome.currentLoggedInUser = user;
             checkIfEmployerOrUser();
             if (!WidgetHome.context) {
               Context.getContext(function (ctx) {
-                console.log('Context     ==============================================================',ctx);
                 WidgetHome.context = ctx;
                 WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
                 $scope.$digest();

@@ -73,7 +73,11 @@
                 <td><button class="link-button details-button" ng-click="ResultsHome.goToDetails(transaction)">{{transaction.createdBy.displayName}}</button></td>
                 <td>{{ResultsHome.typesMapping[transaction.type]}}</td>
                 <td ng-switch="transaction.type">
-                    <span ng-switch-when="earnPoints">{{transaction.item.title | limitTo: 20 }}{{ transaction.item.title.length > 20 ? '...' : '' }}</span>
+                    <span ng-switch-when="earnPoints">
+                        <span ng-if="transaction.item">  {{transaction.item.title | limitTo: 20 }}{{ transaction.item.title.length > 20 ? '...' : '' }}</span>
+                        <span ng-if="transaction.items">{{transaction.items.length == 1 ? transaction.items[0].title : transaction.items.length + " items"}}</span>
+                      
+                    </span>
                     <span ng-switch-when="redeemReward"></span>
                 </td>
                 <td ng-switch="transaction.type">

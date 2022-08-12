@@ -29,8 +29,8 @@
           <span>{{WidgetHome.strings["general.currentlyHave"]}} </span><span
                 class="text-primary">{{loyaltyPoints | number : 2}}</span> <span style="text-transform: lowercase;">{{WidgetHome.strings["general.points"]}}</span>.
         </p>
-        <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id && PointsWaitingForApproval > 9">
-          <span class="text-primary">{{PointsWaitingForApproval}}</span> <span style="text-transform: lowercase;">points waiting for approval</span>.
+        <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id && PointsWaitingForApproval > 0">
+          <span class="text-primary">{{PointsWaitingForApproval | number : 2}}</span> <span style="text-transform: lowercase;">points waiting for approval</span>.
         </p>
         <a class="btn btn-primary padding-left-twenty padding-right-twenty"
            href="javascript:void(0);"
@@ -79,10 +79,23 @@
   buildfire.appearance.getAppTheme((err, appTheme) => {
        if (err) return console.error(err);
        let icons = document.querySelectorAll(".icon");
-       icons.forEach(el => {
+       let textPrimaries = document.querySelectorAll(".text-primary")
+       let btnPrimaries = document.querySelectorAll(".btn-primary")
+       let bgPrimaries = document.querySelectorAll(".bg-primary")
+
+
+      icons.forEach(el => {
         el.style.color = appTheme.colors.icons
-        })
-       
-       
+      })
+      textPrimaries.forEach(el => {
+        el.style.color = appTheme.colors.primaryTheme 
+      })
+      btnPrimaries.forEach(el => {
+        el.style.backgroundColor = appTheme.colors.primaryTheme
+      })
+      bgPrimaries.forEach(el => {
+        el.style.backgroundColor = appTheme.colors.primaryTheme
+      })
+      
      });
 </script>

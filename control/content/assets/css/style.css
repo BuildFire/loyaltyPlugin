@@ -114,10 +114,11 @@ i {
 	width:85px;
 	height:35px;
 	padding-top: 7px;
-	margin-right: 16px
 }
 .cancel-btn:hover {
-	color: white;
+	color: black;
+	background-color: rgb(239, 239, 239);
+	transition: 0.5ms;
 }
 
 #listImage > div > div.main.col-md-9.pull-right > div > div > a {
@@ -134,6 +135,7 @@ i {
 
  }
  .add-item-a, .add-item-a:hover {
+	font-family: 'Conv_apercu_regular';
 	color: white;
  }
 .icon-edit{

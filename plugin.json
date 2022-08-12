@@ -10,17 +10,19 @@
   "content":{
     "enabled":true
   }
+  , "customTabs": [
+    { "title": "Introduction", "url": "/introduction/index.html" },
+    { "title": "Points/Redeems", "url": "/results/index.html" },
+    { "title": "Tests", "url": "/tests/index.html" },
+    { "title": "Language", "url": "/strings/index.html" }
+  ]
 , "design":{
     "enabled":true
   }
 , "settings":{
     "enabled":true
   }
-  , "customTabs": [
-    { "title": "Results", "url": "/results/index.html" },
-    { "title": "Tests", "url": "/tests/index.html" },
-    { "title": "Language", "url": "/strings/index.html" }
-  ]
+  
 }
 ,"widget":{
 
