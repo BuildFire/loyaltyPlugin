@@ -77,7 +77,7 @@
         };
 
         /* list image add <start>*/
-        ContentReward.listImage = new Buildfire.components.images.thumbnail("#listImage", {title: "List Image", dimensionsLabel : "Recommended: 1200 x 1200px"});
+        ContentReward.listImage = new Buildfire.components.images.thumbnail("#listImage", {title: "List Image*", dimensionsLabel : "Recommended: 1200 x 1200px"});
         ContentReward.listImage.onChange = function (url) {
           ContentReward.item.listImage = url;
           if (!$scope.$$phase && !$scope.$root.$$phase) {

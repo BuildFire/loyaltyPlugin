@@ -37,8 +37,8 @@
 			<span class="tip btn-info-icon btn-primary"><span class="cp-tooltip">If this field is  blank, then “Points per Item” cannot be blank. If this field has a value greater than zero, then this item will show up as a reward to redeem on the Loyalty feature’s main screen</span>
 		</div>
 		<div class="main col-md-9 pull-right">
-			<input ng-if="ContentReward.item.pointsToRedeem != '38762499627'" type="text" class="form-control"  ng-model = "ContentReward.item.pointsToRedeem">
-			<input ng-if="ContentReward.loading && ContentReward.item.pointsToRedeem == '38762499627'" type="text" class="form-control" >
+			<input ng-if="ContentReward.item.pointsToRedeem != '38762499627'" type="number" class="form-control"  ng-model = "ContentReward.item.pointsToRedeem">
+			<input ng-if="ContentReward.loading && ContentReward.item.pointsToRedeem == '38762499627'" type="number" class="form-control" >
 		</div>
 	</div>
 	<hr class="none">
@@ -48,7 +48,7 @@
 			<span class="tip btn-info-icon btn-primary"><span class="cp-tooltip second-tooltip">If this field is  blank, then “Points to Redeem” cannot be blank. This item will be treated as an item that can earn users points if all of the following criteria are met: (i) on the settings tab, “Set How Users Get Points” is set to “Per Products Purchased” and (ii) “Points per Item” is set to a value greater than zero.</span>
 		</div>
 		<div class="main col-md-9 pull-right">
-			<input type="text" class="form-control"  ng-model = "ContentReward.item.pointsPerItem">
+			<input type="number" class="form-control"  ng-model = "ContentReward.item.pointsPerItem">
 		</div>
 	</div>
 	<div class="item clearfix row" ng-if="ContentReward.validations.points">
@@ -73,7 +73,7 @@
 		<div class="main col-md-9 pull-right" style="margin-right: 1px; margin-top: 5px;">
 			<div class="col-md-6 pull-right padding-right-zero padding-left-ten">
 				<a class="btn btn-success pull-right btn-save"
-						ng-disabled="ContentReward.loading"
+						ng-disabled="ContentReward.loading || ContentReward.item.listImage == ''|| ContentReward.item.pointsPerItem=='' || ContentReward.item.pointsToRedeem=='' || ContentReward.item.title == ''"
 						ng-click="ContentReward.addingReward()">
 					Save
 				</a>
