@@ -118,7 +118,7 @@
             if(item.quantity && item.quantity > 0)
               calculatedPoints += item.pointsPerItem * item.quantity;
           });
-          var amount = calculatedPoints / WidgetBuyItems.application.pointsPerDollar;
+          var amount = calculatedPoints;
           calculatedPoints +=  WidgetBuyItems.application.pointsPerVisit + currentView.loyaltyPoints;
           if (WidgetBuyItems.application.totalLimit <= calculatedPoints) {
             WidgetBuyItems.totalLimitExceeded = true;

@@ -128,7 +128,6 @@
                               type: "primary",
                               action: () => {
                                 console.log(" ")
-                                  buildfire.history.pop();
                                   ViewStack.push({
                                     template: 'Rewards'
                                   });
@@ -271,7 +270,8 @@
         });
 
         WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
-          if (ViewStack.getCurrentView().template == 'Item') {
+          if (ViewStack.getCurrentView().template == 'Item' || ViewStack.getCurrentView().template == 'Item_Details') {
+            $scope.$destroy();
             buildfire.datastore.onRefresh(function () {});
           }
         });

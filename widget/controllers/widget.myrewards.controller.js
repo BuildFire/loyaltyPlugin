@@ -14,8 +14,8 @@
         WidgetRewards.isUpcomingRewardsEmpty = true;
 
         WidgetRewards.currentUser = null;
-        
 
+        
         var page = 0;
         var breadCrumbFlag = true;
         buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
@@ -127,8 +127,11 @@
                     let imageUrl = null;
                     let item = null;
                     if(element.data.items && element.data.items.length > 0){
-                        imageUrl = element.data.items[0].listImage
-                        element.data.items.forEach((el, index) =>  title += el.title + (index == element.data.items.length ? " " : ", ") )
+                        imageUrl = element.data.items[0].listImage;
+                        var itemsTitle = element.data.items.map(function (result){
+                          return result.title
+                        });
+                        title = itemsTitle.join(",")
                     } else if (element.data.item != null){
                         if(element.data.purchaseAmount && element.data.purchaseAmount != "" ){
                           element.data.item.earnPoint = element.data.purchaseAmount + "$ • " + element.data.pointsEarned
@@ -196,7 +199,7 @@
         }
 
           WidgetRewards.listeners['POP'] = $rootScope.$on('BEFORE_POP', function (e, view) {
-        if (!view || view.template === "items_purchased") {
+        if (!view || view.template === "Item_Details") {
             $scope.$destroy();
         }
         });
@@ -224,7 +227,7 @@
             buildfire.datastore.onRefresh(function () {});
           }
           if (ViewStack.getCurrentView().template == "Item_Details") {
-            WidgetRewards.refresh();
+            ViewStack.pop()
           }
         });
       }]);

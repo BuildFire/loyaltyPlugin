@@ -473,7 +473,7 @@
                         if (err) return console.error("Error while inserting your data", err);
                         let score = 0 
                         selectedFTQ.answers.forEach(answer => {
-                          score += answer.score
+                          score += answer.score ? answer.score : 0
                         });
                         if(WidgetHome.data && WidgetHome.data.settings && WidgetHome.data.settings.approvalType &&
                           WidgetHome.data.settings.approvalType == "ON_SITE_VIA_PASSCODE"){

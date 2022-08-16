@@ -98,13 +98,14 @@
 
 
 <hr class="none">
-<div class="item clearfix row">
+<div class="item clearfix row" ng-if="SettingsHome.data.settings.purchaseOption.value != 'scoreFromFreeTextQuestionnaire'">
   <div class="labels col-xs-3 pull-left">
     <span>Staff Confirmation Passcode</span>
   </div>
   <div class="main col-xs-9 pull-right">
     <input type="text" class="form-control"
            ng-model="SettingsHome.data.settings.redemptionPasscode" maxlength="5">
+           <p ng-if="SettingsHome.redemptionCodeError" class="text-warning margin-top-five">Staff Confirmation Passcode must consist of 5 characters</p>
   </div>
 </div>
 

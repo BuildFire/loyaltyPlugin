@@ -8,6 +8,7 @@
                 SettingsHome.data = null;
                 SettingsHome.ftqFeatureItems = [];
                 SettingsHome.tags = [];
+                SettingsHome.redemptionCodeError = false;
                 SettingsHome.currency=[{
                     name:"USD, AUD, NZD, CAD, Peso, Real, etc. ",
                     symbol: '&#36;'
@@ -247,16 +248,20 @@
                 };
 
                 var addEditApplication = function(newObj) {
+                    let isPurchaseOptionFtqSelected = false;
+                    if(newObj.settings.purchaseOption && newObj.settings.purchaseOption.value == "scoreFromFreeTextQuestionnaire"){
+                        isPurchaseOptionFtqSelected = true;
+                    }
                     var _data = {
-                        redemptionPasscode: newObj.settings.redemptionPasscode ? newObj.settings.redemptionPasscode : '12345',
+                        redemptionPasscode: isPurchaseOptionFtqSelected ? "12345" : (newObj.settings.redemptionPasscode ? newObj.settings.redemptionPasscode : '12345'),
                         unqiueId: SettingsHome.context.instanceId,
                         externalAppId: SettingsHome.context.appId,
                         appId: SettingsHome.context.appId,
                         name: SettingsHome.context.pluginId,
-                        pointsPerVisit: newObj.settings.pointsPerVisit ? newObj.settings.pointsPerVisit : 1,
-                        pointsPerDollar: newObj.settings.pointsPerDollar ? newObj.settings.pointsPerDollar : 1,
-                        totalLimit: newObj.settings.totalLimit ? newObj.settings.totalLimit :5000,
-                        dailyLimit: newObj.settings.dailyLimit ? newObj.settings.dailyLimit :1000,
+                        pointsPerVisit: isPurchaseOptionFtqSelected ? 0 :  (newObj.settings.pointsPerVisit ? newObj.settings.pointsPerVisit : 1),
+                        pointsPerDollar: isPurchaseOptionFtqSelected ? 0 : (newObj.settings.pointsPerDollar ? newObj.settings.pointsPerDollar : 1),
+                        totalLimit: isPurchaseOptionFtqSelected ? 50000 : (newObj.settings.totalLimit ? newObj.settings.totalLimit :5000),
+                        dailyLimit: isPurchaseOptionFtqSelected ? 10000 :  (newObj.settings.dailyLimit ? newObj.settings.dailyLimit :1000),
                         settings: newObj.settings.purchaseOption ? newObj.settings.purchaseOption : {
                           purchaseOption: {
                             name: "Per Money Spent",
@@ -298,9 +303,16 @@
                         if (tmrDelay) {
                             clearTimeout(tmrDelay);
                         }
-                        tmrDelay = setTimeout(function () {
-                            SettingsHome.saveData(JSON.parse(angular.toJson(newObj)), TAG_NAMES.LOYALTY_INFO);
-                        }, 500);
+                        if((!newObj.settings.purchaseOption || newObj.settings.purchaseOption.value != "scoreFromFreeTextQuestionnaire" )
+                            && newObj.settings.redemptionPasscode && newObj.settings.redemptionPasscode.length != 5 ){
+                                SettingsHome.redemptionCodeError = true
+                        } else {
+                                SettingsHome.redemptionCodeError = false
+                                tmrDelay = setTimeout(function () {
+                                    SettingsHome.saveData(JSON.parse(angular.toJson(newObj)), TAG_NAMES.LOYALTY_INFO);
+                                }, 500);
+                        }
+                        
                     }
                 };
                 $scope.$watch(function () {
