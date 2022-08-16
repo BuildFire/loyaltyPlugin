@@ -553,6 +553,7 @@
           var successPoints = function (result) {
             if(result){
               $rootScope.PointsWaitingForApproval = result;
+              $scope.$digest();
             }
           }
           if(WidgetHome.currentLoggedInUser){

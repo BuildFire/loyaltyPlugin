@@ -9,6 +9,7 @@
                 SettingsHome.ftqFeatureItems = [];
                 SettingsHome.tags = [];
                 SettingsHome.redemptionCodeError = false;
+                SettingsHome.showRedemptionCode = true;
                 SettingsHome.currency=[{
                     name:"USD, AUD, NZD, CAD, Peso, Real, etc. ",
                     symbol: '&#36;'
@@ -171,6 +172,12 @@
                                             approvalType : "ON_SITE_VIA_PASSCODE"
                                         }
                                     }
+
+                                    if(SettingsHome.data && SettingsHome.data.settings && SettingsHome.data.settings.approvalType
+                                        && SettingsHome.data.settings.approvalType == "REMOVE_VIA_APP" && SettingsHome.data.settings.purchaseOption 
+                                        && SettingsHome.data.settings.purchaseOption.value == "scoreFromFreeTextQuestionnaire"){
+                                            SettingsHome.showRedemptionCode = false;
+                                        }
                                     buildfire.datastore.get("Tags", function (err, result) {
                                         if (err || !result) {
                                             console.error("Error saving the widget details: ", err);
@@ -248,10 +255,20 @@
                 };
 
                 var addEditApplication = function(newObj) {
+                    console.log(newObj)
                     let isPurchaseOptionFtqSelected = false;
-                    if(newObj.settings.purchaseOption && newObj.settings.purchaseOption.value == "scoreFromFreeTextQuestionnaire"){
+                    if(newObj.settings.purchaseOption && newObj.settings.purchaseOption.value == "scoreFromFreeTextQuestionnaire" 
+                        && newObj.settings.approvalType && newObj.settings.approvalType == "REMOVE_VIA_APP"){
                         isPurchaseOptionFtqSelected = true;
                     }
+                    if(newObj.settings && newObj.settings.approvalType
+                        && newObj.settings.approvalType == "REMOVE_VIA_APP" && newObj.settings.purchaseOption 
+                        && newObj.settings.purchaseOption.value == "scoreFromFreeTextQuestionnaire"){
+                            SettingsHome.showRedemptionCode = false;
+                        } else {
+                            SettingsHome.showRedemptionCode = true;
+
+                        }
                     var _data = {
                         redemptionPasscode: isPurchaseOptionFtqSelected ? "12345" : (newObj.settings.redemptionPasscode ? newObj.settings.redemptionPasscode : '12345'),
                         unqiueId: SettingsHome.context.instanceId,
@@ -303,15 +320,24 @@
                         if (tmrDelay) {
                             clearTimeout(tmrDelay);
                         }
-                        if((!newObj.settings.purchaseOption || newObj.settings.purchaseOption.value != "scoreFromFreeTextQuestionnaire" )
-                            && newObj.settings.redemptionPasscode && newObj.settings.redemptionPasscode.length != 5 ){
+                        if(newObj.settings.purchaseOption && newObj.settings.purchaseOption.value == "scoreFromFreeTextQuestionnaire" 
+                        && newObj.settings.approvalType && newObj.settings.approvalType == "REMOVE_VIA_APP"){
+                            newObj.settings.redemptionPasscode =   "12345" 
+                            newObj.settings.pointsPerVisit = 0 
+                            newObj.settings.pointsPerDollar = 0 
+                            newObj.settings.totalLimit = 50000 
+                            newObj.settings.dailyLimit = 10000 
+                        }
+
+                        if(newObj.settings.redemptionPasscode && newObj.settings.redemptionPasscode.length != 5 ){
                                 SettingsHome.redemptionCodeError = true
                         } else {
                                 SettingsHome.redemptionCodeError = false
-                                tmrDelay = setTimeout(function () {
-                                    SettingsHome.saveData(JSON.parse(angular.toJson(newObj)), TAG_NAMES.LOYALTY_INFO);
-                                }, 500);
+                             
                         }
+                        tmrDelay = setTimeout(function () {
+                            SettingsHome.saveData(JSON.parse(angular.toJson(newObj)), TAG_NAMES.LOYALTY_INFO);
+                        }, 500);
                         
                     }
                 };

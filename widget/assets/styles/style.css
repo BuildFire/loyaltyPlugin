@@ -198,7 +198,7 @@
 	margin-top: 0px;
 }
 .description{
-	padding: 0 16px;
+	padding: 16px 16px;
 }
 .description:empty,
 .description:empty p{
@@ -489,7 +489,7 @@ input[type="password"].form-control::placeholder{
     align-items: center;
 	flex-direction: column;
     justify-content: center;
-    height: 80%;
+    height: 100%;
 }
 
 /* Admin -- Approval Request */
