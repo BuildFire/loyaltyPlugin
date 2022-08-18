@@ -41,6 +41,15 @@
         ContentReward.editor.onAddItems = function (items) {
           if (!ContentReward.item.carouselImage)
             ContentReward.item.carouselImage = [];
+          items.forEach(img => {
+            img.url = buildfire.imageLib.cropImage(
+              img.url, {
+                size: "full_width",
+                aspect: "16:9"
+              }
+            );
+          });
+
           ContentReward.item.carouselImage.push.apply(ContentReward.item.carouselImage, items);
           changeCarouselActionItemDesign();
           $scope.$digest();

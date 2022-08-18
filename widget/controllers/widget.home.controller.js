@@ -146,16 +146,19 @@
             "userLoyaltyPoints",
             (err, res) => {
               if (err) return console.error("there was a problem retrieving your data");
+              let data = {
+                userId: userId, totalPoints: totalPoints
+              }
               if(res && res.length > 0){
                 buildfire.appData.update(
                   res[0].id, // Replace this with your object id
-                  { userId: userId, totalPoints: totalPoints },
+                  data,
                   "userLoyaltyPoints",
                   () => {}
                 );
               } else {
                 buildfire.appData.insert(
-                  { userId: userId , totalPoints: totalPoints },
+                  data,
                   "userLoyaltyPoints",
                   false,
                   () => {}
@@ -322,6 +325,8 @@
         WidgetHome.listeners['POINTS_REDEEMED'] = $rootScope.$on('POINTS_REDEEMED', function (e, points) {
           if (points)
             $rootScope.loyaltyPoints = $rootScope.loyaltyPoints - points;
+            saveLoyaltyPointsInAppData(WidgetHome.currentLoggedInUser._id, $rootScope.loyaltyPoints)
+
         });
 
         /**
@@ -330,6 +335,7 @@
         WidgetHome.listeners['POINTS_ADDED'] = $rootScope.$on('POINTS_ADDED', function (e, points) {
           if (points)
             $rootScope.loyaltyPoints = $rootScope.loyaltyPoints + points;
+            saveLoyaltyPointsInAppData(WidgetHome.currentLoggedInUser._id, $rootScope.loyaltyPoints)
         });
 
         WidgetHome.listeners['POINTS_WAITING_APPROVAL_ADDED'] = $rootScope.$on('POINTS_WAITING_APPROVAL_ADDED', function (e, points) {

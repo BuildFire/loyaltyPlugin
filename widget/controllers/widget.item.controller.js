@@ -233,6 +233,13 @@
             }
           }
 
+          if(item && item.listImage){
+            WidgetItem.reward.listImage = item.listImage;
+          } else {
+            WidgetItem.reward.listImage = null;
+
+          }
+
           if (item && item.title) {
             WidgetItem.reward.title = item.title;
           }
