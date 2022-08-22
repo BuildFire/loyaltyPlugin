@@ -219,12 +219,12 @@
                 restrict: 'A',
                 link: function (scope, element, attrs) {
                     element.attr("src", "../../../styles/media/holder-" + attrs.loadImage + ".gif");
-
+                    
                     var _img = attrs.finalSrc;
 
                     let croppedImage = buildfire.imageLib.cropImage(
                       _img,
-                      { size: "full_width", aspect: "16:9" }
+                      { size: "full_width", aspect: attrs.loadImage }
                     );
                     replaceImg(croppedImage);
 
