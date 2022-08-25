@@ -41,7 +41,17 @@
         ContentReward.editor.onAddItems = function (items) {
           if (!ContentReward.item.carouselImage)
             ContentReward.item.carouselImage = [];
+          items.forEach(img => {
+            img.url = buildfire.imageLib.cropImage(
+              img.url, {
+                size: "full_width",
+                aspect: "16:9"
+              }
+            );
+          });
+
           ContentReward.item.carouselImage.push.apply(ContentReward.item.carouselImage, items);
+          changeCarouselActionItemDesign();
           $scope.$digest();
         };
         // this method will be called when an item deleted from the list
@@ -76,7 +86,7 @@
         };
 
         /* list image add <start>*/
-        ContentReward.listImage = new Buildfire.components.images.thumbnail("#listImage", {title: "List Image", dimensionsLabel : " "});
+        ContentReward.listImage = new Buildfire.components.images.thumbnail("#listImage", {title: "List Image*", dimensionsLabel : "Recommended: 1200 x 1200px"});
         ContentReward.listImage.onChange = function (url) {
           ContentReward.item.listImage = url;
           if (!$scope.$$phase && !$scope.$root.$$phase) {
@@ -90,6 +100,20 @@
             $scope.$apply();
           }
         };
+
+        function changeCarouselActionItemDesign(){
+          Array.from(document.querySelectorAll(".btn-icon.btn-delete-icon")).forEach(
+            (el) => {
+            el.classList.remove("btn-icon", "btn-delete-icon", "btn-danger");
+            el.classList.add("icon", "icon-cross2");
+            }
+          );
+          Array.from(document.querySelectorAll(".text-primary.text")).forEach(
+            (el) => {
+              el.style.marginRight = "32px"
+            }
+          );
+        }
 
         /* list image add <end>*/
 
@@ -249,7 +273,6 @@
         }
 
 
-        console.log(">>>>>>>>>>><<<<<<<<<<", RewardCache.getReward());
 
         /*Go back to home on done button click*/
         ContentReward.gotToHome = function () {
@@ -270,7 +293,6 @@
             ContentReward.item.pointsToRedeem = '';
           }
           ContentReward.item.deepLinkUrl = Buildfire.deeplink.createLink({id: ContentReward.item._id});
-          console.log("aaaaaaaaaaaaaaaaaaaaaa", ContentReward.item);
           ContentReward.listImage.loadbackground(ContentReward.item.listImage);
           /* ContentReward.BackgroundImage.loadbackground(ContentReward.item.BackgroundImage);  */  //enable it when you want to show add background on reward add
           ContentReward.isInserted = true;
@@ -282,10 +304,14 @@
               data: ContentReward.item
             });
           }
-          if (!ContentReward.item.carouselImage)
+          if (!ContentReward.item.carouselImage){
             ContentReward.editor.loadItems([]);
+            changeCarouselActionItemDesign()
+          }
+            
           else
             ContentReward.editor.loadItems(ContentReward.item.carouselImage);
+            changeCarouselActionItemDesign()
         }
 
         /*Save the data on .5 sec delay*/

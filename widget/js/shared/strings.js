@@ -11,11 +11,22 @@ buildfire.services.Strings = class{
 		let obj={};
 		for(let sectionKey in stringsConfig) {
 			let section = obj[sectionKey]={};
-			for (let labelKey in stringsConfig[sectionKey].labels) {
-				section[labelKey]={
-					defaultValue : stringsConfig[sectionKey].labels[labelKey].defaultValue
-					,required : stringsConfig[sectionKey].labels[labelKey].required
-				};
+			if(stringsConfig[sectionKey].labels.length &&  stringsConfig[sectionKey].labels.length){
+				for (let labelKey in stringsConfig[sectionKey].labels) {
+					for(let subLabelKey in stringsConfig[sectionKey].labels[labelKey].subLabels){
+						section[labelKey]={
+							defaultValue : stringsConfig[sectionKey].labels[labelKey].subLabels[subLabelKey].defaultValue
+							,required : stringsConfig[sectionKey].labels[labelKey].subLabels[subLabelKey].required
+						};
+					}
+				}
+			} else {
+				for (let labelKey in stringsConfig[sectionKey].labels) {
+					section[labelKey]={
+						defaultValue : stringsConfig[sectionKey].labels[labelKey].defaultValue
+						,required : stringsConfig[sectionKey].labels[labelKey].required
+					};
+				}
 			}
 		}
 		this._data=obj;

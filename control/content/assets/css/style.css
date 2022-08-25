@@ -91,3 +91,99 @@ i {
 	top: 50%;
 	bottom: 50%;
 }
+
+.add-new-carousel {
+	float: right !important;
+}
+
+.add-reward-page {
+	margin: 0 30px;
+}
+.save-btn {
+	width:85px;
+	height:35px;
+	padding-top: 7px;
+	margin-right: 30px;
+	border-radius: 4px;
+}
+
+.cancel-btn {
+	color: black;
+	border: 1px solid #7676764D;
+	border-radius: 4px;
+	width:85px;
+	height:35px;
+	padding-top: 7px;
+}
+.cancel-btn:hover {
+	color: black;
+	background-color: rgb(239, 239, 239);
+	transition: 0.5ms;
+}
+
+#listImage > div > div.main.col-md-9.pull-right > div > div > a {
+	width: 6rem;
+	height: 6rem;
+	max-width: 6rem;
+  }
+ .secondary {
+	text-align: left;
+	color: #AFAFAF !important;
+ }
+ #listImage > div > div.main.col-md-9.pull-right > div > div > a > span {
+	margin-top: -10px;
+
+ }
+ .add-item-a, .add-item-a:hover {
+	font-family: 'Conv_apercu_regular';
+	color: white;
+ }
+.icon-edit{
+	margin-right: 10px;
+}
+
+.icon-edit, .icon-remove {
+  font-size: 20px;
+}
+
+ .icon-edit:hover {
+	cursor: pointer;
+	color: var(--c-primary);
+ }
+ .icon-remove:hover {
+	cursor: pointer;
+	color: var(--c-danger);
+ }
+
+ #listImage > div > div.main.col-md-9.pull-right > div > div > a > img {
+	margin-top: -20px;
+	width: 100%;
+ }
+
+ #listImage > div > div.main.col-md-9.pull-right > div > div > span {
+	right: 0;
+ }
+
+ .font-size-12 {
+	font-size: 12px;
+ }
+
+ .padding-100 {
+	padding:100px
+ }
+
+ .black-color {
+	color: black;
+ }
+
+ .gray-color {
+	color:#5F5F5F
+ }
+
+ .action-items {
+	width:100%; 
+	position:fixed; 
+	background-color:white; 
+	bottom:0px; 
+	z-index:1;
+ }

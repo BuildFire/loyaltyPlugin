@@ -3,11 +3,15 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'Context', '$window',
-      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, Context, $window) {
+    .controller('WidgetHomeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'Context', '$window', 'Transactions',
+      function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, Context, $window, Transactions) {
         var WidgetHome = this;
         WidgetHome.deepLinkingDone = false;
-
+        WidgetHome.isEmployer = false;
+        WidgetHome.isClient = false;
+        WidgetHome.approvalRequestsTab = 0
+        WidgetHome.tags = null;
+        
         WidgetHome.strings = {
           "general.loginOrRegister": "Login or register",
           "general.toGetPoints": "to get points",
@@ -18,10 +22,17 @@
           "general.done": "Done",
           "general.confirm": "Confirm",
           "general.cancel": "Cancel",
-          "redeem.insufficientFunds": 'You have insufficient points.Please get points to redeem awards.',
-          "redeem.importantNote": "Important: By clicking confirm, you are confirming that the reward has been received and the corresponding points will, therefore, be deducted from the user's account.",
-          "redeem.errorRedeem": 'Error redeeming reward. Please try again later.',
+          "general.next": "Next",
+          "redeem.confirmRedemptionModalTitle": 'Redeem Item',
+          "redeem.confirmRedemptionModalImportantNote": "By clicking redeem, you are confirming that the reward has been received and the coresponding points will, therefore, be deducted from your account.",
+          "redeem.confirmRedemptionModalCancel": 'CANCEL',
+          "redeem.confirmRedemptionModalConfirm": "REDEEM",
+          "redeem.itemRedeemedModalTitle": "Item Redeemed",
+          "redeem.itemRedeemedBody": "Rewards can take up to 24 hours to process. You can check the status of your reward by tapping on rewards icon in the upper right corner on the home screen.",
+          "redeem.closeitemRedeemedAction": "Thanks",
+          "redeem.errorRedeem": "Error redeeming reward. Please try again later.",
           "redeem.redeemDailyLimit": "You have exceeded the daily limit.",
+          "redeem.insufficientFunds": "You have insufficient points. Please get points to redeem awards.",
           "redeem.handDevice": "Please hand your device to a staff member for confirmation",
           "redeem.invalidCode": "Invalid confirmation code.",
           "redeem.enterCode": "Enter Code",
@@ -32,9 +43,17 @@
           "awarded.awesome": "Awesome",
           "awarded.justEarned": "You just earned yourself",
           "awarded.checkList": "Check out our list of rewards to redeem.",
+          "awarded.totalPoints": "Total Points",
           "amount.enterAmount": "Enter the Purchase Amount",
-          "deeplink.deeplinkRewardNotFound":"Reward does not exist!"
+          "deeplink.deeplinkRewardNotFound":"Reward does not exist!",
+          "staffApproval.approve":"Approve",
+          "staffApproval.deny":"deny",
+          "staffApproval.handDevice":"Please hand your device to a staff member for confirmation",
+          "staffApproval.invalidCode":"Invalid confirmation code.",
+          "staffApproval.enterCode":"Enter Code",
+
         }
+        var features = []
         
         $window.strings.getLanguage(function(err, response){
           const obj = response[0] ? response[0].data : $window.strings._data;
@@ -86,7 +105,8 @@
           RewardCache.setReward(reward);
           ViewStack.push({
             template: 'Item_Details',
-            totalPoints: $rootScope.loyaltyPoints
+            totalPoints: $rootScope.loyaltyPoints,
+            settings: WidgetHome.data.settings
           });
           if(index!=-1){
             buildfire.messaging.sendMessageToControl({
@@ -97,13 +117,66 @@
           }
         };
 
+        WidgetHome.openApprovalRequests = function(){
+
+          ViewStack.push({
+            template: 'APPROVAL_REQUESTS'
+          });
+        }
+        WidgetHome.openRewardsPage = function(){
+
+          ViewStack.push({
+            template: 'Rewards'
+          });
+        }
         /**
          * Method to fetch logged in user's loyalty points
          */
+        var isLoyaltyPointsUpdated = false;
+
+        const saveLoyaltyPointsInAppData = function(userId, totalPoints){
+          buildfire.appData.search(
+            {
+              filter: {
+                $or: [
+                  { "$json.userId": userId },
+                ],
+              },
+            },
+            "userLoyaltyPoints",
+            (err, res) => {
+              if (err) return console.error("there was a problem retrieving your data");
+              let data = {
+                userId: userId, totalPoints: totalPoints
+              }
+              if(res && res.length > 0){
+                buildfire.appData.update(
+                  res[0].id, // Replace this with your object id
+                  data,
+                  "userLoyaltyPoints",
+                  () => {}
+                );
+              } else {
+                buildfire.appData.insert(
+                  data,
+                  "userLoyaltyPoints",
+                  false,
+                  () => {}
+                );
+              }
+            }
+          );
+        }
+
+
         WidgetHome.getLoyaltyPoints = function (userId) {
           var success = function (result) {
               $rootScope.loyaltyPoints = result.totalPoints;
               WidgetHome.applicationExists = true;
+              if(!isLoyaltyPointsUpdated){
+                isLoyaltyPointsUpdated = true  
+                saveLoyaltyPointsInAppData(userId, result.totalPoints)
+              }
             }
             , error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
@@ -140,15 +213,26 @@
                 console.error('Error while getting data loyaltyRewards--------------------------------------', err);
               }
             };
-          var successApplication = function (result) {
-            if (result.image)
-              WidgetHome.carouselImages = result.image;
-              else
-            WidgetHome.carouselImages = [];
-            if (result.content && result.content.description)
-              WidgetHome.description = result.content.description;
-            RewardCache.setApplication(result);
-            WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
+            var successApplication = function (result) {
+              Introduction.get()
+                .then((res) => {
+                    if (res) {
+                      if(res.data.images){
+                        WidgetHome.carouselImages = res.data.images;
+                      } else {
+                        WidgetHome.carouselImages = [];
+                      }
+                      WidgetHome.description = res.data.description;
+                    } else {
+                      WidgetHome.carouselImages = [];
+                    }
+                  RewardCache.setApplication(result);
+                  WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
+                  })
+                .catch((err) => {
+                  RewardCache.setApplication(result);
+                  WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
+                })
           };
 
           var errorApplication = function (error) {
@@ -165,9 +249,9 @@
               console.log('COntext got successfully-----------------' +
                   '');
               WidgetHome.context = ctx;
-              LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
-              LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
-            });
+             LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
+             LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
+           });
           }
         };
 
@@ -183,7 +267,37 @@
                 loyaltyPoints: $rootScope.loyaltyPoints,
                 loyaltyRewards: WidgetHome.loyaltyRewards
               });
-            }
+            } else if(settings.purchaseOption && settings.purchaseOption.value === 'scoreFromFreeTextQuestionnaire') {
+                if(features.length > 0){
+                  if(features.length == 1){
+                    buildfire.navigation.navigateTo({
+                      instanceId: features[0].instanceId,
+                    });
+                  } else {
+                    let items = [];
+                    features.forEach(element => {
+                      items.push({
+                        text: element.title,
+                        instanceId: element.instanceId,
+                        iconUrl: element.iconUrl
+                      })
+                    });
+                    buildfire.components.drawer.open(
+                      {
+                        listItems: items
+                      },
+                      (err, result) => {
+                        if (err) return console.error(err);
+                        buildfire.components.drawer.closeDrawer();
+                        buildfire.navigation.navigateTo({
+                          instanceId: result.instanceId,
+                        });
+                      }
+                    );
+                  }
+                }
+          
+            } 
             else {
                 ViewStack.push({
                   template: 'Amount',
@@ -211,6 +325,8 @@
         WidgetHome.listeners['POINTS_REDEEMED'] = $rootScope.$on('POINTS_REDEEMED', function (e, points) {
           if (points)
             $rootScope.loyaltyPoints = $rootScope.loyaltyPoints - points;
+            saveLoyaltyPointsInAppData(WidgetHome.currentLoggedInUser._id, $rootScope.loyaltyPoints)
+
         });
 
         /**
@@ -219,6 +335,12 @@
         WidgetHome.listeners['POINTS_ADDED'] = $rootScope.$on('POINTS_ADDED', function (e, points) {
           if (points)
             $rootScope.loyaltyPoints = $rootScope.loyaltyPoints + points;
+            saveLoyaltyPointsInAppData(WidgetHome.currentLoggedInUser._id, $rootScope.loyaltyPoints)
+        });
+
+        WidgetHome.listeners['POINTS_WAITING_APPROVAL_ADDED'] = $rootScope.$on('POINTS_WAITING_APPROVAL_ADDED', function (e, points) {
+          if (points)
+            $rootScope.PointsWaitingForApproval = parseInt($rootScope.PointsWaitingForApproval) + parseInt(points);
         });
 
         /**
@@ -318,12 +440,85 @@
             }
         };
 
-        /*
-         * Fetch user's data from datastore
-         */
+        WidgetHome.openTab = function (index){
+          WidgetHome.approvalRequestsTab = index
+          document.querySelectorAll(".tablinks").forEach((element,i) => {
+            if(element.classList.contains("active") && i == index){
+              return;
+            }
+            if(element.classList.contains("active")){
+              element.classList.remove("active")
+            }
+            if(index == i){
+              element.classList.add("active")
+            }
+          })
+        }
+
+        var getFTQPointsIfAnyAndUpdate = function(){
+          buildfire.datastore.get("Features",function (err, result) {
+            if(result && result.data && result.data.length > 0){
+              features = result.data;
+              result.data.forEach(element => {
+                buildfire.appData.search({
+                  filter: { "$json.user._id": {$eq: WidgetHome.currentLoggedInUser._id} },
+                  sort:   {"finishedDateTime": -1},
+                  skip:   0,
+                  limit:  1
+                },
+                "freeTextQuestionnaireSubmissions_" + element.instanceId,
+                (err, res) => { 
+                  if(res && res.length > 0 && !res[0].data.isEarnedPoints){
+                    let selectedFTQ = res[0].data;
+                    selectedFTQ.isEarnedPoints = true;
+                    buildfire.appData.update(
+                      res[0].id, // Replace this with your object id
+                      selectedFTQ,
+                      "freeTextQuestionnaireSubmissions_" + element.instanceId,
+                      (err, result) => {
+                        if (err) return console.error("Error while inserting your data", err);
+                        let score = 0 
+                        selectedFTQ.answers.forEach(answer => {
+                          score += answer.score ? answer.score : 0
+                        });
+                        if(WidgetHome.data && WidgetHome.data.settings && WidgetHome.data.settings.approvalType &&
+                          WidgetHome.data.settings.approvalType == "ON_SITE_VIA_PASSCODE"){
+                            ViewStack.push({
+                              template: 'Code',
+                              amount: score,
+                              type: 'buyPoints',
+                              title: element.title,
+                              iconUrl:  element.iconUrl
+                            });
+                        } else {
+                          Transactions.requestPoints("", score, $rootScope.loyaltyPoints, WidgetHome.currentLoggedInUser, element.title, element.iconUrl);
+                          buildfire.notifications.pushNotification.schedule(
+                          {
+                            title: "Points Approval Request",
+                            text: WidgetHome.currentLoggedInUser.displayName + " requests " + score + " points earned from "  + element.title,
+                            groupName: "employerGroup"
+                          , at: new Date()
+                          },
+                          () => {})
+                          if($rootScope.PointsWaitingForApproval){
+                            $rootScope.PointsWaitingForApproval += parseInt(score);
+                          } else {
+                            $rootScope.PointsWaitingForApproval = parseInt(score);
+                          }
+                          $rootScope.$digest();
+                        }
+                      }
+                    );
+                  }
+                })
+              });
+            }
+          })
+        }
 
         var init = function () {
           var success = function (result) {
+             
                 if(result && result.data){
                   console.log('BUILDFIRE GET--------------------------LOYALTY---------RESULT',result);
                   WidgetHome.data = result.data;
@@ -335,6 +530,7 @@
                     }
                   };
                 }
+                getFTQPointsIfAnyAndUpdate();
               if (!WidgetHome.data.design)
                 WidgetHome.data.design = {};
               if (!WidgetHome.data.settings)
@@ -359,6 +555,24 @@
               };
           DataStore.get(TAG_NAMES.LOYALTY_INFO).then(success, error);
           WidgetHome.getApplicationAndRewards();
+
+          var successPoints = function (result) {
+            if(result){
+              $rootScope.PointsWaitingForApproval = result;
+              $scope.$digest();
+            }
+          }
+          if(WidgetHome.currentLoggedInUser){
+            Transactions.getPointsWaitingForApproval(WidgetHome.currentLoggedInUser._id).then(successPoints,error);
+          } else {
+            buildfire.auth.getCurrentUser(function (err, user) {
+              WidgetHome.currentLoggedInUser = user;
+              checkIfEmployerOrUser();
+              if (user) {
+                 Transactions.getPointsWaitingForApproval(WidgetHome.currentLoggedInUser._id).then(successPoints,error);
+               }
+            })
+          }
         };
 
         var loginCallback = function () {
@@ -366,6 +580,7 @@
             console.log("_______________________", user);
             if (user) {
               WidgetHome.currentLoggedInUser = user;
+              checkIfEmployerOrUser();
               WidgetHome.getLoyaltyPoints(user._id);
               $scope.$digest();
             }
@@ -374,17 +589,86 @@
 
         var logoutCallback = function () {
           buildfire.auth.getCurrentUser(function (err, user) {
-            console.log("_______________________", user);
-           // if (user) {
+            if(WidgetHome.isEmployer){
+              buildfire.notifications.pushNotification.unsubscribe(
+                { groupName: "employerGroup" },
+                (err, subscribed) => {
+                if (err) return console.error(err);
+                }
+              );
+            } else {
+              buildfire.notifications.pushNotification.unsubscribe(
+                {  },
+                (err, subscribed) => {
+                  if (err) return console.error(err);
+                }
+              );
+            }
               WidgetHome.currentLoggedInUser = null;
-             // WidgetHome.getLoyaltyPoints(user._id);
               $scope.$digest();
-           // }
           });
         };
 
+
+        var _checkIfEmployerOrUser = function(){
+          if(WidgetHome.currentLoggedInUser.tags && WidgetHome.currentLoggedInUser.tags[WidgetHome.context.appId] && WidgetHome.tags != null && WidgetHome.tags.length > 0 && Object.keys(WidgetHome.tags).length > 0){
+            WidgetHome.currentLoggedInUser.tags[WidgetHome.context.appId].forEach(tag => {
+              WidgetHome.tags.forEach(settingTag => {
+                if(settingTag.tagName == tag.tagName){
+                  WidgetHome.isEmployer = true;
+                  WidgetHome.isClient = false;
+                  buildfire.notifications.pushNotification.subscribe(
+                    { groupName: "employerGroup" },
+                    (err, subscribed) => {
+                    if (err) return console.error(err);
+                    }
+                  );
+                  return;
+                }
+              })
+              if(WidgetHome.isEmployer){
+                return;
+              }
+            });
+  
+            if(WidgetHome.isEmployer == false){
+                WidgetHome.isClient = true;
+                buildfire.notifications.pushNotification.subscribe(
+                  {  },
+                  (err, subscribed) => {
+                    if (err) return console.error(err);
+                  }
+                );
+            }
+          }
+          else {
+            WidgetHome.isClient = true;
+            buildfire.notifications.pushNotification.subscribe(
+              {  },
+              (err, subscribed) => {
+                if (err) return console.error(err);
+              }
+            );
+          }
+          
+        }
+
+        var checkIfEmployerOrUser = function(){
+            if(WidgetHome.tags == null){
+              buildfire.datastore.get("Tags", function (err, result) {
+                if (err || !result) {
+                    console.error("Error Gettings tags ", err);
+                } else {
+                    WidgetHome.tags = result.data
+                    _checkIfEmployerOrUser();
+                }
+              });
+            } else {
+              _checkIfEmployerOrUser();
+            }
+        }
+
         var onUpdateCallback = function (event) {
-          console.log("++++++++++++++++++++++++++", event);
           setTimeout(function () {
             if (event && event.tag) {
               switch (event.tag) {
@@ -406,6 +690,19 @@
                     $rootScope.itemDetailsBackgroundImage = WidgetHome.data.design.itemDetailsBackgroundImage;
                   }
                   break;
+
+                case "Introduction":
+                    if(event.data.images){
+                      WidgetHome.carouselImages = event.data.images;
+                    } else {
+                      WidgetHome.carouselImages = [];
+                    }
+                    WidgetHome.description = event.data.description;
+                  break;
+
+               case "Features":
+                console.log(event)
+                  features = event.data;
               }
               $scope.$digest();
               $rootScope.$digest();
@@ -429,12 +726,11 @@
          */
         var getLoggedInUser = function(){
           buildfire.auth.getCurrentUser(function (err, user) {
-          console.log("_______________________", user);
           if (user) {
             WidgetHome.currentLoggedInUser = user;
+            checkIfEmployerOrUser();
             if (!WidgetHome.context) {
               Context.getContext(function (ctx) {
-                console.log('Context     ==============================================================',ctx);
                 WidgetHome.context = ctx;
                 WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
                 $scope.$digest();
@@ -466,6 +762,14 @@
             }
           }
         });
+
+        buildfire.datastore.get("Tags", function (err, result) {
+          if (err || !result) {
+              console.error("Error Gettings tags ", err);
+          } else {
+              WidgetHome.tags = result.data
+          }
+      });
 
         Context.getContext(function (ctx) {
           console.log('COntext got successfully-----------------' +

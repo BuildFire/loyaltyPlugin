@@ -1,5 +1,15 @@
 
 <div class="holder padding-zero layout2">
+  <div class="icon-button" ng-if="WidgetHome.isEmployer">
+    <button ng-click="WidgetHome.openApprovalRequests()" class="icon ">
+      <span class="material-icons">manage_accounts</span>
+    </button>
+  </div>
+  <div class="icon-button" ng-if="WidgetHome.isClient">
+    <button ng-click="WidgetHome.openRewardsPage()" class="icon ">
+      <span class="material-icons">workspace_premium</span>
+    </button>
+  </div>
 	<div class="loyalty-plugin" data-ng-init="setWidth()">
     <div id="carousel" ng-if="WidgetHome.carouselImages.length" build-fire-carousel=""
          ng-style="WidgetHome.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
@@ -18,6 +28,9 @@
             class="text-primary">{{loyaltyPoints | number : 2}}</span> 
             <span style="text-transform: lowercase;">{{WidgetHome.strings["general.points"]}}</span>.
         </p>
+        <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id && PointsWaitingForApproval > 0">
+          <span class="text-primary">{{PointsWaitingForApproval | number : 2}}</span> <span style="text-transform: lowercase;">points waiting for approval</span>.
+        </p>
         <a class="btn btn-primary padding-left-twenty padding-right-twenty"
            href="javascript:void(0);"
            ng-click="WidgetHome.openGetPoints()"
@@ -28,8 +41,7 @@
      	<div class="list" ng-if="WidgetHome.loyaltyRewards && WidgetHome.carouselImages">
 			<div class="list-item" ng-repeat="reward in WidgetHome.loyaltyRewards | filter: { pointsToRedeem: '!38762499627' }" ng-click="WidgetHome.openReward(reward, $index)"">
         <div class="list-media-holder square-icon pull-left" ng-click="WidgetHome.openReward(reward, $index)" ng-if="reward.listImage">
-          <img load-image="1x1"
-                crop-width="60" crop-height="60" crop-type="crop"
+          <img load-image="1:1"
                 data-final-src="{{reward.listImage}}">
         </div>
         <div class="list-item-copy ellipsis">
@@ -39,5 +51,37 @@
         </div>
 			</div>
 		</div>
+    <div ng-show="WidgetHome.loyaltyRewards.length == 0">
+      <div id="empty_state">
+        <img src="./assets/.images/ic_bookmark_empty.svg" />
+        <label style="color:black;font-weight: bold;margin-top: 32px;font-size: 16px;">Nothing To Redeem Yet</label>
+        <label style="margin-top: 8px;font-size:14px;font-weight: 400;">Rewards will appear here</label>
+      </div>
+
+    </div>
 	</div>
 </div>
+<script>
+  buildfire.appearance.getAppTheme((err, appTheme) => {
+       if (err) return console.error(err);
+       let icons = document.querySelectorAll(".icon");
+       let textPrimaries = document.querySelectorAll(".text-primary")
+       let btnPrimaries = document.querySelectorAll(".btn-primary")
+       let bgPrimaries = document.querySelectorAll(".bg-primary")
+
+
+      icons.forEach(el => {
+        el.style.color = appTheme.colors.icons
+      })
+      textPrimaries.forEach(el => {
+        el.style.color = appTheme.colors.primaryTheme 
+      })
+      btnPrimaries.forEach(el => {
+        el.style.backgroundColor = appTheme.colors.primaryTheme
+      })
+      bgPrimaries.forEach(el => {
+        el.style.backgroundColor = appTheme.colors.primaryTheme
+      })
+      
+     });
+</script>

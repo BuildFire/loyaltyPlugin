@@ -1,13 +1,25 @@
-<div class="loyalty-plugin">
-	<button class="link-button close-button" ng-click="ContentReward.goBack()">
-        <i class="glyphicon glyphicon-remove"></i>
-    </button>
+<div class="loyalty-plugin add-reward-page">
+	<div>
+		<label><a ng-click="ContentReward.goBack()">Content</a> / 
+			<span ng-if="ContentReward.item._id"> {{ContentReward.item.title}}</span>
+			<span  ng-if="!ContentReward.item._id"> New Item</span>	
+
+		</label>
+	</div>
+	<h1>Item Images</h1>
+	<div id="listImage" class="listImage"></div>
+	<hr class="none">
+	<div id="carouselReward"></div>
+  <br ng-if="!ContentReward.item.carouselImage.length">
+  
+  <h1>Item Details</h1>
+
 	<div class="item clearfix row" style="margin-top: 50px;">
 		<div class="labels col-md-3 pull-left">
-			<span>Item Title <span class ="red">*</span></span>
+			<span>Title<span class ="red">*</span></span>
 		</div>
 		<div class="main col-md-9 pull-right">
-			<input type="text" class="form-control" placeholder="Item Title" ng-model = "ContentReward.item.title">
+			<input type="text" class="form-control" ng-model = "ContentReward.item.title">
 		</div>
 	</div>
 	<div class="item clearfix row" ng-if="ContentReward.validations.title">
@@ -18,42 +30,25 @@
 		</div>
 	</div>
 	<hr class="none">
-	<div id="listImage"></div>
-	<hr class="none">
-	<div class="item clearfix row">
-		<div class="labels col-md-3 pull-left">
-			<span>Deep Link URL</span>
-		</div>
-		<div class="main col-md-9 pull-right">
-			<p>{{ContentReward.item.deepLinkUrl}}</p>
-		</div>
-	</div>
-	<hr>
-	<hr class="none">
-	<div id="carouselReward"></div>
-  <br ng-if="!ContentReward.item.carouselImage.length">
-  <div class="padded" ng-if="!ContentReward.item.carouselImage.length">
-    <div class="well text-center">No images found.</div>
-  </div>
-	<hr class="none">
+	
 	<div class="item clearfix row">
 		<div class="labels col-md-3 pull-left tooltip-container">
-			<span>Cost to Redeem <span class ="red">*</span></span>
+			<span>Cost to Redeem<span class="text-danger">*</span></span>
 			<span class="tip btn-info-icon btn-primary"><span class="cp-tooltip">If this field is  blank, then “Points per Item” cannot be blank. If this field has a value greater than zero, then this item will show up as a reward to redeem on the Loyalty feature’s main screen</span>
 		</div>
 		<div class="main col-md-9 pull-right">
-			<input ng-if="ContentReward.item.pointsToRedeem != '38762499627'" type="text" class="form-control" placeholder="Points to Redeem" ng-model = "ContentReward.item.pointsToRedeem">
-			<input ng-if="ContentReward.loading && ContentReward.item.pointsToRedeem == '38762499627'" type="text" class="form-control" placeholder="Points to Redeem" >
+			<input ng-if="ContentReward.item.pointsToRedeem != '38762499627'" type="number" class="form-control"  ng-model = "ContentReward.item.pointsToRedeem">
+			<input ng-if="ContentReward.loading && ContentReward.item.pointsToRedeem == '38762499627'" type="number" class="form-control" >
 		</div>
 	</div>
 	<hr class="none">
 	<div class="item clearfix row">
 		<div class="labels col-md-3 pull-left tooltip-container">
-			<span>Points Earned <span class ="red">*</span></span>
+			<span>Points Earned<span class ="red">*</span></span>
 			<span class="tip btn-info-icon btn-primary"><span class="cp-tooltip second-tooltip">If this field is  blank, then “Points to Redeem” cannot be blank. This item will be treated as an item that can earn users points if all of the following criteria are met: (i) on the settings tab, “Set How Users Get Points” is set to “Per Products Purchased” and (ii) “Points per Item” is set to a value greater than zero.</span>
 		</div>
 		<div class="main col-md-9 pull-right">
-			<input type="text" class="form-control" placeholder="Points per Item" ng-model = "ContentReward.item.pointsPerItem">
+			<input type="number" class="form-control"  ng-model = "ContentReward.item.pointsPerItem">
 		</div>
 	</div>
 	<div class="item clearfix row" ng-if="ContentReward.validations.points">
@@ -74,15 +69,19 @@
 	<hr class="none">
 	<div id="actionItems" style="margin-bottom:50px;"></div>
 	<hr class="none">
-	<div style="width:100%; position:fixed; background-color:white; bottom:0px; z-index:0;">
+	<div class="bottom-actions" style="z-index: 1">
 		<div class="main col-md-9 pull-right" style="margin-right: 1px; margin-top: 5px;">
 			<div class="col-md-6 pull-right padding-right-zero padding-left-ten">
-				<a class="btn btn-primary pull-right"
-				style="width:100px; height:35px; padding-top: 7px;"
-						ng-disabled="ContentReward.loading"
+				<a class="btn btn-success pull-right btn-save"
+						ng-disabled="ContentReward.loading || ContentReward.item.listImage == ''|| ContentReward.item.pointsPerItem=='' || ContentReward.item.pointsToRedeem=='' || ContentReward.item.title == ''"
 						ng-click="ContentReward.addingReward()">
-					Done
+					Save
 				</a>
+				<a class="btn btn-light pull-right cancel-btn"
+						ng-click="ContentReward.goBack()">
+					Cancel
+				</a>
+				
 			</div>
 		</div>
 	</div>

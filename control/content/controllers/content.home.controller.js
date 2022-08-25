@@ -5,7 +5,6 @@
     .module('loyaltyPluginContent')
     .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal', 'RewardCache', '$location', '$timeout', 'context', 'TAG_NAMES',
       function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache, $location, $timeout, context, TAG_NAMES) {
-        console.log("---------------------", context);
         var ContentHome = this;
         var _data = {
           redemptionPasscode: '12345',
@@ -28,9 +27,10 @@
 
         //Scroll current view to top when page loaded.
         buildfire.navigation.scrollTop();
-
+        ContentHome.title = "";
         ContentHome.masterData = null;
         ContentHome.loyaltyRewards = [];
+        ContentHome.loyaltyRewardsCloned = [];
         ContentHome.bodyWYSIWYGOptions = {
           plugins: 'advlist autolink link image lists charmap print preview',
           skin: 'lightgray',
@@ -42,46 +42,6 @@
         ContentHome.needToLoginInCP = false;
 
 
-        /*buildfire carousel component*/
-        // create a new instance of the buildfire carousel editor
-        ContentHome.editor = new Buildfire.components.carousel.editor("#carousel");
-        // this method will be called when a new item added to the list
-        ContentHome.editor.onAddItems = function (items) {
-          if (!ContentHome.data.image)
-            ContentHome.data.image = [];
-          ContentHome.data.image.push.apply(ContentHome.data.image, items);
-          $scope.$digest();
-        };
-        // this method will be called when an item deleted from the list
-        ContentHome.editor.onDeleteItem = function (item, index) {
-          ContentHome.data.image.splice(index, 1);
-          $scope.$digest();
-        };
-        // this method will be called when you edit item details
-        ContentHome.editor.onItemChange = function (item, index) {
-          ContentHome.data.image.splice(index, 1, item);
-          $scope.$digest();
-        };
-        // this method will be called when you change the order of items
-        ContentHome.editor.onOrderChange = function (item, oldIndex, newIndex) {
-          var items = ContentHome.data.image;
-
-          var tmp = items[oldIndex];
-
-          if (oldIndex < newIndex) {
-            for (var i = oldIndex + 1; i <= newIndex; i++) {
-              items[i - 1] = items[i];
-            }
-          } else {
-            for (var i = oldIndex - 1; i >= newIndex; i--) {
-              items[i + 1] = items[i];
-            }
-          }
-          items[newIndex] = tmp;
-
-          ContentHome.data.image = items;
-          $scope.$digest();
-        };
 
 
         function updateMasterItem(data) {
@@ -125,10 +85,6 @@
                   ContentHome.data.appId = _data.appId;
                   ContentHome.data.externalAppId = _data.externalAppId;
 
-                  if (!ContentHome.data.image)
-                      ContentHome.editor.loadItems([]);
-                  else
-                      ContentHome.editor.loadItems(ContentHome.data.image);
                   if (tmrDelay) clearTimeout(tmrDelay);
 
                   buildfire.datastore.get(TAG_NAMES.LOYALTY_INFO,function(err,data){
@@ -175,6 +131,7 @@
                   ContentHome.loyaltyRewards = result;
                   if (!ContentHome.loyaltyRewards)
                       ContentHome.loyaltyRewards = [];
+                  ContentHome.loyaltyRewardsCloned = ContentHome.loyaltyRewards
                   ContentHome.addDeepLinks(result);
                   console.info('init success result loyaltyRewards:', result);
                   if (tmrDelay) clearTimeout(tmrDelay);
@@ -196,6 +153,28 @@
               });
           };
 
+        ContentHome.search = function() {
+          if(ContentHome.title != ""){
+              ContentHome.loyaltyRewards = ContentHome.loyaltyRewardsCloned.filter(x=>x.title.includes(ContentHome.title))
+          }  else {
+              ContentHome.successloyaltyRewards = function (result) {
+                ContentHome.loyaltyRewards = result;
+                if (!ContentHome.loyaltyRewards)
+                    ContentHome.loyaltyRewards = [];
+                ContentHome.loyaltyRewardsCloned = ContentHome.loyaltyRewards
+                ContentHome.addDeepLinks(result);
+                console.info('init success result loyaltyRewards:', result);
+                if (tmrDelay) clearTimeout(tmrDelay);
+            };
+            ContentHome.errorloyaltyRewards = function (err) {
+                if (err && err.code !== STATUS_CODE.NOT_FOUND) {
+                    console.log('Error while getting data loyaltyRewards', err);
+                    if (tmrDelay) clearTimeout(tmrDelay);
+                }
+            };
+            LoyaltyAPI.getRewards(context.instanceId).then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
+          }
+        }
 
         ContentHome.addDeepLinks = function(list){
           Deeplink.getAll({},(err,result)=>{
@@ -358,6 +337,17 @@
             }, 500);
           }
         };
+
+        ContentHome.openSettingsPage = function() {
+          buildfire.navigation.navigateToTab({
+              tabTitle: "Settings",
+              deeplinkData: {},
+            },
+            (err, res) => {
+              if (err) return console.error(err); // `Content` tab was not found
+            }
+          );
+        }
 
         /*
          * watch for changes in data and trigger the saveDataWithDelay function on change

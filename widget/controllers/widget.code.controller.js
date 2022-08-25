@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetCodeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', '$rootScope', 'Buildfire', 'Context', 'Transactions',
-      function ($scope, ViewStack, LoyaltyAPI, RewardCache, $rootScope, Buildfire, Context, Transactions) {
+    .controller('WidgetCodeCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', '$rootScope', 'Buildfire', 'Context', 'Transactions', '$timeout',
+      function ($scope, ViewStack, LoyaltyAPI, RewardCache, $rootScope, Buildfire, Context, Transactions,  $timeout) {
 
         var WidgetCode = this;
         var breadCrumbFlag = true;
@@ -37,7 +37,6 @@
         WidgetCode.dailyLimitExceeded = false;
 
         WidgetCode.context = Context.getContext();
-
         if (RewardCache.getApplication()) {
           WidgetCode.application = RewardCache.getApplication();
         } 
@@ -51,18 +50,13 @@
               template: 'Awarded',
               pointsAwarded: pointsAwarded
             });
-            buildfire.auth.getCurrentUser(function (err, user) {
-              if (user) {
                 if(currentView.type === 'buyPoints') {
-                  Transactions.buyPoints(currentView.amount, pointsAwarded, $rootScope.loyaltyPoints, user);
+                  Transactions.buyPoints(currentView.amount, pointsAwarded, $rootScope.loyaltyPoints, WidgetCode.currentLoggedInUser, currentView.title, currentView.iconUrl);
                 } else if(currentView.type === 'buyProducts') {
-                  Transactions.buyProducts(currentView.items, $rootScope.loyaltyPoints, user);
-                } else {
+                  Transactions.buyProducts(currentView.items, $rootScope.loyaltyPoints, WidgetCode.currentLoggedInUser);
+                }  else 
                   return;
-                }
               }
-            });            
-          };
 
           var error = function (error) {
             Buildfire.spinner.hide();
@@ -80,16 +74,66 @@
           Buildfire.spinner.show();
           checkIfUserDailyLimitExceeded(currentView, WidgetCode, function (err, res){
             if(err) error(err);
-            else LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode, currentView.amount).then(success, error);
-        });
+            buildfire.auth.getCurrentUser(function (err, user) {
+              if(user){
+                WidgetCode.currentLoggedInUser = user;
+                if(currentView.type =="redeemPoints"){
 
-        };
+                  var redeemSuccess = function () {
+                    Buildfire.spinner.hide();
+                    $rootScope.$broadcast('POINTS_REDEEMED', currentView.pointsToRedeem);
+                    ViewStack.push({
+                      template: 'Success'
+                    });
+                    Transactions.redeemReward(currentView.reward, currentView.pointsToRedeem, $rootScope.loyaltyPoints, WidgetCode.currentLoggedInUser);
+                  };
+        
+                  var redeemFailure = function (error) {
+                    Buildfire.spinner.hide();
+                    if (error && error.code == 2103) {
+                      WidgetCode.dailyLimitExceeded = true;
+                      $timeout(function () {
+                        WidgetCode.dailyLimitExceeded = false;
+                      }, 3000);
+                    } else {
+                      WidgetCode.redeemFail = true;
+                      $timeout(function () {
+                        WidgetCode.redeemFail = false;
+                      }, 3000);
+                    }
+                  };
+                  if (WidgetCode.currentLoggedInUser) {
+                    console.log(currentView.reward)
+                    if (WidgetCode.application.dailyLimit > currentView.pointsToRedeem) {
+                      Buildfire.spinner.show();
+                      LoyaltyAPI.redeemPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, currentView.reward._id).then(redeemSuccess, redeemFailure);
+                    }
+                    else {
+                      WidgetCode.dailyLimitExceeded = true;
+                      $timeout(function () {
+                        WidgetCode.dailyLimitExceeded = false;
+                      }, 3000);
+                    }
+                  }
+                  else {
+                    buildfire.auth.login({}, function () {
+        
+                    });
+                  }
+
+                } else {
+                  LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode, currentView.amount).then(success, error);
+                }
+              }
+            })
+        });
+      }
+
 
         WidgetCode.confirmPasscode = function () {
           var success = function (result) {
             Buildfire.spinner.hide();
             console.log("Passcode valid");
-            console.log(result);
             WidgetCode.addPoints();
           };
 

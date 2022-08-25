@@ -1,14 +1,164 @@
 <div class="container">
-    <button class="link-button close-button" ng-click="ResultDetails.goBack()">
-        <i class="glyphicon glyphicon-remove"></i>
-    </button>
-    <p><strong>User name: </strong>{{item.createdBy.displayName ? item.createdBy.displayName : item.createdBy.email}}</p>
-    <p><strong>Date: </strong>{{item.createdAt | date:'dd MMM yyyy'}}</p>
-    <p><strong>Type: </strong>{{typesMapping[item.type]}}</p>
-    <p ng-if="item.type == 'earnPoints'"><strong>Item Bought: </strong>{{item.item.title}}</p>
-    <p ng-if="item.type == 'redeemReward'"><strong>Item Redeemed: </strong>{{item.item.title}}</p>
-    <p ng-if="item.type == 'earnPoints'"><strong>Points Earned: </strong>{{item.pointsEarned}}</p>
-    <p ng-if="item.type == 'earnPoints'"><strong>Money Spent: </strong>{{item.purchaseAmount}}</p>
-    <p ng-if="item.type == 'earnPoints'"><strong>Item Quantity: </strong>{{item.item.quantity}}</p>
-    <p ng-if="item.type == 'earnPoints'"><strong>Points per Item: </strong>{{item.item.pointsPerItem}}</p>
+    <div>
+		<label><a ng-click="ResultDetails.goBack()">Points</a> / 
+			<span>{{item.createdBy.displayName ? item.createdBy.displayName : item.createdBy.email }}</span>	
+		</label>
+	</div>
+    <h1>{{item.createdBy.displayName ? item.createdBy.displayName : item.createdBy.email }}</h1>
+    <div  class="details-container">
+        <div class="row">
+            <div class="col-md-4 title">
+                Email:
+            </div>
+            <div class="col-md-8">
+                {{item.createdBy.email}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 title">
+                Date:
+            </div>
+            <div class="col-md-8">
+                {{item.createdAt | date:'EEEE, MMMM d yyyy, h:mm a'}}
+            </div>
+        </div>
+    </div>
+
+    <div  class="details-container">
+        <div class="row">
+            <div class="col-md-4 title">
+                Approved By:
+            </div>
+            <div class="col-md-8">
+                {{item.approvedBy}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 title">
+                Approved On:
+            </div>
+            <div class="col-md-8">
+                {{item.approvedOn | date:'EEEE, MMMM d yyyy, h:mm a'}}
+            </div>
+        </div>
+        
+    </div>
+
+    <div  class="details-container" ng-if="item.type == 'earnPoints'">
+        <div class="row"> 
+            <div class="col-md-4 title">
+                Type:
+            </div>
+            <div class="col-md-8">
+                {{typesMapping[item.type]}}
+            </div>
+        </div>
+        <div ng-if="item.item">
+            <div class="row">
+                <div class="col-md-4 title">
+                    Item Bought:
+                </div>
+                <div class="col-md-8">
+                    {{item.item.title}}
+                </div>
+            </div>
+    
+           <div class="row">
+                <div class="col-md-4 title">
+                    Points Earned:
+                </div>
+                <div class="col-md-8">
+                    {{item.pointsEarned}}
+                </div>
+           </div>
+    
+           <div class="row"> 
+                <div class="col-md-4 title">
+                    Money Spent:
+                </div>
+                <div class="col-md-8">
+                    {{item.purchaseAmount}}
+                </div>
+           </div>
+    
+           <div class="row">
+                <div class="col-md-4 title">
+                    Item Quantity:
+                </div>
+    
+                <div class="col-md-8">
+                    {{item.item.quantity}}
+                </div>
+           </div>
+    
+           <div class="row">
+            <div class="col-md-4 title">
+                Points per Item:
+            </div>
+            <div class="col-md-8">
+                {{item.item.pointsPerItem}}
+            </div>
+           </div>
+        </div>
+        <div ng-if="item.items">
+            <div ng-repeat="item in item.items" style="margin-top: 16px;">
+                <div class="row">
+                    <div class="col-md-4 title">
+                        Item Bought:
+                    </div>
+                    <div class="col-md-8">
+                        {{item.title}}
+                    </div>
+                </div>
+        
+               <div class="row">
+                    <div class="col-md-4 title">
+                        Points Earned:
+                    </div>
+                    <div class="col-md-8">
+                        {{item.pointEarned}}
+
+                    </div>
+               </div>
+               <div class="row">
+                    <div class="col-md-4 title">
+                        Item Quantity:
+                    </div>
+        
+                    <div class="col-md-8">
+                        {{item.quantity}}
+                    </div>
+               </div>
+        
+               <div class="row">
+                <div class="col-md-4 title">
+                    Points per Item:
+                </div>
+                <div class="col-md-8">
+                    {{item.pointsPerItem}}
+                </div>
+               </div>
+            </div>
+            <div ng-if="item.items.length > 1" style="margin-top: 16px;">
+                <div class="row">
+                    <div class="col-md-4 title">
+                        Total Points Earned:
+                    </div>
+                    <div class="col-md-8">
+                        {{item.pointsEarned}}
+                    </div>
+                   </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="details-container row" ng-if="item.type == 'redeemReward'">
+        <div class="col-md-4 title">
+            Item Redeemed:
+        </div>
+        <div class="col-md-8">
+            {{item.item.title ? item.item.title : " "}}
+        </div>
+    </div>
 </div>

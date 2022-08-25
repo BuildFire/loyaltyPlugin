@@ -219,25 +219,14 @@
                 restrict: 'A',
                 link: function (scope, element, attrs) {
                     element.attr("src", "../../../styles/media/holder-" + attrs.loadImage + ".gif");
-
+                    
                     var _img = attrs.finalSrc;
-                    if (attrs.cropType == 'resize') {
-                        Buildfire.imageLib.local.resizeImage(_img, {
-                            width: attrs.cropWidth,
-                            height: attrs.cropHeight
-                        }, function (err, imgUrl) {
-                            _img = imgUrl;
-                            replaceImg(_img);
-                        });
-                    } else {
-                        Buildfire.imageLib.local.cropImage(_img, {
-                            width: attrs.cropWidth,
-                            height: attrs.cropHeight
-                        }, function (err, imgUrl) {
-                            _img = imgUrl;
-                            replaceImg(_img);
-                        });
-                    }
+
+                    let croppedImage = buildfire.imageLib.cropImage(
+                      _img,
+                      { size: "full_width", aspect: attrs.loadImage }
+                    );
+                    replaceImg(croppedImage);
 
                     function replaceImg(finalSrc) {
                         var elem = $("<img>");
@@ -252,16 +241,11 @@
         }])
     .filter('getImageUrl', function () {
       return function (url, width, height, type) {
-        if (type == 'resize')
-          return buildfire.imageLib.resizeImage(url, {
-            width: width,
-            height: height
-          });
-        else
-          return buildfire.imageLib.cropImage(url, {
-            width: width,
-            height: height
-          });
+        let croppedImage = buildfire.imageLib.cropImage(
+          url,
+          { size: "full_width", aspect: "16:9" }
+        );
+        return croppedImage;
       }
     })
     .run(['Location', '$location', '$rootScope', 'RewardCache', 'ViewStack', 'Context', '$window',

@@ -32,6 +32,83 @@
         </div>
     </div>
 </div>
+<hr class="none">
+<div class="item clearfix row">
+  <div class="labels col-xs-3 pull-left">
+    <span>Set Approval Type</span>
+  </div>
+  <div class="main col-xs-9 pull-right">
+        <span class="radios-row">
+          <div class="radio radio-primary radio-inline">
+              <input id="onSiteViaPassCode" type="radio" name="approvalType"  value="ON_SITE_VIA_PASSCODE" checked="SettingsHome.data.settings.approvalType=='ON_SITE_VIA_PASSCODE'" ng-model="SettingsHome.data.settings.approvalType">
+              <label class="subtitles-labels" for="onSiteViaPassCode">On-site via Passcode</label>
+          </div>
+          <div class="radio radio-primary radio-inline">
+              <input id="remoteViaApp" type="radio" name="approvalType"  value='REMOVE_VIA_APP' checked="SettingsHome.data.settings.approvalType=='REMOVE_VIA_APP'" ng-model="SettingsHome.data.settings.approvalType">
+              <label class="subtitles-labels"  for="remoteViaApp">Remote via App</label>
+          </div>
+      </span>
+  </div>
+</div>
+
+<hr class="none">
+<div ng-show="SettingsHome.data.settings.approvalType=='REMOVE_VIA_APP'">
+  <div class="item clearfix row">
+    <div class="labels col-md-3 pull-left tooltip-container">
+      <span>Points Approver User Tag<span class="text-danger">*</span></span>
+      <span class="tip btn-info-icon btn-primary"><span class="cp-tooltip">Specify a user tag assigned to the user who will be allowed to approve or deny points</span>
+    </div>
+    <div class="main col-xs-9 pull-right">
+      <button class="btn btn-success pull-right btn-plus-icon-with-text" ng-click="SettingsHome.openTagDialog()">Add Tag</button>
+    </div>
+  </div>
+  <div ng-show="SettingsHome.tags.length > 0">
+    <div class="item clearfix row">
+      <div class="labels col-md-3 pull-left tooltip-container">
+      </div>
+      <div class="main col-xs-9 pull-right">
+        <div  style="margin-top: 6px;">
+          <div style="font-weight: bold;padding: 10px;color: black;margin-left: 12px;">
+            Tag Name
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="item clearfix row">
+      <div class="labels col-md-3 pull-left tooltip-container">
+      </div>
+      <div class="main col-xs-9 pull-right">
+        <div class="action-item-container"  ng-repeat="tag in SettingsHome.tags" >
+          <div class="title" style="margin-left:12px">
+            {{tag.tagName}}
+          </div>
+          <div class="pull-right">
+            <span
+                class="btn-icon icon-cross2 icon-remove transition-third "
+                ng-click="SettingsHome.removeTag($index)"></span>
+          </div>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<hr class="none">
+<div class="item clearfix row" ng-if="SettingsHome.showRedemptionCode">
+  <div class="labels col-xs-3 pull-left">
+    <span>Staff Confirmation Passcode</span>
+  </div>
+  <div class="main col-xs-9 pull-right">
+    <input type="text" class="form-control"
+           ng-model="SettingsHome.data.settings.redemptionPasscode" maxlength="5">
+           <p ng-if="SettingsHome.redemptionCodeError && SettingsHome.showRedemptionCode" class="text-warning margin-top-five">Staff Confirmation Passcode must consist of 5 characters</p>
+  </div>
+</div>
+
 <div class="item row clearfix margin-top" style="margin-top: 16px">
     <div class="labels col-md-3 padding-right-zero pull-left">
         <span>Set How User Earns Points</span>
@@ -52,3 +129,95 @@
         </div>
     </div>
 </div>
+<div ng-if="SettingsHome.data.settings.purchaseOption.value != 'scoreFromFreeTextQuestionnaire'">
+  <hr class="none">
+  <div class="item clearfix row">
+      <div class="labels col-md-3 pull-left tooltip-container">
+        <span>Extra Points Per Purchase<span class="text-danger">*</span></span>
+        <span class="tip btn-info-icon btn-primary"><span class="cp-tooltip">Reward extra points for every purchas made by user</span>
+      </div>
+      <div class="main col-xs-9 pull-right">
+        <input type="number" class="form-control"
+               ng-model="SettingsHome.data.settings.pointsPerVisit">
+      </div>
+    </div>
+    <hr class="none">
+    <div class="item clearfix row" ng-if="SettingsHome.data.settings.purchaseOption.value !== 'perProductsPurchased'">
+      <div class="labels col-md-3 pull-left tooltip-container">
+        <span>Points Per Dollar Spent<span class="text-danger">*</span></span>
+        <span class="tip btn-info-icon btn-primary"><span class="cp-tooltip">Set how many points user can earn per every $1 (or other currency) spent</span>
+      </div>
+      <div class="main col-xs-9 pull-right">
+        <input type="number" class="form-control"
+               ng-model="SettingsHome.data.settings.pointsPerDollar">
+      </div>
+    </div>
+    <hr class="none" ng-if="SettingsHome.data.settings.purchaseOption.value !== 'perProductsPurchased'">
+    <div class="item clearfix row">
+      <div class="labels col-xs-3 pull-left">
+        <span>Daily Points Limit</span>
+      </div>
+      <div class="main col-xs-9 pull-right">
+        <input type="number" class="form-control"
+               ng-model="SettingsHome.data.settings.dailyLimit">
+      </div>
+    </div>
+    <hr class="none">
+    <div class="item clearfix row">
+      <div class="labels col-xs-3 pull-left">
+        <span>Total Points Limit</span>
+      </div>
+      <div class="main col-xs-9 pull-right">
+        <input type="number" class="form-control"
+               ng-model="SettingsHome.data.settings.totalLimit">
+      </div>
+    </div>
+ 
+    <hr class="none">
+    <div class="item clearfix row">
+      <div class="col-xs-12 margin-top-five" ng-if="ContentHome.invalidApplicationParameters">
+        <div class="alert alert-sm text-center alert-danger">Please enter valid data.
+        </div>
+      </div>
+    </div>
+</div>
+<div ng-show="SettingsHome.data.settings.purchaseOption.value == 'scoreFromFreeTextQuestionnaire'">
+  <hr class="none">
+    <div>
+      <div class="item clearfix row">
+        <div class="labels col-md-3 pull-left tooltip-container">
+          <span>Free Text Questionnaire<span class="text-danger">*</span></span>
+          <span class="tip btn-info-icon btn-primary"><span class="cp-tooltip2">You must enable “Calculate score” and “Save Submissions to App Data” options on connected Free Text Questionnaire. Points will be calculated and updated after you enter Leaderboard plugin again.</span>
+         </div>
+        <div class="main col-xs-9 pull-right">
+          <button class="btn btn-success pull-right btn-plus-icon-with-text" ng-click="SettingsHome.openActionItemsDialog()">Add Features</button>
+        </div>
+      </div>
+      <div class="item clearfix row">
+        <div class="labels col-md-3 pull-left tooltip-container">
+        </div>
+        <div class="main col-xs-9 pull-right">
+          <div   class="action-item-container"  ng-repeat="feature in SettingsHome.ftqFeatureItems" >
+            <div style="display: flex;align-items:center;margin-left:12px">
+              <img style="width: 42px;height:38px;border-radius: 4px;" ng-src={{feature.iconUrl}}/>
+              <div  style="display: flex;flex-direction: column;justify-content: center; margin-left: 16px;">
+                <span class="title">{{feature.title}}</span>
+                <span class="subTitle">{{feature.pluginTypeName}}</span>
+              </div>
+            </div>
+            <div class="pull-right">
+              <span
+                  class="btn-icon icon-cross2 icon-remove transition-third "
+                  ng-click="SettingsHome.removeActionItemFeature($index)"></span>
+            </div>
+          </div>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+   
+
+
+
+

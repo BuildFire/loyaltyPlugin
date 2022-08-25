@@ -6,6 +6,12 @@
     .controller('ResultsHomeCtrl', ['$scope', '$rootScope', 'Buildfire', 'Transactions', '$location', '$filter',
       function ($scope, $rootScope, Buildfire, Transactions, $location, $filter) {
         var ResultsHome = this;
+        ResultsHome.dateSort = -1;
+        ResultsHome.dateSearch = {
+          from: undefined,
+          to: undefined,
+        };
+        ResultsHome.title = ""
         ResultsHome.transactions = [];
         ResultsHome.typesMapping = {
           earnPoints: 'Earn Points',
@@ -15,6 +21,16 @@
         ResultsHome.goToDetails = function(result) {
           $rootScope.result = result;
           $location.path('/details');
+        }
+
+        ResultsHome.sortData = function() {
+          $scope.skip = 0;
+          if(ResultsHome.dateSort == -1){
+            ResultsHome.dateSort = 1;
+          } else {
+            ResultsHome.dateSort = -1;
+          }
+          init();
         }
 
         ResultsHome.loading = false;
@@ -90,6 +106,26 @@
           }
         }
 
+        ResultsHome.openExportActions = function() {
+          const locationDropdown = document.querySelector('#export-bulk-dropdown');
+          toggleDropdown(locationDropdown);
+
+          function toggleDropdown(dropdownElement, forceClose) {
+            if (!dropdownElement) {
+              return;
+            }
+            if (dropdownElement.classList.contains("open") || forceClose) {
+              dropdownElement.classList.remove("open");
+            } else {
+              dropdownElement.classList.add("open");
+            }
+          };
+        }
+
+        ResultsHome.search = function(){
+          init();
+        }
+
         $scope.getMoreTransactions = function () {
           $scope.skip += 50;
           function success(result) {
@@ -101,32 +137,37 @@
             if(transactions.length < 50) {
               ResultsHome.noMore = true;
             }
-            ResultsHome.loading = false;
           }
           function error(err) {
             console.error(err);
-            ResultsHome.loading = false;
           }
-          ResultsHome.loading = true;
           Transactions.get($scope.skip).then(success, error);
         };
 
         function init(){
+          ResultsHome.loading = true;
           function success(result) {
             var transactions = result.map(function (result){
               return result.data
             });
+            console.log(transactions)
             ResultsHome.transactions = transactions;
             $rootScope.transactions = transactions;
             if(transactions.length < 50) {
               ResultsHome.noMore = true;
             }
+            ResultsHome.loading = false;
           }
           function error(err) {
             console.error(err);
+            ResultsHome.loading = false;
+
           }
-          Transactions.get().then(success, error);
+          Transactions.get(0, ResultsHome.dateSort, ResultsHome.dateSearch.from, ResultsHome.dateSearch.to, ResultsHome.title).then(success, error);
         }
+        $scope.$watch(function () {
+          return ResultsHome.dateSearch;
+        }, init, true);
 
         if($rootScope.transactions && $rootScope.transactions.length > 0) {
           ResultsHome.transactions = $rootScope.transactions
