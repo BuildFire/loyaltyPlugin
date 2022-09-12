@@ -65,13 +65,13 @@
         WidgetItem.confirmCancel = function () {
           buildfire.dialog.confirm(
             {
-              title: WidgetItem.strings["redeem.confirmRedemptionModalTitle"],
-              message: WidgetItem.strings["redeem.confirmRedemptionModalImportantNote"],
+              title: WidgetItem.strings["redeem.titleNote"],
+              message: WidgetItem.strings["redeem.importantNote"],
               confirmButton: {
-                text: WidgetItem.strings["redeem.confirmRedemptionModalConfirm"],
+                text: WidgetItem.strings["redeem.confirmActionNote"],
                 type: "primary",
               },
-              cancelButtonText: WidgetItem.strings["redeem.confirmRedemptionModalCancel"],
+              cancelButtonText: WidgetItem.strings["redeem.cancelActionNote"],
             },
             (err, isConfirmed) => {
               if (err) return;
