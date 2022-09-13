@@ -14,7 +14,7 @@ buildfire.services.Strings = class{
 			if(stringsConfig[sectionKey].labels.length &&  stringsConfig[sectionKey].labels.length){
 				for (let labelKey in stringsConfig[sectionKey].labels) {
 					for(let subLabelKey in stringsConfig[sectionKey].labels[labelKey].subLabels){
-						section[labelKey]={
+						section[subLabelKey]={
 							defaultValue : stringsConfig[sectionKey].labels[labelKey].subLabels[subLabelKey].defaultValue
 							,required : stringsConfig[sectionKey].labels[labelKey].subLabels[subLabelKey].required
 						};
