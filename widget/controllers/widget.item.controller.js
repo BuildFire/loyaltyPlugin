@@ -119,7 +119,7 @@
                       buildfire.spinner.hide();
                       buildfire.dialog.show(
                         {
-                          title: WidgetItem.strings["redeem.itemRedeemedModalTitle"],
+                          title: WidgetItem.strings["redeem.itemRedeemedTitle"],
                           message: WidgetItem.strings["redeem.itemRedeemedBody"],
                           showCancelButton: false,
                           actionButtons: [
