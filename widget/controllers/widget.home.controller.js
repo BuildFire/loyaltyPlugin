@@ -147,12 +147,16 @@
                 userId: userId, totalPoints: totalPoints
               }
               if(res && res.length > 0){
-                buildfire.appData.update(
-                  res[0].id, // Replace this with your object id
-                  data,
-                  "userLoyaltyPoints",
-                  () => {}
-                );
+                if( (!WidgetHome.data.settings.deductLeaderboardPoints && res[0].data.totalPoints < totalPoints)
+                  ||  WidgetHome.data.settings.deductLeaderboardPoints){
+                  buildfire.appData.update(
+                    res[0].id,
+                    data,
+                    "userLoyaltyPoints",
+                    () => {}
+                  );
+                }
+                
               } else {
                 buildfire.appData.insert(
                   data,
@@ -698,7 +702,6 @@
                   break;
 
                case "Features":
-                console.log(event)
                   features = event.data;
               }
               $scope.$digest();
