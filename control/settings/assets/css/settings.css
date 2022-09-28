@@ -145,6 +145,10 @@ div.col-md-5.text-right.pull-right.padding-right-zero > a {
 
 }
 
+.row {
+	margin-right: 0 !important;
+}
+
 .subTitle {
 	color: #5f5f5f;
 	font-size: 12px;
@@ -157,3 +161,91 @@ div.col-md-5.text-right.pull-right.padding-right-zero > a {
 	font-size: 20px !important;
 	margin-right: 20px;
 }
+
+.button-switch{
+    display: flex;
+    align-items: center;
+    height: 2.5rem;
+  }
+  
+  .button-switch > label {
+    cursor: pointer;
+    height: 0;
+    position: relative;
+    width: 40px;
+    text-align: left;
+  }
+  
+  .button-switch > label::before {
+    background: #909090;
+    border-radius: 18px;
+    content: "";
+    height: 27px;
+    margin-top: -13.5px;
+    position: absolute;
+    opacity: 0.3;
+    transition: all 0.4s ease-in-out;
+    width: 46px;
+  }
+  
+  .button-switch > label::after {
+    background: var(--c-white);
+    border-radius: 16px;
+    box-shadow: 0 0 5px rgb(0 0 0 / 30%);
+    content: "";
+    height: 24px;
+    left: 0;
+    margin-top: -9px;
+    position: absolute;
+    top: -4px;
+    transition: all 0.3s ease-in-out;
+    width: 24px;
+  }
+  
+  .button-switch > input[type="checkbox"]:checked + label::before {
+    background: inherit;
+    opacity: 0.5;
+  }
+  
+  .button-switch > input[type="checkbox"] {
+    display: none;
+    margin: 4px 0 0;
+  }
+  
+  .button-switch > input[type="checkbox"]:checked + label::after {
+    background: inherit;
+    left: 23px;
+  }
+  
+  .button-switch.switch-sm > label::before {
+    background: #909090;
+    border-radius: 18px;
+    content: "";
+    height: 1.5rem;
+    margin-top: 0;
+    position: absolute;
+    opacity: 0.3;
+    transition: all 0.4s ease-in-out;
+    width: 3rem;
+  }
+  
+  .button-switch.switch-sm > label::after {
+    background: var(--c-white);
+    border-radius: 16px;
+    box-shadow: 0 0 5px rgb(0 0 0 / 30%);
+    content: "";
+    left: 0;
+    margin-top: 0;
+    position: absolute;
+    top: -12px;
+    transition: all 0.3s ease-in-out;
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+  
+  .button-switch.switch-sm > label{
+    display: flex;
+    align-items: center;
+    width: 2rem;
+  }
+  
