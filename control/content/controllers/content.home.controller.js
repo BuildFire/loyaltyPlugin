@@ -12,7 +12,7 @@
           externalAppId: context.appId,
           appId: context.appId,
           name: context.pluginId,
-          pointsPerVisit: 1,
+          pointsPerVisit: 0,
           pointsPerDollar: 1,
           totalLimit: 5000,
           dailyLimit: 1000,

@@ -275,7 +275,7 @@
                         externalAppId: SettingsHome.context.appId,
                         appId: SettingsHome.context.appId,
                         name: SettingsHome.context.pluginId,
-                        pointsPerVisit: isPurchaseOptionFtqSelected ? 0 :  (newObj.settings.pointsPerVisit ? newObj.settings.pointsPerVisit : 1),
+                        pointsPerVisit: isPurchaseOptionFtqSelected ? 0 :  (newObj.settings.pointsPerVisit ? newObj.settings.pointsPerVisit : 0),
                         pointsPerDollar: isPurchaseOptionFtqSelected ? 0 : (newObj.settings.pointsPerDollar ? newObj.settings.pointsPerDollar : 1),
                         totalLimit: isPurchaseOptionFtqSelected ? 50000 : (newObj.settings.totalLimit ? newObj.settings.totalLimit :5000),
                         dailyLimit: isPurchaseOptionFtqSelected ? 10000 :  (newObj.settings.dailyLimit ? newObj.settings.dailyLimit :1000),
