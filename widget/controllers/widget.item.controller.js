@@ -81,10 +81,7 @@
                       WidgetItem.redeemPoints()
                       return;
                     } else {
-                      WidgetItem.insufficientPoints = true;
-                      $timeout(function () {
-                        WidgetItem.insufficientPoints = false;
-                      }, 3000);
+                      WidgetItem.getLoyaltyPoints();
                       return;
                     }
                 } else {
