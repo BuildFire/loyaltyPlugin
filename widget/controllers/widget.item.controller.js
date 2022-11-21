@@ -76,8 +76,16 @@
             (err, isConfirmed) => {
               if (err) return;
               if (isConfirmed) {
-                if (currentView.totalPoints && (WidgetItem.reward.pointsToRedeem <= currentView.totalPoints)) {
-                  WidgetItem.redeemPoints();
+                if (currentView.totalPoints) {
+                  if (WidgetItem.reward.pointsToRedeem <= currentView.totalPoints) {
+                    WidgetItem.redeemPoints()
+                    return;
+                  } else {
+                    WidgetItem.insufficientPoints = true;
+                    $timeout(function () {
+                      WidgetItem.insufficientPoints = false;
+                    }, 3000);
+                  }
                 } else {
                   WidgetItem.getLoyaltyPoints();
                 }
