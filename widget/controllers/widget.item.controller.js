@@ -13,7 +13,7 @@
 
         WidgetItem.listeners = {};
         WidgetItem.insufficientPoints = false;
-
+        WidgetItem.dailyLimitExceeded = false;
         WidgetItem.currentLoggedInUser = null;
         WidgetItem.isReward = false;
         //create new instance of buildfire carousel viewer
@@ -77,7 +77,7 @@
               if (err) return;
               if(isConfirmed){
                 if (currentView.totalPoints) {
-                    if (WidgetItem.reward.pointsToRedeem <= currentView.totalPoints) {
+                  if (WidgetItem.reward.pointsToRedeem <= currentView.totalPoints) {
                       WidgetItem.redeemPoints()
                       return;
                     } else {
@@ -158,6 +158,7 @@
               })
             }
             else {
+              buildfire.spinner.hide();
               WidgetItem.dailyLimitExceeded = true;
               $timeout(function () {
                 WidgetItem.dailyLimitExceeded = false;
