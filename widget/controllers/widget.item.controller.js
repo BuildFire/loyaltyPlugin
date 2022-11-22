@@ -13,7 +13,7 @@
 
         WidgetItem.listeners = {};
         WidgetItem.insufficientPoints = false;
-
+        WidgetItem.dailyLimitExceeded = false;
         WidgetItem.currentLoggedInUser = null;
         WidgetItem.isReward = false;
         //create new instance of buildfire carousel viewer
@@ -36,14 +36,14 @@
 
         //Refresh item details on pulling the tile bar
 
-        buildfire.datastore.onRefresh(function () {});
+        buildfire.datastore.onRefresh(function () { });
 
         /**
          * Initialize variable with current view returned by ViewStack service. In this case it is "Item_Details" view.
          */
         var currentView = ViewStack.getCurrentView();
 
-        if(currentView.item && currentView.isReward){
+        if (currentView.item && currentView.isReward) {
           WidgetItem.reward = currentView.item;
           WidgetItem.isReward = true;
         }
@@ -58,7 +58,7 @@
         if (RewardCache.getApplication()) {
           WidgetItem.application = RewardCache.getApplication();
         }
-      
+
         /**
          * Check if user's total loyalty points are enough to redeem the reward, if yes redirect to next page.
          */
@@ -75,18 +75,17 @@
             },
             (err, isConfirmed) => {
               if (err) return;
-              if(isConfirmed){
+              if (isConfirmed) {
                 if (currentView.totalPoints) {
-                    if (WidgetItem.reward.pointsToRedeem <= currentView.totalPoints) {
-                      WidgetItem.redeemPoints()
-                      return;
-                    } else {
-                      WidgetItem.insufficientPoints = true;
-                      $timeout(function () {
-                        WidgetItem.insufficientPoints = false;
-                      }, 3000);
-                      return;
-                    }
+                  if (WidgetItem.reward.pointsToRedeem <= currentView.totalPoints) {
+                    WidgetItem.redeemPoints()
+                    return;
+                  } else {
+                    WidgetItem.insufficientPoints = true;
+                    $timeout(function () {
+                      WidgetItem.insufficientPoints = false;
+                    }, 3000);
+                  }
                 } else {
                   WidgetItem.getLoyaltyPoints();
                 }
@@ -102,46 +101,46 @@
               buildfire.spinner.show();
               buildfire.auth.getCurrentUser(function (err, user) {
                 if (user) {
-                  if(currentView.settings && currentView.settings.approvalType 
-                    && currentView.settings.approvalType == "REMOVE_VIA_APP"){
-                      Transactions.requestRedeem(WidgetItem.reward, WidgetItem.reward.pointsToRedeem, $rootScope.loyaltyPoints, user);
-                      buildfire.notifications.pushNotification.schedule(
-                        {
-                          title: "Item Redeem Approval Request",
-                          text: user.displayName + " would like to redeem " + WidgetItem.reward.title,
-                          groupName: "employerGroup",
-                          queryString: "toEmployer=true"
+                  if (currentView.settings && currentView.settings.approvalType
+                    && currentView.settings.approvalType == "REMOVE_VIA_APP") {
+                    Transactions.requestRedeem(WidgetItem.reward, WidgetItem.reward.pointsToRedeem, $rootScope.loyaltyPoints, user);
+                    buildfire.notifications.pushNotification.schedule(
+                      {
+                        title: "Item Redeem Approval Request",
+                        text: user.displayName + " would like to redeem " + WidgetItem.reward.title,
+                        groupName: "employerGroup",
+                        queryString: "toEmployer=true"
                         , at: new Date()
-                        },
-                        (err, result) => {
-                          if (err) return console.error(err);
-                        })
-                      buildfire.spinner.hide();
-                      buildfire.dialog.show(
-                        {
-                          title: WidgetItem.strings["redeem.itemRedeemedTitle"],
-                          message: WidgetItem.strings["redeem.itemRedeemedBody"],
-                          showCancelButton: false,
-                          actionButtons: [
-                            {
-                              text: WidgetItem.strings["redeem.closeitemRedeemedAction"],
-                              type: "primary",
-                              action: () => {
-                                console.log(" ")
-                                  ViewStack.push({
-                                    template: 'Rewards'
-                                  });
-                                  $scope.$apply();
-                              },
-                            }
-                          ],
-                        },
-                        (err, actionButton) => {
-                          console.log(" ")
+                      },
+                      (err, result) => {
+                        if (err) return console.error(err);
+                      })
+                    buildfire.spinner.hide();
+                    buildfire.dialog.show(
+                      {
+                        title: WidgetItem.strings["redeem.itemRedeemedTitle"],
+                        message: WidgetItem.strings["redeem.itemRedeemedBody"],
+                        showCancelButton: false,
+                        actionButtons: [
+                          {
+                            text: WidgetItem.strings["redeem.closeitemRedeemedAction"],
+                            type: "primary",
+                            action: () => {
+                              console.log(" ")
+                              ViewStack.push({
+                                template: 'Rewards'
+                              });
+                              $scope.$apply();
+                            },
+                          }
+                        ],
+                      },
+                      (err, actionButton) => {
+                        console.log(" ")
 
-                        }
-                      );
-                   } 
+                      }
+                    );
+                  }
                   else {
                     ViewStack.push({
                       template: 'Code',
@@ -153,14 +152,15 @@
                   }
 
 
-                 
-                
+
+
                 } else {
                   buildfire.spinner.hide();
                 }
               })
             }
             else {
+              buildfire.spinner.hide();
               WidgetItem.dailyLimitExceeded = true;
               $timeout(function () {
                 WidgetItem.dailyLimitExceeded = false;
@@ -185,15 +185,15 @@
               Context.getContext(function (ctx) {
                 WidgetItem.currentLoggedInUser = user;
                 var success = function (result) {
-                    if (WidgetItem.reward.pointsToRedeem <= result.totalPoints) {
-                      WidgetItem.redeemPoints()
-                    } else {
-                      WidgetItem.insufficientPoints = true;
-                      $timeout(function () {
-                        WidgetItem.insufficientPoints = false;
-                      }, 3000);
-                    }
-                  },
+                  if (WidgetItem.reward.pointsToRedeem <= result.totalPoints) {
+                    WidgetItem.redeemPoints()
+                  } else {
+                    WidgetItem.insufficientPoints = true;
+                    $timeout(function () {
+                      WidgetItem.insufficientPoints = false;
+                    }, 3000);
+                  }
+                },
                   error = function (err) {
                     if (err && err.code !== STATUS_CODE.NOT_FOUND) {
                       console.error('Error while getting points data----------------------------------------', err);
@@ -233,7 +233,7 @@
             }
           }
 
-          if(item && item.listImage){
+          if (item && item.listImage) {
             WidgetItem.reward.listImage = item.listImage;
           } else {
             WidgetItem.reward.listImage = null;
@@ -279,7 +279,7 @@
         WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
           if (ViewStack.getCurrentView().template == 'Item' || ViewStack.getCurrentView().template == 'Item_Details') {
             $scope.$destroy();
-            buildfire.datastore.onRefresh(function () {});
+            buildfire.datastore.onRefresh(function () { });
           }
         });
 

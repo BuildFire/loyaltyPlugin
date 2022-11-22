@@ -30,6 +30,9 @@
       <div class="alert alert-sm text-center alert-danger">{{WidgetItem.strings["redeem.insufficientFunds"]}}
       </div>
     </div>
+    <div class="alert alert-sm text-center alert-danger"
+               ng-if="WidgetItem.dailyLimitExceeded">{{WidgetItem.strings["redeem.redeemDailyLimit"]}}
+          </div>
   </div>
 </div>
 
