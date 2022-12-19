@@ -558,7 +558,7 @@
           WidgetHome.getApplicationAndRewards();
 
           var successPoints = function (result) {
-            if(result>=0){
+            if(typeof result=='number' && result>=0){
               $rootScope.PointsWaitingForApproval = result;
               $scope.$digest();
             }
