@@ -558,7 +558,7 @@
           WidgetHome.getApplicationAndRewards();
 
           var successPoints = function (result) {
-            if(result){
+            if(result>-1){
               $rootScope.PointsWaitingForApproval = result;
               $scope.$digest();
             }
@@ -780,6 +780,7 @@
 
           WidgetHome.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
               if (!ViewStack.hasViews()) {
+                  init();
                   // bind on refresh again
                   buildfire.datastore.onRefresh(function () {
                       init();
