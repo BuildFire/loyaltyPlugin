@@ -480,7 +480,7 @@
                         if (err) return console.error("Error while inserting your data", err);
                         let score = 0 
                         selectedFTQ.answers.forEach(answer => {
-                          score += answer.score ? answer.score : 0
+                          score += answer && answer.score ? answer.score : 0
                         });
                         if(WidgetHome.data && WidgetHome.data.settings && WidgetHome.data.settings.approvalType &&
                           WidgetHome.data.settings.approvalType == "ON_SITE_VIA_PASSCODE"){
@@ -558,7 +558,7 @@
           WidgetHome.getApplicationAndRewards();
 
           var successPoints = function (result) {
-            if(result){
+            if(typeof result=='number' && result>=0){
               $rootScope.PointsWaitingForApproval = result;
               $scope.$digest();
             }
@@ -780,6 +780,7 @@
 
           WidgetHome.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
               if (!ViewStack.hasViews()) {
+                  init();
                   // bind on refresh again
                   buildfire.datastore.onRefresh(function () {
                       init();
