@@ -305,6 +305,11 @@
               $rootScope.$broadcast("REFRESH_APP");
               $rootScope.$apply();
               break;
+
+            case 'SettingsUpdated':
+              $rootScope.$broadcast("SETTINGS_UPDATED", msg.data);
+              $rootScope.$apply();
+              break;
             case 'refresh':
               $window.location.reload();
               break;
