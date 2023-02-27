@@ -162,8 +162,10 @@
             else {
               buildfire.spinner.hide();
               WidgetItem.dailyLimitExceeded = true;
+              $scope.$apply();
               $timeout(function () {
                 WidgetItem.dailyLimitExceeded = false;
+                $scope.$apply();
               }, 3000);
             }
           }
@@ -251,6 +253,15 @@
           }
         });
 
+
+        WidgetItem.listeners['SETTINGS_UPDATED'] = $rootScope.$on('SETTINGS_UPDATED', function (e, item) {
+          WidgetItem.application.dailyLimit = item.data.settings.dailyLimit;
+          WidgetItem.application.pointsPerDollar = item.data.settings.pointsPerDollar;
+          WidgetItem.application.pointsPerVisit = item.data.settings.pointsPerVisit;
+          WidgetItem.application.redemptionPasscode = item.data.settings.redemptionPasscode;
+          WidgetItem.application.totalLimit = item.data.settings.totalLimit;
+        });
+
         /**
          * This event listener is bound for "Carousel2:LOADED" event broadcast
          */
@@ -275,7 +286,7 @@
             $scope.$destroy();
           }
         });
-
+        
         WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
           if (ViewStack.getCurrentView().template == 'Item' || ViewStack.getCurrentView().template == 'Item_Details') {
             $scope.$destroy();

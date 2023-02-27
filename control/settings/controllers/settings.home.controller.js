@@ -243,6 +243,10 @@
                         if (err)
                             console.error('Error while saving data : ', err);
                         else {
+                            buildfire.messaging.sendMessageToWidget({
+                                type: 'SettingsUpdated',
+                                data: data
+                            });
                             console.info('Saved data result: ', data);
                             updateMasterItem(newObj);
                         }
