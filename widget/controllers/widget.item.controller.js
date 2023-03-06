@@ -82,8 +82,10 @@
                     return;
                   } else {
                     WidgetItem.insufficientPoints = true;
+                    $scope.$apply();
                     $timeout(function () {
                       WidgetItem.insufficientPoints = false;
+                      $scope.$apply();
                     }, 3000);
                   }
                 } else {
@@ -191,8 +193,10 @@
                     WidgetItem.redeemPoints()
                   } else {
                     WidgetItem.insufficientPoints = true;
+                    $scope.$apply();
                     $timeout(function () {
                       WidgetItem.insufficientPoints = false;
+                      $scope.$apply();
                     }, 3000);
                   }
                 },
@@ -201,8 +205,10 @@
                       console.error('Error while getting points data----------------------------------------', err);
                     }
                     WidgetItem.insufficientPoints = true;
+                    $scope.$apply();
                     $timeout(function () {
                       WidgetItem.insufficientPoints = false;
+                      $scope.$apply();
                     }, 3000);
                   };
                 if (user._id)
@@ -211,8 +217,10 @@
               });
             } else {
               WidgetItem.insufficientPoints = true;
+              $scope.$apply();
               $timeout(function () {
                 WidgetItem.insufficientPoints = false;
+                $scope.$apply();
               }, 3000);
             }
           });
