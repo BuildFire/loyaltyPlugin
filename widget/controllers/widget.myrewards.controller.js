@@ -44,8 +44,7 @@
               item: item.data.item,
               isReward: true
             });
-            $scope.$digest()
-            $scope.$apply()
+            if (!$scope.$$phase) $scope.$apply()
           }
           
         };
@@ -56,8 +55,7 @@
               item: item.data.item,
               isReward: true
             });
-            $scope.$digest()
-            $scope.$apply()
+            if (!$scope.$$phase) $scope.$digest()
 
           }
         };

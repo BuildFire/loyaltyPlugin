@@ -26,13 +26,6 @@
            ng-bind-html="WidgetItem.safeHtml(WidgetItem.reward.description)"></p>
       </div>
     </div>
-    <div class="col-xs-12 margin-top-five" ng-if="WidgetItem.insufficientPoints">
-      <div class="alert alert-sm text-center alert-danger">{{WidgetItem.strings["redeem.insufficientFunds"]}}
-      </div>
-    </div>
-    <div class="alert alert-sm text-center alert-danger"
-               ng-if="WidgetItem.dailyLimitExceeded">{{WidgetItem.strings["redeem.redeemDailyLimit"]}}
-          </div>
   </div>
 </div>
 
