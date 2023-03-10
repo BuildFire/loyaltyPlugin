@@ -14,8 +14,6 @@
         /**
          * Initialize show error message to false
          */
-        WidgetRedeem.redeemFail = false;
-        WidgetRedeem.dailyLimitExceeded = false;
         WidgetRedeem.context = Context.getContext();
         WidgetRedeem.listeners = {};
 
@@ -67,10 +65,10 @@
               })
             }
             else {
-              WidgetRedeem.dailyLimitExceeded = true;
-              $timeout(function () {
-                WidgetRedeem.dailyLimitExceeded = false;
-              }, 3000);
+              buildfire.dialog.toast({
+                message: WidgetRedeem.strings["redeem.insufficientFunds"],
+                type: "danger",
+              });
             }
           }
           else {
@@ -138,7 +136,7 @@
           console.log("_______________________", user);
           if (user) {
             WidgetRedeem.currentLoggedInUser = user;
-            $scope.$digest();
+            if (!$scope.$$phase) $scope.$digest();
           }
         });
 

@@ -67,11 +67,11 @@
                     case 'OpenItem':
                         RewardCache.setReward(msg.data);
                         $location.path('/reward/' + msg.data._id + '/' + msg.index);
-                        $rootScope.$apply();
+                        if (!$rootScope.$$phase) $rootScope.$apply();
                         break;
                     case 'BackToHome':
                         $location.path('/');
-                        $rootScope.$apply();
+                        if (!$rootScope.$$phase) $rootScope.$apply();
                         break;
                 }
             };

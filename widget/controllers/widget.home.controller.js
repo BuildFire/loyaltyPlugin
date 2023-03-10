@@ -422,7 +422,7 @@
         });
 
         WidgetHome.showDescription = function (description) {
-          return !((description == '<p>&nbsp;<br></p>') || (description == '<p><br data-mce-bogus="1"></p>'));
+          return description && !((description == '<p>&nbsp;<br></p>') || (description == '<p><br data-mce-bogus="1"></p>'));
         };
 
         /**
@@ -506,7 +506,7 @@
                           } else {
                             $rootScope.PointsWaitingForApproval = parseInt(score);
                           }
-                          $rootScope.$digest();
+                          if (!$rootScope.$$phase) $rootScope.$digest();
                         }
                       }
                     );
@@ -560,7 +560,7 @@
           var successPoints = function (result) {
             if(typeof result=='number' && result>=0){
               $rootScope.PointsWaitingForApproval = result;
-              $scope.$digest();
+              if (!$scope.$$phase) $scope.$digest();
             }
           }
           if(WidgetHome.currentLoggedInUser){
@@ -583,7 +583,7 @@
               WidgetHome.currentLoggedInUser = user;
               checkIfEmployerOrUser();
               WidgetHome.getLoyaltyPoints(user._id);
-              $scope.$digest();
+              if (!$scope.$$phase) $scope.$digest();
             }
           });
         };
@@ -606,51 +606,54 @@
               );
             }
               WidgetHome.currentLoggedInUser = null;
-              $scope.$digest();
+              if (!$scope.$$phase) $scope.$digest();
           });
         };
 
 
         var _checkIfEmployerOrUser = function(){
-          if(WidgetHome.currentLoggedInUser.tags && WidgetHome.currentLoggedInUser.tags[WidgetHome.context.appId] && WidgetHome.tags != null && WidgetHome.tags.length > 0 && Object.keys(WidgetHome.tags).length > 0){
-            WidgetHome.currentLoggedInUser.tags[WidgetHome.context.appId].forEach(tag => {
-              WidgetHome.tags.forEach(settingTag => {
-                if(settingTag.tagName == tag.tagName){
-                  WidgetHome.isEmployer = true;
-                  WidgetHome.isClient = false;
-                  buildfire.notifications.pushNotification.subscribe(
-                    { groupName: "employerGroup" },
-                    (err, subscribed) => {
-                    if (err) return console.error(err);
-                    }
-                  );
+          if(WidgetHome.currentLoggedInUser){
+            if(WidgetHome.currentLoggedInUser.tags && WidgetHome.currentLoggedInUser.tags[WidgetHome.context.appId] && WidgetHome.tags != null && WidgetHome.tags.length > 0 && Object.keys(WidgetHome.tags).length > 0){
+              WidgetHome.currentLoggedInUser.tags[WidgetHome.context.appId].forEach(tag => {
+                WidgetHome.tags.forEach(settingTag => {
+                  if(settingTag.tagName == tag.tagName){
+                    WidgetHome.isEmployer = true;
+                    WidgetHome.isClient = false;
+                    buildfire.notifications.pushNotification.subscribe(
+                      { groupName: "employerGroup" },
+                      (err, subscribed) => {
+                      if (err) return console.error(err);
+                      }
+                    );
+                    return;
+                  }
+                })
+                if(WidgetHome.isEmployer){
                   return;
                 }
-              })
-              if(WidgetHome.isEmployer){
-                return;
+              });
+    
+              if(WidgetHome.isEmployer == false){
+                  WidgetHome.isClient = true;
+                  buildfire.notifications.pushNotification.subscribe(
+                    {  },
+                    (err, subscribed) => {
+                      if (err) return console.error(err);
+                    }
+                  );
               }
-            });
-  
-            if(WidgetHome.isEmployer == false){
-                WidgetHome.isClient = true;
-                buildfire.notifications.pushNotification.subscribe(
-                  {  },
-                  (err, subscribed) => {
-                    if (err) return console.error(err);
-                  }
-                );
+            }
+            else {
+              WidgetHome.isClient = true;
+              buildfire.notifications.pushNotification.subscribe(
+                {  },
+                (err, subscribed) => {
+                  if (err) return console.error(err);
+                }
+              );
             }
           }
-          else {
-            WidgetHome.isClient = true;
-            buildfire.notifications.pushNotification.subscribe(
-              {  },
-              (err, subscribed) => {
-                if (err) return console.error(err);
-              }
-            );
-          }
+          
           
         }
 
@@ -704,8 +707,8 @@
                case "Features":
                   features = event.data;
               }
-              $scope.$digest();
-              $rootScope.$digest();
+              if (!$scope.$$phase) $scope.$digest();
+              if (!$rootScope.$$phase) $rootScope.$digest();
             }
           }, 0);
         };
@@ -733,11 +736,11 @@
               Context.getContext(function (ctx) {
                 WidgetHome.context = ctx;
                 WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
-                $scope.$digest();
+                if (!$scope.$$phase) $scope.$digest();
               });
             } else {
               WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
-              $scope.$digest();
+              if (!$scope.$$phase) $scope.$digest();
             }
           }
         });

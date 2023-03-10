@@ -12,7 +12,8 @@
                 buildfire.auth.getCurrentUser(function (err, user) {
                     if (user) {
                       TestsHome.currentLoggedInUser = user;
-                      $scope.$digest();
+                      if (!$scope.$$phase) $scope.$digest();
+
                     }
                 });
                 buildfire.getContext(function (err, context) {

@@ -52,17 +52,17 @@
 
           ContentReward.item.carouselImage.push.apply(ContentReward.item.carouselImage, items);
           changeCarouselActionItemDesign();
-          $scope.$digest();
+          if (!$scope.$$phase) $scope.$digest();
         };
         // this method will be called when an item deleted from the list
         ContentReward.editor.onDeleteItem = function (item, index) {
           ContentReward.item.carouselImage.splice(index, 1);
-          $scope.$digest();
+          if (!$scope.$$phase) $scope.$digest();
         };
         // this method will be called when you edit item details
         ContentReward.editor.onItemChange = function (item, index) {
           ContentReward.item.carouselImage.splice(index, 1, item);
-          $scope.$digest();
+          if (!$scope.$$phase) $scope.$digest();
         };
         // this method will be called when you change the order of items
         ContentReward.editor.onOrderChange = function (item, oldIndex, newIndex) {
@@ -82,7 +82,7 @@
           items[newIndex] = tmp;
 
           ContentReward.item.carouselImage = items;
-          $scope.$digest();
+          if (!$scope.$$phase) $scope.$digest();
         };
 
         /* list image add <start>*/
@@ -147,7 +147,7 @@
         buildfire.auth.getCurrentUser(function (err, user) {
           if (user && user._cpUser) {
             ContentReward.currentLoggedInUser = user._cpUser;
-            $scope.$digest();
+            if (!$scope.$$phase) $scope.$digest();
           }
         });
         ContentReward.addingReward = function () {
@@ -237,7 +237,7 @@
               data: ContentReward.item
             });
           }
-          $scope.$digest();
+          if (!$scope.$$phase) $scope.$digest();
           var success = function (result) {
               console.info('Saved data result: ', result);
               ContentReward.itemSaved = true;

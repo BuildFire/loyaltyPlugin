@@ -80,7 +80,7 @@
                     if (result && result.data && result.data.length > 0) {
                         console.log(result)
                         SettingsHome.ftqFeatureItems = result.data;
-                        $scope.$digest();
+                        if (!$scope.$$phase) $scope.$digest();
                         changeActionItemIcon();
                     }
                 })
@@ -102,7 +102,7 @@
                         );
                         response[0].iconUrl = croppedImage;
                         SettingsHome.ftqFeatureItems.push(response[0])
-                        $scope.$digest();
+                        if (!$scope.$$phase) $scope.$digest();
                         buildfire.datastore.save(SettingsHome.ftqFeatureItems, "Features", function (err, result) {
                             if (err || !result) {
                                 console.error("Error saving the widget details: ", err);
@@ -126,7 +126,7 @@
                 buildfire.auth.getCurrentUser(function (err, user) {
                     if (user && user._cpUser) {
                         SettingsHome.currentLoggedInUser = user._cpUser;
-                        $scope.$digest();
+                        if (!$scope.$$phase) $scope.$digest();
                     }
                 });
                 buildfire.getContext(function (err, context) {
@@ -184,7 +184,7 @@
                                         } else {
                                             SettingsHome.tags = result.data
 
-                                            $scope.$apply();
+                                            if (!$scope.$$phase) $scope.$apply();
                                             updateMasterItem(SettingsHome.data);
                                             if (tmrDelay) clearTimeout(tmrDelay);
                                         }
@@ -200,7 +200,7 @@
                         if (err) return console.error(err);
                         if (result && result != null) {
                             SettingsHome.tags = result;
-                            $scope.$apply();
+                            if (!$scope.$$phase) $scope.$apply();
                             buildfire.datastore.save(SettingsHome.tags, "Tags", function (err, result) {
                                 if (err || !result) {
                                     console.error("Error saving the widget details: ", err);

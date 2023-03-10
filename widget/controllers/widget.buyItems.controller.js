@@ -8,7 +8,6 @@
 
         var WidgetBuyItems = this;
         var breadCrumbFlag = true;
-        WidgetBuyItems.totalLimitExceeded = false;
         WidgetBuyItems.data = [];
         WidgetBuyItems.items = [];
         WidgetBuyItems.listeners = {};
@@ -49,7 +48,7 @@
                   WidgetBuyItems.data = event.data;
                   break;
               }
-              $scope.$digest();
+              if (!$scope.$$phase) $scope.$digest();
             }
           }, 0);
         };
@@ -121,11 +120,10 @@
           var amount = calculatedPoints;
           calculatedPoints +=  WidgetBuyItems.application.pointsPerVisit + currentView.loyaltyPoints;
           if (WidgetBuyItems.application.totalLimit <= calculatedPoints) {
-            WidgetBuyItems.totalLimitExceeded = true;
-            setTimeout(function () {
-              WidgetBuyItems.totalLimitExceeded = false;
-              $scope.$digest();
-            }, 3000);
+            buildfire.dialog.toast({
+              message: WidgetBuyItems.strings["redeem.redeemDailyLimit"],
+              type: "danger",
+            });
           }
           else if(WidgetBuyItems.data.settings && WidgetBuyItems.data.settings.approvalType 
             && WidgetBuyItems.data.settings.approvalType == "REMOVE_VIA_APP") {
