@@ -187,7 +187,7 @@
                     WidgetItem.redeemPoints()
                   } else {
                     buildfire.dialog.toast({
-                      message: WidgetItem.strings["redeem.insufficientPoints"],
+                      message: WidgetItem.strings["redeem.insufficientFunds"],
                       type: "danger",
                     });
                   }
@@ -197,7 +197,7 @@
                       console.error('Error while getting points data----------------------------------------', err);
                     }
                     buildfire.dialog.toast({
-                      message: WidgetItem.strings["redeem.insufficientPoints"],
+                      message: WidgetItem.strings["redeem.insufficientFunds"],
                       type: "danger",
                     });
                   };
@@ -207,7 +207,7 @@
               });
             } else {
               buildfire.dialog.toast({
-                message: WidgetItem.strings["redeem.insufficientPoints"],
+                message: WidgetItem.strings["redeem.insufficientFunds"],
                 type: "danger",
               });
             }
