@@ -38,8 +38,6 @@
           theme: 'modern'
         };
         ContentHome.currentLoggedInUser = null;
-        ContentHome.invalidApplicationParameters = false;
-        ContentHome.needToLoginInCP = false;
 
 
 
@@ -120,10 +118,10 @@
                           _data.auth = ContentHome.currentLoggedInUser.auth;
                           LoyaltyAPI.addEditApplication(_data).then(success, error);
                       } else {
-                          ContentHome.needToLoginInCP = true;
-                          $timeout(function () {
-                              ContentHome.needToLoginInCP = false;
-                          }, 5000);
+                        buildfire.dialog.toast({
+                          message: "Please make sure you are logged In",
+                          type: "danger",
+                        });
                       }
                   }
               };
@@ -148,7 +146,7 @@
                   console.log("!!!!!!!!!!User!!!!!!!!!!!!", user);
                   if (user && user._cpUser) {
                       ContentHome.currentLoggedInUser = user._cpUser;
-                      $scope.$digest();
+                      if (!$scope.$$phase) $scope.$digest();
                   }
               });
           };
@@ -240,10 +238,10 @@
             , error = function (err) {
               console.log('Error while updating application : ', err);
               if (err && err.code == 2000) {
-                ContentHome.invalidApplicationParameters = true;
-                $timeout(function () {
-                  ContentHome.invalidApplicationParameters = false;
-                }, 3000);
+                buildfire.dialog.toast({
+                  message: "Please enter valid data.",
+                  type: "danger",
+                });
               }
             };
             if (ContentHome.currentLoggedInUser) {

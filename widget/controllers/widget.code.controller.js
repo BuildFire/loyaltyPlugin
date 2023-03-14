@@ -33,8 +33,6 @@
           buildfire.datastore.onRefresh(function () {
           });
 
-        WidgetCode.passcodeFailure = false;
-        WidgetCode.dailyLimitExceeded = false;
 
         WidgetCode.context = Context.getContext();
         if (RewardCache.getApplication()) {
@@ -62,12 +60,10 @@
             Buildfire.spinner.hide();
             console.log("Error while adding points:", error);
             if (error.code == 2103) {
-              WidgetCode.dailyLimitExceeded = true;
-              $scope.$digest();
-              setTimeout(function () {
-                WidgetCode.dailyLimitExceeded = false;
-                $scope.$digest();
-              }, 3000);
+              buildfire.dialog.toast({
+                message: WidgetCode.strings["redeem.redeemDailyLimit"],
+                type: "danger",
+              });
             }
 
           };
@@ -91,10 +87,10 @@
                   var redeemFailure = function (error) {
                     Buildfire.spinner.hide();
                     if (error && error.code == 2103) {
-                      WidgetCode.dailyLimitExceeded = true;
-                      $timeout(function () {
-                        WidgetCode.dailyLimitExceeded = false;
-                      }, 3000);
+                      buildfire.dialog.toast({
+                        message: WidgetCode.strings["redeem.redeemDailyLimit"],
+                        type: "danger",
+                      });
                     } else {
                       WidgetCode.redeemFail = true;
                       $timeout(function () {
@@ -109,10 +105,10 @@
                       LoyaltyAPI.redeemPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, currentView.reward._id).then(redeemSuccess, redeemFailure);
                     }
                     else {
-                      WidgetCode.dailyLimitExceeded = true;
-                      $timeout(function () {
-                        WidgetCode.dailyLimitExceeded = false;
-                      }, 3000);
+                      buildfire.dialog.toast({
+                        message: WidgetCode.strings["redeem.redeemDailyLimit"],
+                        type: "danger",
+                      });
                     }
                   }
                   else {
@@ -140,13 +136,17 @@
           var error = function (error) {
             Buildfire.spinner.hide();
             console.log("Error while adding points:", error);
+            if (error.code == 2101) { // Invalid Passcode
+              buildfire.dialog.toast({
+                message: WidgetCode.strings["staffApproval.invalidCode"],
+                type: "danger",
+              });
+            }
             if (error.code == 2103) {
-              WidgetCode.dailyLimitExceeded = true;
-              $scope.$digest();
-              setTimeout(function () {
-                WidgetCode.dailyLimitExceeded = false;
-                $scope.$digest();
-              }, 3000);
+              buildfire.dialog.toast({
+                message: WidgetCode.strings["redeem.redeemDailyLimit"],
+                type: "danger",
+              });
             }
 
           };
@@ -174,7 +174,7 @@
           console.log("_______________________", user);
           if (user) {
             WidgetCode.currentLoggedInUser = user;
-            $scope.$digest();
+            if (!$scope.$$phase) $scope.$digest();
           }
         });
 

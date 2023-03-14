@@ -12,8 +12,6 @@
         WidgetItem.strings = $rootScope.strings;
 
         WidgetItem.listeners = {};
-        WidgetItem.insufficientPoints = false;
-        WidgetItem.dailyLimitExceeded = false;
         WidgetItem.currentLoggedInUser = null;
         WidgetItem.isReward = false;
         //create new instance of buildfire carousel viewer
@@ -63,6 +61,10 @@
          * Check if user's total loyalty points are enough to redeem the reward, if yes redirect to next page.
          */
         WidgetItem.confirmCancel = function () {
+          if (!WidgetItem.currentLoggedInUser) {
+            buildfire.auth.login({}, () => { });
+            return;
+          }
           buildfire.dialog.confirm(
             {
               title: WidgetItem.strings["redeem.titleNote"],
@@ -81,10 +83,10 @@
                     WidgetItem.redeemPoints()
                     return;
                   } else {
-                    WidgetItem.insufficientPoints = true;
-                    $timeout(function () {
-                      WidgetItem.insufficientPoints = false;
-                    }, 3000);
+                    buildfire.dialog.toast({
+                      message: WidgetItem.strings["redeem.insufficientFunds"],
+                      type: "danger",
+                    });
                   }
                 } else {
                   WidgetItem.getLoyaltyPoints();
@@ -130,7 +132,7 @@
                               ViewStack.push({
                                 template: 'Rewards'
                               });
-                              $scope.$apply();
+                              if (!$scope.$$phase) $scope.$apply()
                             },
                           }
                         ],
@@ -148,12 +150,8 @@
                       type: 'redeemPoints',
                       pointsToRedeem: WidgetItem.reward.pointsToRedeem
                     });
-                    $scope.$apply();
+                    if (!$scope.$$phase) $scope.$apply()
                   }
-
-
-
-
                 } else {
                   buildfire.spinner.hide();
                 }
@@ -161,10 +159,10 @@
             }
             else {
               buildfire.spinner.hide();
-              WidgetItem.dailyLimitExceeded = true;
-              $timeout(function () {
-                WidgetItem.dailyLimitExceeded = false;
-              }, 3000);
+              buildfire.dialog.toast({
+                message: WidgetItem.strings["redeem.redeemDailyLimit"],
+                type: "danger",
+              });
             }
           }
           else {
@@ -188,30 +186,30 @@
                   if (WidgetItem.reward.pointsToRedeem <= result.totalPoints) {
                     WidgetItem.redeemPoints()
                   } else {
-                    WidgetItem.insufficientPoints = true;
-                    $timeout(function () {
-                      WidgetItem.insufficientPoints = false;
-                    }, 3000);
+                    buildfire.dialog.toast({
+                      message: WidgetItem.strings["redeem.insufficientFunds"],
+                      type: "danger",
+                    });
                   }
                 },
                   error = function (err) {
                     if (err && err.code !== STATUS_CODE.NOT_FOUND) {
                       console.error('Error while getting points data----------------------------------------', err);
                     }
-                    WidgetItem.insufficientPoints = true;
-                    $timeout(function () {
-                      WidgetItem.insufficientPoints = false;
-                    }, 3000);
+                    buildfire.dialog.toast({
+                      message: WidgetItem.strings["redeem.insufficientFunds"],
+                      type: "danger",
+                    });
                   };
                 if (user._id)
                   LoyaltyAPI.getLoyaltyPoints(user._id, WidgetItem.currentLoggedInUser.userToken, ctx.instanceId).then(success, error);
 
               });
             } else {
-              WidgetItem.insufficientPoints = true;
-              $timeout(function () {
-                WidgetItem.insufficientPoints = false;
-              }, 3000);
+              buildfire.dialog.toast({
+                message: WidgetItem.strings["redeem.insufficientFunds"],
+                type: "danger",
+              });
             }
           });
         };
@@ -251,6 +249,15 @@
           }
         });
 
+
+        WidgetItem.listeners['SETTINGS_UPDATED'] = $rootScope.$on('SETTINGS_UPDATED', function (e, item) {
+          WidgetItem.application.dailyLimit = item.data.settings.dailyLimit;
+          WidgetItem.application.pointsPerDollar = item.data.settings.pointsPerDollar;
+          WidgetItem.application.pointsPerVisit = item.data.settings.pointsPerVisit;
+          WidgetItem.application.redemptionPasscode = item.data.settings.redemptionPasscode;
+          WidgetItem.application.totalLimit = item.data.settings.totalLimit;
+        });
+
         /**
          * This event listener is bound for "Carousel2:LOADED" event broadcast
          */
@@ -275,7 +282,7 @@
             $scope.$destroy();
           }
         });
-
+        
         WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
           if (ViewStack.getCurrentView().template == 'Item' || ViewStack.getCurrentView().template == 'Item_Details') {
             $scope.$destroy();

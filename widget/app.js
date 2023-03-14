@@ -260,7 +260,7 @@
                 totalPoints: $rootScope.loyaltyPoints
               });
               $rootScope.$broadcast("REWARD_ADDED", msg.data);
-              $rootScope.$apply();
+              if (!$rootScope.$$phase) $rootScope.$apply();
               break;
 
             case 'OpenItem':
@@ -271,39 +271,44 @@
                       template: 'Item_Details',
                       totalPoints: $rootScope.loyaltyPoints
                   });
-                  $rootScope.$apply();
+                  if (!$rootScope.$$phase) $rootScope.$apply();
               }
               break;
 
             case 'UpdateItem':
               RewardCache.setReward(msg.data);
               $rootScope.$broadcast("REWARD_UPDATED", msg.data, msg.index);
-              $rootScope.$apply();
+              if (!$rootScope.$$phase) $rootScope.$apply();
               break;
 
             case 'RemoveItem':
               $rootScope.$broadcast("REWARD_DELETED", msg.index);
-              $rootScope.$apply();
+              if (!$rootScope.$$phase) $rootScope.$apply();
               break;
 
             case 'ListSorted':
               $rootScope.$broadcast("REWARDS_SORTED");
-              $rootScope.$apply();
+              if (!$rootScope.$$phase) $rootScope.$apply();
               break;
 
             case 'UpdateApplication':
               $rootScope.$broadcast("APPLICATION_UPDATED", msg.data);
-              $rootScope.$apply();
+              if (!$rootScope.$$phase) $rootScope.$apply();
               break;
 
             case 'ReturnHome':
               $rootScope.$broadcast("GOTO_HOME");
-              $rootScope.$apply();
+              if (!$rootScope.$$phase) $rootScope.$apply();
               break;
 
             case 'AppCreated':
               $rootScope.$broadcast("REFRESH_APP");
-              $rootScope.$apply();
+              if (!$rootScope.$$phase) $rootScope.$apply();
+              break;
+
+            case 'SettingsUpdated':
+              $rootScope.$broadcast("SETTINGS_UPDATED", msg.data);
+              if (!$rootScope.$$phase) $rootScope.$apply();
               break;
             case 'refresh':
               $window.location.reload();
