@@ -150,8 +150,7 @@
                 let oldPoints = res[0].data.newPoints ? res[0].data.newPoints : 0
 
                 if(type === "Redeemed" && WidgetHome.data.settings.deductLeaderboardPoints){
-                  if(oldPoints === 0) data.newPoints = neg(newPoints)
-                  else data.newPoints = oldPoints > newPoints ? oldPoints - newPoints : neg(newPoints - oldPoints) 
+                  data.newPoints = oldPoints === 0 ? negative(newPoints) : oldPoints - newPoints;
                 } 
                 else if(type === "Added"){
                   data.newPoints = oldPoints + newPoints;
@@ -182,7 +181,7 @@
           );
         }
 
-        const neg = (num) => -Math.abs(num)
+        const negative = (num) => -Math.abs(num)
 
         WidgetHome.getLoyaltyPoints = function (userId) {
           var success = function (result) {
