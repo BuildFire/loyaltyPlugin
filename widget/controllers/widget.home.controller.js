@@ -130,7 +130,7 @@
          * Method to fetch logged in user's loyalty points
          */
 
-        const saveLoyaltyPointsInAppData = function(userId, totalPoints, newPoints, type){
+        const saveLoyaltyPointsInAppData = function(userId, totalPoints, points, type){
           buildfire.appData.search(
             {
               filter: {
@@ -143,26 +143,23 @@
             (err, res) => {
               if (err) return console.error("there was a problem retrieving your data");
               if(res && res.length > 0){
-                let data = {
-                  userId: userId,
-                  totalPoints: totalPoints, 
-                }
                 let oldPoints = res[0].data.newPoints ? res[0].data.newPoints : 0
 
+                let newPoints;
                 if(type === "Redeemed" && WidgetHome.data.settings.deductLeaderboardPoints){
-                  data.newPoints = oldPoints === 0 ? negative(newPoints) : oldPoints - newPoints;
+                  newPoints = oldPoints === 0 ? negative(points) : oldPoints - points;
                 } 
                 else if(type === "Added"){
-                  data.newPoints = oldPoints + newPoints;
+                  newPoints = oldPoints + points;
                 }
                 // If points are redeemed and deductLearboardPoints is off -> No changes
-                if(data.newPoints){ 
-                    buildfire.appData.update(
-                        res[0].id,
-                        data,
-                        "userLoyaltyPoints",
-                        () => {}
-                      );
+                if(newPoints){ 
+                  buildfire.appData.searchAndUpdate(
+                    { userId: { $eq: userId} },
+                    { $set: { totalPoints, newPoints  } },
+                    "userLoyaltyPoints",
+                    () => {}
+                  );
                 }
               } else {
                 let data = {
