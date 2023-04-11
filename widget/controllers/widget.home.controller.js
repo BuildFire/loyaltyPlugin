@@ -129,9 +129,8 @@
         /**
          * Method to fetch logged in user's loyalty points
          */
-        var isLoyaltyPointsUpdated = false;
 
-        const saveLoyaltyPointsInAppData = function(userId, totalPoints){
+        const saveLoyaltyPointsInAppData = function(userId, totalPoints, points, type){
           buildfire.appData.search(
             {
               filter: {
@@ -143,21 +142,31 @@
             "userLoyaltyPoints",
             (err, res) => {
               if (err) return console.error("there was a problem retrieving your data");
-              let data = {
-                userId: userId, totalPoints: totalPoints
-              }
               if(res && res.length > 0){
-                if( (!WidgetHome.data.settings.deductLeaderboardPoints && res[0].data.totalPoints < totalPoints)
-                  ||  WidgetHome.data.settings.deductLeaderboardPoints){
-                  buildfire.appData.update(
-                    res[0].id,
-                    data,
+                let oldPoints = res[0].data.newPoints ? res[0].data.newPoints : 0
+
+                let newPoints;
+                if(type === "Redeemed" && WidgetHome.data.settings.deductLeaderboardPoints){
+                  newPoints = oldPoints === 0 ? negative(points) : oldPoints - points;
+                } 
+                else if(type === "Added"){
+                  newPoints = oldPoints + points;
+                }
+                // If points are redeemed and deductLearboardPoints is off -> No changes
+                if(newPoints){ 
+                  buildfire.appData.searchAndUpdate(
+                    { userId: { $eq: userId} },
+                    { $set: { totalPoints, newPoints  } },
                     "userLoyaltyPoints",
                     () => {}
                   );
                 }
-                
               } else {
+                let data = {
+                  userId: userId,
+                  totalPoints: totalPoints,
+                  newPoints: newPoints 
+                }
                 buildfire.appData.insert(
                   data,
                   "userLoyaltyPoints",
@@ -169,15 +178,12 @@
           );
         }
 
+        const negative = (num) => -Math.abs(num)
 
         WidgetHome.getLoyaltyPoints = function (userId) {
           var success = function (result) {
               $rootScope.loyaltyPoints = result.totalPoints;
               WidgetHome.applicationExists = true;
-              if(!isLoyaltyPointsUpdated){
-                isLoyaltyPointsUpdated = true  
-                saveLoyaltyPointsInAppData(userId, result.totalPoints)
-              }
             }
             , error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
@@ -326,7 +332,7 @@
         WidgetHome.listeners['POINTS_REDEEMED'] = $rootScope.$on('POINTS_REDEEMED', function (e, points) {
           if (points)
             $rootScope.loyaltyPoints = $rootScope.loyaltyPoints - points;
-            saveLoyaltyPointsInAppData(WidgetHome.currentLoggedInUser._id, $rootScope.loyaltyPoints)
+            saveLoyaltyPointsInAppData(WidgetHome.currentLoggedInUser._id, $rootScope.loyaltyPoints, points, "Redeemed")
 
         });
 
@@ -336,7 +342,7 @@
         WidgetHome.listeners['POINTS_ADDED'] = $rootScope.$on('POINTS_ADDED', function (e, points) {
           if (points)
             $rootScope.loyaltyPoints = $rootScope.loyaltyPoints + points;
-            saveLoyaltyPointsInAppData(WidgetHome.currentLoggedInUser._id, $rootScope.loyaltyPoints)
+            saveLoyaltyPointsInAppData(WidgetHome.currentLoggedInUser._id, $rootScope.loyaltyPoints, points, "Added")
         });
 
         WidgetHome.listeners['POINTS_WAITING_APPROVAL_ADDED'] = $rootScope.$on('POINTS_WAITING_APPROVAL_ADDED', function (e, points) {
