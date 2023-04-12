@@ -165,7 +165,7 @@
                 let data = {
                   userId: userId,
                   totalPoints: totalPoints,
-                  newPoints: newPoints 
+                  newPoints: totalPoints 
                 }
                 buildfire.appData.insert(
                   data,
