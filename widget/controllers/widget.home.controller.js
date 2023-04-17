@@ -129,7 +129,6 @@
         /**
          * Method to fetch logged in user's loyalty points
          */
-
         const saveLoyaltyPointsInAppData = function(userId, totalPoints, points, type){
           buildfire.appData.search(
             {
@@ -165,7 +164,7 @@
                 let data = {
                   userId: userId,
                   totalPoints: totalPoints,
-                  newPoints: newPoints 
+                  newPoints: totalPoints 
                 }
                 buildfire.appData.insert(
                   data,
@@ -179,6 +178,7 @@
         }
 
         const negative = (num) => -Math.abs(num)
+
 
         WidgetHome.getLoyaltyPoints = function (userId) {
           var success = function (result) {
