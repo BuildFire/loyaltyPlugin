@@ -137,10 +137,10 @@
                   buildfire.services.publicFiles.showDialog(
                     { filter: ["text/csv"], allowMultipleFilesUpload: false },
                     (onProgress) => {
-                      console.log("onProgress" + JSON.stringify(onProgress));
+                      // console.log("onProgress" + JSON.stringify(onProgress));
                     },
                     (onComplete) => {
-                      console.log("onComplete" + JSON.stringify(onComplete));
+                      // console.log("onComplete" + JSON.stringify(onComplete));
                     },
                     (err, files) => {
                       if (err) {
@@ -184,15 +184,34 @@
                     });
                     return console.error(err);
                   }
-                  // console.log("response", res, context.instanceId);
-                  buildfire.dialog.toast({
-                    message: "Importing users points...",
-                    type: 'info',
-                    duration: 2000
-                  });
-                  setTimeout(()=> {
-                    addAllUsersPoints(res);
-                  }, 500);
+                  buildfire.dialog.show(
+                    {
+                      title: "Import users",
+                      message:
+                        "Please wait while importing, it may take a while. Click Continue to proceed.",
+                      isMessageHTML: false,
+                      showCancelButton: true,
+                      actionButtons: [
+                        {
+                          text: "Continue",
+                          type: "primary",
+                          action: () => {
+                            addAllUsersPoints(res);
+                          },
+                        },
+                      ],
+                    },
+                    (err, actionButton) => {
+                      if (err) {
+                        ResultsHome.exporting = false;
+                        buildfire.dialog.toast({
+                          message: "Import failed",
+                          type: "danger"
+                        });
+                        console.error(err);
+                      }
+                    }
+                  );
                 })
               })
               .catch((error) => {
@@ -262,7 +281,7 @@
             return new Promise((resolve, reject) => {
               LoyaltyAPI.addLoyaltyPoints(user.userId, null, ResultsHome.application.unqiueId, ResultsHome.application.redemptionPasscode, null, points).then(result => {
                 // add imported points transaction
-                Transactions.requestApprovedImportPoints(points, ResultsHome.currentUser, 'IMPORTED POINTS', user).then(transaction => {
+                Transactions.requestApprovedImportPoints(points, ResultsHome.currentUser, 'IMPORTED POINTS', {_id: user.userId, email: user.email, userId: user.userId}).then(transaction => {
                   resolve(result);
                 })
               }).catch(err => {
@@ -417,7 +436,7 @@
             var transactions = result.map(function (result){
               return result.data
             });
-            console.log(transactions)
+            // console.log(transactions)
             ResultsHome.transactions = transactions;
             $rootScope.transactions = transactions;
             if(transactions.length < 50) {

@@ -49,11 +49,10 @@
           var pluginTitle = buildfire.getContext().title;
           let date = new Date();
           const data = {
-            createdBy: user,
+            createdBy: importedUser,
             createdAt: date,
             approvedBy: user.email,
             approvedOn: date,
-            importedUser: importedUser,
             type: TRANSACTION_TYPES.IMPORT_POINTS,
             purchaseAmount: null,
             pointsEarned: pointsEarned,
@@ -67,7 +66,7 @@
             pluginTitle: pluginTitle,
             _buildfire :{ 
               index: {
-                text: user.displayName ? user.displayName : user.email,
+                text: importedUser.displayName ? importedUser.displayName : importedUser.email,
                 date1: new Date(),
               }
             }
