@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginResults')
-    .controller('ResultsHomeCtrl', ['$scope', '$rootScope', 'Buildfire', 'Transactions', '$location', '$filter',
-      function ($scope, $rootScope, Buildfire, Transactions, $location, $filter) {
+    .controller('ResultsHomeCtrl', ['$scope', '$rootScope', 'Buildfire', 'Transactions', '$location', '$filter', 'LoyaltyAPI', 'context',
+      function ($scope, $rootScope, Buildfire, Transactions, $location, $filter, LoyaltyAPI, context) {
         var ResultsHome = this;
         ResultsHome.dateSort = -1;
         ResultsHome.dateSearch = {
@@ -104,6 +104,257 @@
           } else {
             generateCsv();
           }
+        }
+
+        ResultsHome.DownloadTemplateCsv = function() {
+          ResultsHome.exporting = true;
+          function generateCsv() {
+            let csvContent = '';
+            csvContent += "Email,Points \r\n"
+            var blob = new Blob([csvContent],{type: 'text/csv;charset=utf-8;'});
+            var url = URL.createObjectURL(blob);
+            var link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "Template.csv");
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+            ResultsHome.exporting = false;
+          }
+          generateCsv();
+        }
+
+        ResultsHome.importCsv = function() {
+          ResultsHome.exporting = true;
+
+          function uploadFile() {
+            LoyaltyAPI.getApplication(context.instanceId).then(loyaltyApp => {
+              ResultsHome.getCurrentUser().then(user => {
+                if (user && Object.keys(user).length && loyaltyApp && Object.keys(loyaltyApp).length) {
+                  ResultsHome.currentUser = user
+                  ResultsHome.application = loyaltyApp;
+                  buildfire.services.publicFiles.showDialog(
+                    { filter: ["text/csv"], allowMultipleFilesUpload: false },
+                    (onProgress) => {
+                      console.log("onProgress" + JSON.stringify(onProgress));
+                    },
+                    (onComplete) => {
+                      console.log("onComplete" + JSON.stringify(onComplete));
+                    },
+                    (err, files) => {
+                      if (err) {
+                        ResultsHome.exporting = false;
+                        buildfire.dialog.toast({
+                          message: "Import failed",
+                          type: "danger"
+                        });
+                        return console.error(err);
+                      }
+
+                      if (files[0]) {
+                        // console.log("Files", files[0]);
+                        processCSVFile(files[0]);
+                      }
+                    }
+                  );
+                } else {
+                  ResultsHome.exporting = false;
+                  buildfire.dialog.toast({
+                    message: "Import failed",
+                    type: "danger"
+                  });
+                }
+              })
+            });
+          };
+
+          function processCSVFile(file) {
+            // Fetch the file content using the provided URL
+            fetch(file.url)
+              .then((response) => response.text())
+              .then((csvData) => {
+                // console.log("check data", csvData);
+                ParseCsv(csvData, (err, res) => {
+                  if (err) {
+                    ResultsHome.exporting = false;
+                    buildfire.dialog.toast({
+                      message: "Import failed",
+                      type: "danger"
+                    });
+                    return console.error(err);
+                  }
+                  // console.log("response", res, context.instanceId);
+                  addAllUsersPoints(res);
+                })
+              })
+              .catch((error) => {
+                ResultsHome.exporting = false;
+                buildfire.dialog.toast({
+                  message: "Import failed",
+                  type: "danger"
+                });
+                console.error("Error fetching file:", error);
+              });
+          };
+
+          function addAllUsersPoints(data) {
+            function searchForUsers() {
+              // Search for all users
+              return ResultsHome.searchUsers({emails: data.emails})
+                .then((searchResult) => {
+                  if (searchResult && searchResult.length > 0) {
+                    // Update each record
+                    const updatePromises = data.emails.map((email, idx) => {return addUserPointsHelper(email, searchResult, data, idx)});
+
+                    const filteredUpdatePromises = updatePromises.filter(e => e != null);
+                    // Wait for all updates to complete
+                    return Promise.all(filteredUpdatePromises)
+                      .then(() => {
+                        // TODO refresh UI to get new imported points transactions
+                        return Promise.resolve();
+                      });
+                  } 
+                  else {
+                    return Promise.resolve();
+                  }
+                })
+                .catch((error) => {
+                  console.error(`Error searching for records: ${error.message}`);
+                  return Promise.reject(error);
+                });
+            }
+
+            return searchForUsers()
+              .then(() => {
+                // console.log("All records updated successfully");
+                ResultsHome.exporting = false;
+                buildfire.dialog.toast({
+                  message: "Import success",
+                  type: "success"
+                });
+              })
+              .catch(err => {
+                console.error(err);
+                ResultsHome.exporting = false;
+                buildfire.dialog.toast({
+                  message: "Import failed",
+                  type: "danger"
+                });
+              });
+          }
+
+          const addUserPoint = ({ userId, points }) => {
+            return new Promise((resolve, reject) => {
+              LoyaltyAPI.addLoyaltyPoints(userId, null, ResultsHome.application.unqiueId, ResultsHome.application.redemptionPasscode, null, points).then(result => {
+                // add imported points transaction
+                resolve(result);
+              }).catch(err => {
+                if(err.code == 2107 && err.message == 'Invalid userId') {
+                  resolve({});
+                } else {
+                  reject(err);
+                }
+              })
+            })
+          }
+
+          function addUserPointsHelper(email, users, data, idx) {
+            let user = users.find(user => user.email == email);
+            let userId = user ? user.userId : null;
+            let points = user ? data.points[idx] : null;
+
+            if (!userId || !points) {
+              return null;
+            }
+            return addUserPoint({ userId, points });
+          }
+
+          function ParseCsv(csvData, callback) {
+            try {
+              // Split the CSV data into rows
+              const rows = csvData.split("\n");
+
+              // Extract the headers from the first row
+              const headers = rows[0].replace("\r", "").split(",");
+
+              // Find the indices of the "email" and "points" columns
+              const emailIndex = headers.indexOf("Email");
+              const pointsIndex = headers.indexOf("Points");
+
+              // Initialize arrays for storing emails and points
+              const emails = [];
+              const points = [];
+
+              // Iterate over the remaining rows and extract the email and points values
+              for (let i = 1; i < rows.length; i++) {
+                const row = rows[i].replace("\r", "").split(",");
+
+                // Extract the email and points values based on the column indices
+                const email = row[emailIndex];
+                const point = !isNaN(parseInt(row[pointsIndex])) ? parseInt(row[pointsIndex]) : 0;
+
+                // Push the email and points values to the respective arrays
+                if (point && email) {
+                  emails.push(email);
+                  points.push(point);
+                }
+              }
+
+              // console.log("Emails:", emails);
+              // console.log("Points:", points);
+              return callback(null, {emails, points})
+            } catch (error) {
+              return callback(error)
+            }
+          }
+            uploadFile();
+        }
+
+        ResultsHome.searchUsers = function ({ emails }) {
+          let _emails = [...emails];
+          let allUsers = [];
+          return new Promise((resolve, reject) => {
+            function _fetchUsers(users, skip) {
+              const params = {
+                emails: users,
+                limit: 20,
+                skip
+              }
+              buildfire.auth.searchUsers(
+                params, (err, result) => {
+                  if (err) {
+                    reject(err);
+                    return;
+                  }
+                  allUsers.push(...result);
+                  if (_emails.length > 0) {
+                    _fetchUsers(_emails.splice(0, 20), skip + 20);
+                  } else {
+                    resolve(allUsers);
+                  }
+
+                }
+              );
+            }
+            if (_emails.length > 0) {
+              _fetchUsers(_emails.splice(0, 20), 0);
+            } else {
+              resolve([]);
+            }
+          });
+        }
+
+        ResultsHome.getCurrentUser = function () {
+          return new Promise((resolve, reject) => {
+            buildfire.auth.getCurrentUser((err, user) => {
+              if (err) reject(err);
+              if(user) {
+                resolve(user);
+              } else {
+                resolve(null);
+              }
+            });
+          });
         }
 
         ResultsHome.openExportActions = function() {
