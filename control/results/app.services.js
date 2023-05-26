@@ -9,7 +9,7 @@
       };
       return Buildfire;
     }])
-  .factory("Transactions", ['Buildfire', '$q', 'TAG_NAMES', function (Buildfire, $q, TAG_NAMES) {
+  .factory("Transactions", ['Buildfire', '$q', 'TAG_NAMES', 'TRANSACTION_TYPES', 'STATUS', function (Buildfire, $q, TAG_NAMES, TRANSACTION_TYPES, STATUS) {
       return {
         get: function(skip = 0, datesort = -1, dateFrom = undefined, dateTo = undefined, title = "") {
           var deferred = $q.defer();
@@ -45,7 +45,7 @@
           });
           return deferred.promise;
         },
-        requestApprovedImportPoints: function (purchaseAmount, pointsEarned, currentPointsAmount, user, title, imageUrl, importedUserId) {
+        requestApprovedImportPoints: function (pointsEarned, user, title, importedUser) {
           var pluginTitle = buildfire.getContext().title;
           let date = new Date();
           const data = {
@@ -53,13 +53,14 @@
             createdAt: date,
             approvedBy: user.email,
             approvedOn: date,
+            importedUser: importedUser,
             type: TRANSACTION_TYPES.IMPORT_POINTS,
             purchaseAmount: null,
             pointsEarned: pointsEarned,
             status: STATUS.Approved,
             currentPointsAmount: null,
             item: {
-              title: 'IMPORT POINTS',
+              title: title,
               listImage: null
             },
             imageUrl: null,

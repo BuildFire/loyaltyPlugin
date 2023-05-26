@@ -15,7 +15,8 @@
         ResultsHome.transactions = [];
         ResultsHome.typesMapping = {
           earnPoints: 'Earn Points',
-          redeemReward: 'Redeem Reward'
+          redeemReward: 'Redeem Reward',
+          importPoints: 'Import points'
         }
 
         ResultsHome.goToDetails = function(result) {
@@ -184,7 +185,14 @@
                     return console.error(err);
                   }
                   // console.log("response", res, context.instanceId);
-                  addAllUsersPoints(res);
+                  buildfire.dialog.toast({
+                    message: "Importing users points...",
+                    type: 'info',
+                    duration: 2000
+                  });
+                  setTimeout(()=> {
+                    addAllUsersPoints(res);
+                  }, 500);
                 })
               })
               .catch((error) => {
@@ -196,6 +204,12 @@
                 console.error("Error fetching file:", error);
               });
           };
+
+          function reloadPage() {
+            ResultsHome.noMore = false;
+            $scope.skip = 0;
+            init();
+          }
 
           function addAllUsersPoints(data) {
             function searchForUsers() {
@@ -210,7 +224,8 @@
                     // Wait for all updates to complete
                     return Promise.all(filteredUpdatePromises)
                       .then(() => {
-                        // TODO refresh UI to get new imported points transactions
+                        // Reload page to get new imported points transactions
+                        reloadPage();
                         return Promise.resolve();
                       });
                   } 
@@ -243,11 +258,13 @@
               });
           }
 
-          const addUserPoint = ({ userId, points }) => {
+          const addUserPoint = ({ user, points }) => {
             return new Promise((resolve, reject) => {
-              LoyaltyAPI.addLoyaltyPoints(userId, null, ResultsHome.application.unqiueId, ResultsHome.application.redemptionPasscode, null, points).then(result => {
+              LoyaltyAPI.addLoyaltyPoints(user.userId, null, ResultsHome.application.unqiueId, ResultsHome.application.redemptionPasscode, null, points).then(result => {
                 // add imported points transaction
-                resolve(result);
+                Transactions.requestApprovedImportPoints(points, ResultsHome.currentUser, 'IMPORTED POINTS', user).then(transaction => {
+                  resolve(result);
+                })
               }).catch(err => {
                 if(err.code == 2107 && err.message == 'Invalid userId') {
                   resolve({});
@@ -260,13 +277,12 @@
 
           function addUserPointsHelper(email, users, data, idx) {
             let user = users.find(user => user.email == email);
-            let userId = user ? user.userId : null;
             let points = user ? data.points[idx] : null;
 
-            if (!userId || !points) {
+            if (!user || !points) {
               return null;
             }
-            return addUserPoint({ userId, points });
+            return addUserPoint({ user, points });
           }
 
           function ParseCsv(csvData, callback) {
