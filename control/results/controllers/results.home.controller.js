@@ -281,7 +281,7 @@
             return new Promise((resolve, reject) => {
               LoyaltyAPI.addLoyaltyPoints(user.userId, null, ResultsHome.application.unqiueId, ResultsHome.application.redemptionPasscode, null, points).then(result => {
                 // add imported points transaction
-                Transactions.requestApprovedImportPoints(points, ResultsHome.currentUser, 'IMPORTED POINTS', {_id: user.userId, email: user.email, userId: user.userId}).then(transaction => {
+                Transactions.requestApprovedImportPoints(points, ResultsHome.currentUser, 'IMPORTED POINTS', {_id: user.userId, email: user.email, userId: user.userId, displayName: user.displayName}).then(transaction => {
                   resolve(result);
                 })
               }).catch(err => {
