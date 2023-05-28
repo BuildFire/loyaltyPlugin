@@ -5,6 +5,14 @@
     .constant('TAG_NAMES', {
       TRANSACTIONS: 'transactions'
     })
+    .constant('TRANSACTION_TYPES', {
+      IMPORT_POINTS: 'importPoints'
+    })
+    .constant('STATUS', {
+      Approved: "APPROVED",
+      Denied: "DENIED",
+      Processing: "PROCESSING"
+    })
     .constant('STATUS_CODE', {
       INSERTED: 'inserted',
       UPDATED: 'updated',
