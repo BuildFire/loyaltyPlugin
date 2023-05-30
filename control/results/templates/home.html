@@ -39,7 +39,9 @@
                     <span class='caret'></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
+                    <li ng-click="ResultsHome.DownloadTemplateCsv()" ng-disabled="ResultsHome.exporting"><a>Download Template</a></li>
                     <li ng-click="ResultsHome.exportCsv()" ng-disabled="ResultsHome.exporting"><a>Export as CSV</a></li>
+                    <li ng-click="ResultsHome.importCsv()" ng-disabled="ResultsHome.exporting"><a>Import</a></li>
                 </ul>
         </div>
     </div>
