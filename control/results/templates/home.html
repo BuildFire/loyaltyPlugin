@@ -83,7 +83,7 @@
         </thead>
         <tbody>
             <tr ng-repeat="transaction in ResultsHome.transactions track by $index">
-                <td style="width: 110px; text-align:center">{{transaction.createdAt | date:'dd MMM yyyy HH:mm'}}</td>
+                <td style="width: 110px; text-align:center">{{transaction.createdAt | date:'MMM dd, yyyy HH:mm'}}</td>
                 <td><button class="link-button details-button" ng-click="ResultsHome.goToDetails(transaction)">{{transaction.createdBy.displayName || transaction.createdBy.email}}</button></td>
                 <td>{{ResultsHome.typesMapping[transaction.type]}}</td>
                 <td ng-switch="transaction.type">
@@ -98,7 +98,7 @@
                     <span ng-switch-when="earnPoints"></span>
                     <span ng-switch-when="redeemReward">{{transaction.item.title | limitTo: 20 }}{{ transaction.item.title.length > 20 ? '...' : '' }}</span>
                 </td>
-                <td style="width: 110px; text-align:center">{{transaction.approvedOn | date:'dd MMM yyyy HH:mm'}}</td>
+                <td style="width: 110px; text-align:center">{{transaction.approvedOn | date:'MMM dd, yyyy HH:mm'}}</td>
             </tr>
         </tbody>
     </table>

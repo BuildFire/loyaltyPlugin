@@ -112,7 +112,7 @@
           ResultsHome.exporting = true;
           function generateCsv() {
             let csvContent = '';
-            csvContent += "Email,Points \r\n"
+            csvContent += "Email,Points to add\r\n"
             var blob = new Blob([csvContent],{type: 'text/csv;charset=utf-8;'});
             var url = URL.createObjectURL(blob);
             var link = document.createElement("a");
@@ -343,10 +343,10 @@
 
               // Extract the headers from the first row
               const headers = rows[0].replaceAll("\r", "").replaceAll('"', '').replaceAll("'", '').replaceAll('\\',"").trim().split(",");
-
+							headers.map((el)=>el.trim());
               // Find the indices of the "email" and "points" columns
               const emailIndex = headers.indexOf("Email");
-              const pointsIndex = headers.indexOf("Points");
+              const pointsIndex = headers.indexOf("Points to add");
 
               // Initialize arrays for storing emails and points
               const emails = [];
