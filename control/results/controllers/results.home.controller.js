@@ -37,6 +37,7 @@
         ResultsHome.loading = false;
         ResultsHome.noMore = false;
         ResultsHome.exporting = false;
+				ResultsHome.notFoundEmails=[];
         $scope.skip = 0;
 
         ResultsHome.exportCsv = function() {
@@ -125,6 +126,32 @@
           generateCsv();
         }
 
+				ResultsHome.DownloadNotFoundEmailsCsv = function() {
+          ResultsHome.exporting = true;
+          function generateCsv() {
+            let csvContent = '';
+            csvContent += "Emails not imported / users not found \r\n"
+						if(ResultsHome.notFoundEmails.length > 0){
+
+							ResultsHome.notFoundEmails.forEach((email)=>{
+								csvContent += email;
+								csvContent += "\r\n";
+							})
+							// csvContent += ResultsHome.notFoundEmails;
+							var blob = new Blob([csvContent],{type: 'text/csv;charset=utf-8;'});
+							var url = URL.createObjectURL(blob);
+							var link = document.createElement("a");
+							link.setAttribute("href", url);
+							link.setAttribute("download", "Errors.csv");
+							document.body.appendChild(link);
+							link.click();
+							link.parentNode.removeChild(link);
+							ResultsHome.exporting = false;
+						}
+          }
+          generateCsv();
+        }
+
         ResultsHome.importCsv = function() {
           ResultsHome.exporting = true;
 
@@ -153,7 +180,8 @@
                       }
 
                       if (files[0]) {
-                        // console.log("Files", files[0]);
+												ResultsHome.notFoundEmails=[];
+												ResultsHome.updateWaitingPopup()
                         processCSVFile(files[0]);
                       }
                     }
@@ -171,51 +199,27 @@
 
           function processCSVFile(file) {
             // Fetch the file content using the provided URL
+						ResultsHome.openExportActions()
+						ResultsHome.openWaitingPopup(true)
             fetch(file.url)
               .then((response) => response.text())
               .then((csvData) => {
-                // console.log("check data", csvData);
                 ParseCsv(csvData, (err, res) => {
                   if (err) {
                     ResultsHome.exporting = false;
+										ResultsHome.openWaitingPopup(false)
                     buildfire.dialog.toast({
                       message: "Import failed",
                       type: "danger"
                     });
                     return console.error(err);
                   }
-                  buildfire.dialog.show(
-                    {
-                      title: "Import users",
-                      message:
-                        "Please wait while importing, it may take a while. Click Continue to proceed.",
-                      isMessageHTML: false,
-                      showCancelButton: true,
-                      actionButtons: [
-                        {
-                          text: "Continue",
-                          type: "primary",
-                          action: () => {
-                            addAllUsersPoints(res);
-                          },
-                        },
-                      ],
-                    },
-                    (err, actionButton) => {
-                      if (err) {
-                        ResultsHome.exporting = false;
-                        buildfire.dialog.toast({
-                          message: "Import failed",
-                          type: "danger"
-                        });
-                        console.error(err);
-                      }
-                    }
-                  );
+									addAllUsersPoints(res);
                 })
               })
               .catch((error) => {
                 ResultsHome.exporting = false;
+								ResultsHome.openWaitingPopup(false)
                 buildfire.dialog.toast({
                   message: "Import failed",
                   type: "danger"
@@ -231,6 +235,7 @@
           }
 
           function addAllUsersPoints(data) {
+						ResultsHome.updateWaitingPopup()
             function searchForUsers() {
               // Search for all users
               return ResultsHome.searchUsers({emails: data.emails})
@@ -241,14 +246,36 @@
 
                     const filteredUpdatePromises = updatePromises.filter(e => e != null);
                     // Wait for all updates to complete
-                    return Promise.all(filteredUpdatePromises)
-                      .then(() => {
-                        // Reload page to get new imported points transactions
-                        reloadPage();
-                        return Promise.resolve();
-                      });
+											return new Promise((resolve, reject) => {
+												let _filteredUpdatePromises = [...filteredUpdatePromises]
+												function _addPoints(items) {
+													Promise.all(items).then(()=>{
+														if (_filteredUpdatePromises.length > 0) {
+															ResultsHome.updateWaitingPopup(filteredUpdatePromises, _filteredUpdatePromises);
+															_addPoints(_filteredUpdatePromises.splice(0, 20));
+														} else {
+															reloadPage();
+															ResultsHome.openWaitingPopup(false)
+															ResultsHome.DownloadNotFoundEmailsCsv();
+															return Promise.resolve();
+														}
+													})
+												}
+												if (_filteredUpdatePromises.length > 0) {
+													ResultsHome.updateWaitingPopup(filteredUpdatePromises, _filteredUpdatePromises);
+													_addPoints(_filteredUpdatePromises.splice(0, 20));
+												} else {
+													reloadPage();
+													ResultsHome.DownloadNotFoundEmailsCsv();
+													ResultsHome.openWaitingPopup(false)
+													return Promise.resolve();
+												}
+											});
                   } 
                   else {
+										ResultsHome.openWaitingPopup(false)
+										ResultsHome.notFoundEmails=[...data.emails]
+										ResultsHome.DownloadNotFoundEmailsCsv();
                     return Promise.resolve();
                   }
                 })
@@ -260,7 +287,6 @@
 
             return searchForUsers()
               .then(() => {
-                // console.log("All records updated successfully");
                 ResultsHome.exporting = false;
                 buildfire.dialog.toast({
                   message: "Import success",
@@ -288,6 +314,11 @@
                 if(err.code == 2107 && err.message == 'Invalid userId') {
                   resolve({});
                 } else {
+									ResultsHome.openWaitingPopup(false);
+									buildfire.dialog.toast({
+                    message: "The daily point limit has been exceeded; please update it in the settings tab.",
+                    type: "danger"
+                  });
                   reject(err);
                 }
               })
@@ -299,6 +330,7 @@
             let points = user ? data.points[idx] : null;
 
             if (!user || !points) {
+							ResultsHome.notFoundEmails.push(email);
               return null;
             }
             return addUserPoint({ user, points });
@@ -335,8 +367,6 @@
                 }
               }
 
-              // console.log("Emails:", emails);
-              // console.log("Points:", points);
               return callback(null, {emails, points})
             } catch (error) {
               return callback(error)
@@ -352,8 +382,6 @@
             function _fetchUsers(users, skip) {
               const params = {
                 emails: users,
-                limit: 20,
-                skip
               }
               buildfire.auth.searchUsers(
                 params, (err, result) => {
@@ -363,7 +391,7 @@
                   }
                   allUsers.push(...result);
                   if (_emails.length > 0) {
-                    _fetchUsers(_emails.splice(0, 20), skip + 20);
+                    _fetchUsers(_emails.splice(0, 20));
                   } else {
                     resolve(allUsers);
                   }
@@ -372,7 +400,7 @@
               );
             }
             if (_emails.length > 0) {
-              _fetchUsers(_emails.splice(0, 20), 0);
+              _fetchUsers(_emails.splice(0, 20));
             } else {
               resolve([]);
             }
@@ -408,6 +436,42 @@
           };
         }
 
+				ResultsHome.openWaitingPopup = function(show) {
+          const waitingPopup = document.querySelector('#importModal');
+          openPopup(waitingPopup,show);
+
+          function openPopup(waitingPopup, show) {
+            if (!waitingPopup) {
+              return;
+            }
+            if (show) {
+              waitingPopup.classList.remove("hide");
+              waitingPopup.classList.add("show");
+            } else {
+              waitingPopup.classList.add("hide");
+							waitingPopup.classList.remove("show");
+
+            }
+          };
+        }
+
+				ResultsHome.updateWaitingPopup = function(a,b) {
+          const waitingPopupText = document.querySelector('#modalMessage');
+          updateText(waitingPopupText,a,b);
+
+          function updateText(waitingPopupText, a,b) {
+            if (!waitingPopupText) {
+              return;
+            }
+            if (a && b) {
+              waitingPopupText.innerHTML= `We are importing your data, please wait (${a.length - b.length}/${a.length})...`
+            } else {
+              waitingPopupText.innerHTML ='We are importing your data, please wait ...'
+
+            }
+          };
+        }
+
         ResultsHome.search = function(){
           init();
         }
@@ -436,7 +500,6 @@
             var transactions = result.map(function (result){
               return result.data
             });
-            // console.log(transactions)
             ResultsHome.transactions = transactions;
             $rootScope.transactions = transactions;
             if(transactions.length < 50) {
