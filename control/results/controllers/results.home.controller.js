@@ -342,7 +342,7 @@
               const rows = csvData.split("\n");
 
               // Extract the headers from the first row
-              const headers = rows[0].replace("\r", "").split(",");
+              const headers = rows[0].replaceAll("\r", "").replaceAll('"', '').replaceAll("'", '').replaceAll('\\',"").trim().split(",");
 
               // Find the indices of the "email" and "points" columns
               const emailIndex = headers.indexOf("Email");
@@ -354,7 +354,7 @@
 
               // Iterate over the remaining rows and extract the email and points values
               for (let i = 1; i < rows.length; i++) {
-                const row = rows[i].replace("\r", "").split(",");
+                const row = rows[i].replaceAll("\r", "").replaceAll('"', '').replaceAll("'", '').replaceAll('\\',"").trim().split(",");
 
                 // Extract the email and points values based on the column indices
                 const email = row[emailIndex];
