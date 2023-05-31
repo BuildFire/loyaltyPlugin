@@ -234,11 +234,13 @@
                       WidgetHome.carouselImages = [];
                     }
                   RewardCache.setApplication(result);
-                  WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
+                  if(WidgetHome.currentLoggedInUser != null){
+                    WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
+                  }
+                  if (!$rootScope.$$phase) $rootScope.$digest();
                   })
                 .catch((err) => {
-                  RewardCache.setApplication(result);
-                  WidgetHome.getLoyaltyPoints(WidgetHome.currentLoggedInUser._id);
+                  console.error(err);
                 })
           };
 
@@ -464,7 +466,7 @@
 
         var getFTQPointsIfAnyAndUpdate = function(){
           buildfire.datastore.get("Features",function (err, result) {
-            if(result && result.data && result.data.length > 0){
+            if(result && result.data && result.data.length > 0 && WidgetHome.currentLoggedInUser != null){
               features = result.data;
               result.data.forEach(element => {
                 buildfire.appData.search({
