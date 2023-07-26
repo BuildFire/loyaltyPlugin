@@ -72,6 +72,7 @@
                       if (err) return console.error(err);
                     }
                   );
+                  $rootScope.$broadcast('POINTS_ADDED', ItemsPurchased.TotalPoints);
                 } else {
                     buildfire.dialog.toast({
                         message: ItemsPurchased.TotalPoints + " points denied for " + (ItemsPurchased.Item.data.createdBy.displayName ?  ItemsPurchased.Item.data.createdBy.displayName :  ItemsPurchased.Item.data.createdBy.email),

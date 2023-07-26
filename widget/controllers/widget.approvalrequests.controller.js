@@ -176,6 +176,7 @@
                 if (err) return console.error(err);
               }
             );
+            $rootScope.$broadcast('POINTS_ADDED', selectedItem.data.points);
           }, errorLoyaltyPoints = function (err) {
             if (err ) {
                 console.error('Error Add ing Loyalty Points', err);
