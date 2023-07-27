@@ -165,10 +165,11 @@
               message: selectedItem.data.points + " points approved for " + selectedItem.title,
               type: "success"
             });
+            var title = updatedItem.data.items ? updatedItem.data.items.map(el => el.title).join(",") : updatedItem.data.item ? updatedItem.data.item.title : "Unknown";
             buildfire.notifications.pushNotification.schedule(
               {
                 title: "Reward Approved",
-                text:  ( (updatedItem.data.item.title && updatedItem.data.item.title == '') ? "BUY POINTS" : updatedItem.data.item.title) + " has been approved",
+                text: !title ? "BUY POINTS" : title + " has been approved",
                 users: [updatedItem.data.createdBy._id]
               , at: new Date()
               },
