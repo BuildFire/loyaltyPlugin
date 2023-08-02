@@ -11,7 +11,7 @@
         WidgetHome.isClient = false;
         WidgetHome.approvalRequestsTab = 0
         WidgetHome.tags = null;
-        
+
         WidgetHome.strings = {
           "general.loginOrRegister": "Login or register",
           "general.toGetPoints": "to get points",
@@ -51,7 +51,7 @@
 
         }
         var features = []
-        
+
         $window.strings.getLanguage(function(err, response){
           const obj = response[0] ? response[0].data : $window.strings._data;
           const strings = {};
@@ -147,12 +147,12 @@
                 let newPoints;
                 if(type === "Redeemed" && WidgetHome.data.settings.deductLeaderboardPoints){
                   newPoints = oldPoints === 0 ? negative(points) : oldPoints - points;
-                } 
+                }
                 else if(type === "Added"){
                   newPoints = oldPoints + points;
                 }
                 // If points are redeemed and deductLearboardPoints is off -> No changes
-                if(newPoints){ 
+                if(newPoints){
                   buildfire.appData.searchAndUpdate(
                     { userId: { $eq: userId} },
                     { $set: { totalPoints, newPoints  } },
@@ -164,7 +164,7 @@
                 let data = {
                   userId: userId,
                   totalPoints: totalPoints,
-                  newPoints: totalPoints 
+                  newPoints: totalPoints
                 }
                 buildfire.appData.insert(
                   data,
@@ -208,7 +208,7 @@
                     var reward=WidgetHome.loyaltyRewards.find(el=>el._id==data.id);
                     if(reward)
                       WidgetHome.openReward(reward,-1);
-                    else 
+                    else
                       buildfire.dialog.toast({
                         message: WidgetHome.strings["deeplink.deeplinkRewardNotFound"]
                       });
@@ -305,8 +305,8 @@
                     );
                   }
                 }
-          
-            } 
+
+            }
             else {
                 ViewStack.push({
                   template: 'Amount',
@@ -341,10 +341,31 @@
         /**
          * This event listener is bound for "POINTS_ADDED" event broadcast
          */
-        WidgetHome.listeners['POINTS_ADDED'] = $rootScope.$on('POINTS_ADDED', function (e, points) {
-          if (points)
-            $rootScope.loyaltyPoints = $rootScope.loyaltyPoints + points;
+        WidgetHome.listeners['POINTS_ADDED'] = $rootScope.$on('POINTS_ADDED', function (e, { points, userId }) {
+          // no userId means points should be assigned to the logged-in user
+          if (!userId) {
+            if (points) $rootScope.loyaltyPoints = $rootScope.loyaltyPoints + points;
             saveLoyaltyPointsInAppData(WidgetHome.currentLoggedInUser._id, $rootScope.loyaltyPoints, points, "Added")
+          } else {
+            // defined users, get their totalPoints first
+            buildfire.appData.search(
+              {
+                filter: {
+                  $or: [
+                    { "$json.userId": userId },
+                  ],
+                },
+              },
+              "userLoyaltyPoints",
+              (err, res) => {
+                if (err) return console.error("there was a problem retrieving your data");
+                const totalPoints = res && res.length && res[0].data.totalPoints ?
+                  (res[0].data.totalPoints + points)
+                  : points;
+                saveLoyaltyPointsInAppData(userId, totalPoints, points, "Added")
+              }
+            );
+          }
         });
 
         WidgetHome.listeners['POINTS_WAITING_APPROVAL_ADDED'] = $rootScope.$on('POINTS_WAITING_APPROVAL_ADDED', function (e, points) {
@@ -476,7 +497,7 @@
                   limit:  1
                 },
                 "freeTextQuestionnaireSubmissions_" + element.instanceId,
-                (err, res) => { 
+                (err, res) => {
                   if(res && res.length > 0 && !res[0].data.isEarnedPoints){
                     let selectedFTQ = res[0].data;
                     selectedFTQ.isEarnedPoints = true;
@@ -486,7 +507,7 @@
                       "freeTextQuestionnaireSubmissions_" + element.instanceId,
                       (err, result) => {
                         if (err) return console.error("Error while inserting your data", err);
-                        let score = 0 
+                        let score = 0
                         selectedFTQ.answers.forEach(answer => {
                           score += answer && answer.score ? answer.score : 0
                         });
@@ -527,7 +548,7 @@
 
         var init = function () {
           var success = function (result) {
-             
+
                 if(result && result.data){
                   console.log('BUILDFIRE GET--------------------------LOYALTY---------RESULT',result);
                   WidgetHome.data = result.data;
@@ -640,7 +661,7 @@
                   return;
                 }
               });
-    
+
               if(WidgetHome.isEmployer == false){
                   WidgetHome.isClient = true;
                   buildfire.notifications.pushNotification.subscribe(
@@ -661,8 +682,8 @@
               );
             }
           }
-          
-          
+
+
         }
 
         var checkIfEmployerOrUser = function(){

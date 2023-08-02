@@ -16,7 +16,7 @@
         ItemsPurchased.currentLoggedInUser = null
         ItemsPurchased.Settings = null;
         ItemsPurchased.strings = $rootScope.strings;
-        ItemsPurchased.Settings = null; 
+        ItemsPurchased.Settings = null;
         ItemsPurchased.drawerItems = [
           {
             text: ItemsPurchased.strings["staffApproval.approve"],
@@ -44,13 +44,13 @@
           ItemsPurchased.appTheme = appTheme;
           let tab = document.querySelector(".tab");
           let tabButtons = document.querySelectorAll(".tablinks")
-          
+
           tab.style.backgroundColor = appTheme.colors.titleBar
           tabButtons.forEach(el => {
             el.style.color = appTheme.colors.titleBarTextAndIcons
           })
-          
-       
+
+
         })
 
         ItemsPurchased.Update = (status) => {
@@ -72,12 +72,13 @@
                       if (err) return console.error(err);
                     }
                   );
+                  $rootScope.$broadcast('POINTS_ADDED', { points: ItemsPurchased.TotalPoints });
                 } else {
                     buildfire.dialog.toast({
                         message: ItemsPurchased.TotalPoints + " points denied for " + (ItemsPurchased.Item.data.createdBy.displayName ?  ItemsPurchased.Item.data.createdBy.displayName :  ItemsPurchased.Item.data.createdBy.email),
                         type: "danger"
                       });
-                         
+
                   buildfire.notifications.pushNotification.schedule(
                     {
                       title: "Reward Denied",
@@ -121,7 +122,7 @@
           listViewItemTitle.forEach(el => {
             el.style.color = ItemsPurchased.appTheme.colors.headerText
           })
-          
+
           btnApproved.style.backgroundColor = ItemsPurchased.appTheme.colors.primaryTheme + " !important"
 
           listViewItemSubtitle.forEach(el => {
@@ -165,7 +166,7 @@
                     title: element.title,
                     imageUrl: element.listImage,
                     subtitle: element.pointsPerItem + " Points",
-                    description: "Quantity: " + element.quantity 
+                    description: "Quantity: " + element.quantity
                 })
             })
             itemsPurchasedListView.loadListViewItems(items)
@@ -180,7 +181,7 @@
               }
               Context.getContext(function (ctx) {
                 ItemsPurchased.context = ctx;
-               
+
                 buildfire.datastore.get(TAG_NAMES.LOYALTY_INFO,function(err,result){
                   if(result && result.data && result.data.settings){
                     ItemsPurchased.Settings = result.data.settings
@@ -204,7 +205,7 @@
           }
         });
 
-      
+
         init();
         ItemsPurchased.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
           if (ViewStack.getCurrentView().template == "items_purchased") {
