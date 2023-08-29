@@ -69,7 +69,7 @@
           };
           Buildfire.spinner.show();
           checkIfUserDailyLimitExceeded(currentView, WidgetCode, function (err, res){
-            if(err) error(err);
+            if(err) return error(err);
             buildfire.auth.getCurrentUser(function (err, user) {
               if(user){
                 WidgetCode.currentLoggedInUser = user;

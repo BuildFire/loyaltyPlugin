@@ -16,7 +16,6 @@ const saveUserDailyPoints = (obj,callback) =>{
 const checkIfUserDailyLimitExceeded = (currentView, WidgetCode, callback) =>{
     if(currentView.amount > WidgetCode.application.dailyLimit) return callback({code:2103});
     getUserDailyPoints((err,r) =>{
-;
         if(err) return callback(err);
         var pointsAwarded = (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit;
         var date = new Date().toLocaleDateString();
