@@ -11,7 +11,7 @@
           <div>
             <p class="redeem-title">{{WidgetItem.reward.title}}</p>
 
-            <label class="redeem-points" ng-if="WidgetItem.reward.pointsToRedeem">
+            <label class="redeem-points" ng-if="WidgetItem.reward.pointsToRedeem || WidgetItem.reward.pointsToRedeem === 0">
               {{WidgetItem.reward.pointsToRedeem}} {{WidgetItem.strings["general.points"]}}</label>
             <label class="redeem-points" ng-if="WidgetItem.reward.earnPoint">
               {{WidgetItem.reward.earnPoint}} {{WidgetItem.strings["general.points"]}}</label>
