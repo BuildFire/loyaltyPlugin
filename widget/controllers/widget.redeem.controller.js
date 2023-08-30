@@ -99,7 +99,7 @@
           if (item && item.description) {
             WidgetRedeem.reward.description = item.description;
           }
-          if (item && item.pointsToRedeem) {
+          if (item && (item.pointsToRedeem || item.pointsToRedeem === 0)) {
             WidgetRedeem.reward.pointsToRedeem = item.pointsToRedeem;
           }
         });
