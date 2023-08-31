@@ -158,7 +158,7 @@
           if(!ContentReward.item.title || ContentReward.item.title.length == 0) {
             ContentReward.validations.title = true;
           } 
-          if ((!ContentReward.item.pointsToRedeem || ContentReward.item.pointsToRedeem.length == 0) && 
+          if (((!ContentReward.item.pointsToRedeem && ContentReward.item.pointsToRedeem !== 0) || ContentReward.item.pointsToRedeem.length == 0) && 
           (!ContentReward.item.pointsPerItem || ContentReward.item.pointsPerItem.length == 0) ){
             ContentReward.validations.points = true;
           } 
@@ -166,7 +166,7 @@
             // "Hack" for overcoming pointsToRedeem validation if the item can only be bought but not redeemed
             if(ContentReward.item.pointsPerItem && ContentReward.item.pointsPerItem.length > 0 
               && 
-              (!ContentReward.item.pointsToRedeem || ContentReward.item.pointsToRedeem.length === 0 || ContentReward.item.pointsToRedeem === '38762499627')) {
+              ((!ContentReward.item.pointsToRedeem && ContentReward.item.pointsToRedeem !== 0) || ContentReward.item.pointsToRedeem.length === 0 || ContentReward.item.pointsToRedeem === '38762499627')) {
                 ContentReward.item.pointsToRedeem = '38762499627'
             }
             ContentReward.addReward(JSON.parse(angular.toJson(ContentReward.item)));
@@ -253,7 +253,7 @@
         /*validate the required fields whether its there or not */
         ContentReward.isValidReward = function (reward) {
           if (reward)
-            return (reward.title && reward.pointsToRedeem);
+            return (reward.title && (reward.pointsToRedeem || reward.pointsToRedeem === 0));
         };
 
         /*This method is used to get the rewards details*/

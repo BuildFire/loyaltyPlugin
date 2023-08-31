@@ -37,7 +37,7 @@
 			<span class="tip btn-info-icon btn-primary"><span class="cp-tooltip">If this field is  blank, then “Points per Item” cannot be blank. If this field has a value greater than zero, then this item will show up as a reward to redeem on the Loyalty feature’s main screen</span>
 		</div>
 		<div class="main col-md-9 pull-right">
-			<input ng-if="ContentReward.item.pointsToRedeem != '38762499627'" type="number" class="form-control"  ng-model = "ContentReward.item.pointsToRedeem">
+			<input ng-if="ContentReward.item.pointsToRedeem != '38762499627'" type="number" min="0" class="form-control"  ng-model = "ContentReward.item.pointsToRedeem">
 			<input ng-if="ContentReward.loading && ContentReward.item.pointsToRedeem == '38762499627'" type="number" class="form-control" >
 		</div>
 	</div>
@@ -73,7 +73,7 @@
 		<div class="main col-md-9 pull-right" style="margin-right: 1px; margin-top: 5px;">
 			<div class="col-md-6 pull-right padding-right-zero padding-left-ten">
 				<a class="btn btn-success pull-right btn-save"
-						ng-disabled="ContentReward.loading || ContentReward.item.listImage == ''|| ContentReward.item.pointsPerItem=='' || ContentReward.item.pointsToRedeem=='' || ContentReward.item.title == ''"
+						ng-disabled="ContentReward.loading || ContentReward.item.listImage == ''|| ContentReward.item.pointsPerItem=='' || ((ContentReward.item.pointsToRedeem=='' || !ContentReward.item.pointsToRedeem) && ContentReward.item.pointsToRedeem !== 0) || ContentReward.item.title == ''"
 						ng-click="ContentReward.addingReward()">
 					Save
 				</a>
