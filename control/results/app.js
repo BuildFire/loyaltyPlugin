@@ -7,7 +7,12 @@
         .when('/', {
           templateUrl: 'templates/home.html',
           controllerAs: 'ResultsHome',
-          controller: 'ResultsHomeCtrl'
+          controller: 'ResultsHomeCtrl',
+          resolve: {
+            context: function (Context) {
+                return Context.getContext();
+            }
+        }
         })
         .when('/details', {
           templateUrl: 'templates/details.html',

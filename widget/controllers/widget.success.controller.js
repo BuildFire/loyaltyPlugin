@@ -76,7 +76,7 @@
           if (item && item.description) {
             WidgetSuccess.reward.description = item.description;
           }
-          if (item && item.pointsToRedeem) {
+          if (item && (item.pointsToRedeem || item.pointsToRedeem === 0)) {
             WidgetSuccess.reward.pointsToRedeem = item.pointsToRedeem;
           }
         });

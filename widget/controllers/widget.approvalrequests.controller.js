@@ -19,7 +19,7 @@
         ApprovalRequests.isRedeemItemsLoading = false;
         ApprovalRequests.currentLoggedInUser = null
         ApprovalRequests.strings = $rootScope.strings;
-        ApprovalRequests.Settings = null; 
+        ApprovalRequests.Settings = null;
         ApprovalRequests.drawerItems = [
           {
             text: ApprovalRequests.strings["staffApproval.approve"],
@@ -31,7 +31,7 @@
           }
         ]
         var breadCrumbFlag = true;
-        
+
         buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
           if (result && result.length) {
             result.forEach(function (breadCrumb) {
@@ -74,11 +74,11 @@
 
         redeemslistView.onItemActionClicked = (item) => {
           var success = function (result) {
-            ApprovalRequests.RedeemItems = ApprovalRequests.RedeemItems.filter(x => x.id != item.id ) 
+            ApprovalRequests.RedeemItems = ApprovalRequests.RedeemItems.filter(x => x.id != item.id )
             redeemslistView.clear();
             redeemslistView.loadListViewItems(ApprovalRequests.RedeemItems)
             updateListViewDesign();
-           
+
           }
           , error = function (err) {
               if (err ) {
@@ -99,7 +99,7 @@
               } else {
                 status = STATUS.Denied
               }
-              let selectedItem = ApprovalRequests.RedeemResult.find(x => x.id == item.id ) 
+              let selectedItem = ApprovalRequests.RedeemResult.find(x => x.id == item.id )
 
               Transactions.updateRequestedRedeemStatus(selectedItem, status, ApprovalRequests.currentLoggedInUser.displayName ? ApprovalRequests.currentLoggedInUser.displayName : ApprovalRequests.currentLoggedInUser.email ).then(success, error).then(x =>{
                 if(status == STATUS.Approved){
@@ -108,7 +108,7 @@
                     type: "success"
                   });
                   LoyaltyAPI.redeemPoints(selectedItem.data.createdBy._id, selectedItem.data.createdBy.userToken, ApprovalRequests.context.instanceId, selectedItem.data.item._id).then();
-                  
+
                   buildfire.notifications.pushNotification.schedule(
                     {
                       title: "Points Approved",
@@ -145,7 +145,7 @@
 
         pointslistView.onItemActionClicked = (item) => {
           var success = function (result) {
-        
+
           }
           , error = function (err) {
               if (err ) {
@@ -154,8 +154,8 @@
           };
 
           var successLoyaltyPoints = function(result){
-            var selectedItem = ApprovalRequests.PointItems.find(x => x.id == item.id ) 
-            ApprovalRequests.PointItems = ApprovalRequests.PointItems.filter(x => x.id != item.id ) 
+            var selectedItem = ApprovalRequests.PointItems.find(x => x.id == item.id )
+            ApprovalRequests.PointItems = ApprovalRequests.PointItems.filter(x => x.id != item.id )
 
             pointslistView.clear();
             pointslistView.loadListViewItems(ApprovalRequests.PointItems)
@@ -165,10 +165,11 @@
               message: selectedItem.data.points + " points approved for " + selectedItem.title,
               type: "success"
             });
+            var title = updatedItem.data.items ? updatedItem.data.items.map(el => el.title).join(",") : updatedItem.data.item ? updatedItem.data.item.title : "Unknown";
             buildfire.notifications.pushNotification.schedule(
               {
                 title: "Reward Approved",
-                text:  ( (updatedItem.data.item.title && updatedItem.data.item.title == '') ? "BUY POINTS" : updatedItem.data.item.title) + " has been approved",
+                text: !title ? "BUY POINTS" : title + " has been approved",
                 users: [updatedItem.data.createdBy._id]
               , at: new Date()
               },
@@ -176,6 +177,7 @@
                 if (err) return console.error(err);
               }
             );
+            $rootScope.$broadcast('POINTS_ADDED', { points: selectedItem.data.points, userId: updatedItem.data.createdBy._id });
           }, errorLoyaltyPoints = function (err) {
             if (err ) {
                 console.error('Error Add ing Loyalty Points', err);
@@ -195,8 +197,8 @@
               } else {
                 status = STATUS.Denied
               }
-              let selectedItem = ApprovalRequests.PointResult.find(x => x.id == item.id ) 
-                  
+              let selectedItem = ApprovalRequests.PointResult.find(x => x.id == item.id )
+
               if(ApprovalRequests.Settings == null || !ApprovalRequests.Settings.redemptionPasscode){
                 buildfire.dialog.toast({
                   message: "Please Add A Redemption Code",
@@ -233,25 +235,25 @@
 
         pointslistView.onItemClicked = item => {
           if(item.data.isClickable){
-            let selectedItem = ApprovalRequests.PointResult.find(x => x.id == item.id ) 
+            let selectedItem = ApprovalRequests.PointResult.find(x => x.id == item.id )
               ViewStack.push({
                 template: 'items_purchased',
                 item: selectedItem
               });
           }
-          
+
         };
 
         buildfire.appearance.getAppTheme((err, appTheme) => {
           ApprovalRequests.appTheme = appTheme;
           let tab = document.querySelector(".tab");
           let tabButtons = document.querySelectorAll(".tablinks")
-          
+
           tab.style.backgroundColor = appTheme.colors.titleBar
           tabButtons.forEach(el => {
             el.style.color = appTheme.colors.titleBarTextAndIcons
           })
-       
+
         })
 
         function updateListViewDesign(){
@@ -271,7 +273,7 @@
           })
           glyphicons.forEach(el => {
             el.style.color = ApprovalRequests.appTheme.colors.icons
-          
+
         })
         }
 
@@ -320,7 +322,7 @@
 
                 let items = []
                 result.forEach(element => {
-                 
+
                   items.push({
                     id: element.id,
                     title: element.data.createdBy.displayName ? element.data.createdBy.displayName : element.data.createdBy.username ,
@@ -360,10 +362,10 @@
                     })
                     subTitle = (element.data.items.length == 1 ? element.data.items.length  + " item" :   element.data.items.length + " items") + " • " +  element.data.pointsEarned + " Points"
                     isClickable = true;
-                  } else if(element.data.item){ 
+                  } else if(element.data.item){
                     title = element.data.item.title;
                     subTitle = (element.data.item.title == "POINTS PURCHASE" ? element.data.purchaseAmount + "$" : element.data.item.title)    + " • " + element.data.pointsEarned + " Points"
-                  } 
+                  }
                   items.push({
                       id: element.id,
                       title: element.data.createdBy.displayName ? element.data.createdBy.displayName : element.data.createdBy.username ,
@@ -379,7 +381,7 @@
                         icon: 'material-icons material-inject--more'
                       }
                     })
-                
+
                 });
                 ApprovalRequests.PointItems = items;
                 pointslistView.loadListViewItems(items)
@@ -392,7 +394,7 @@
             getCurrentUser();
           Transactions.getRequestedRedeems().then(successRequestedRedeems, errorRequestedRedeems);
           Transactions.getRequestedPoints().then(successRequestedPoints, errorRequestedPoints);
-          
+
         };
 
 
@@ -400,12 +402,12 @@
           buildfire.auth.getCurrentUser(function (err, user) {
             if (user) {
               ApprovalRequests.currentLoggedInUser = user;
-           
-              
+
+
             }
             Context.getContext(function (ctx) {
               ApprovalRequests.context = ctx;
-             
+
               buildfire.datastore.get(TAG_NAMES.LOYALTY_INFO,function(err,result){
                 if(result && result.data && result.data.settings){
                   ApprovalRequests.Settings = result.data.settings
@@ -427,12 +429,12 @@
           if(currentDate.toDateString() === selectedDate.toDateString()){
               return "Today " + time;
             }
-            
+
           currentDate.setDate(currentDate.getDate() - 1);
           if (currentDate.toDateString() === selectedDate.toDateString()) {
             return "Yesterday " + time;;
           }
-          
+
           return selectedDate.toLocaleTimeString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'});
         }
         ApprovalRequests.listeners['GOTO_HOME'] = $rootScope.$on('GOTO_HOME', function (e) {
@@ -456,7 +458,7 @@
             $scope.$destroy();
           }
         });
-      
+
         init();
 
         ApprovalRequests.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {

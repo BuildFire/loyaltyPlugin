@@ -37,12 +37,12 @@
         WidgetCode.context = Context.getContext();
         if (RewardCache.getApplication()) {
           WidgetCode.application = RewardCache.getApplication();
-        } 
+        }
 
         WidgetCode.addPoints = function () {
           var success = function (result) {
             Buildfire.spinner.hide();
-            $rootScope.$broadcast('POINTS_ADDED', (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit);
+            $rootScope.$broadcast('POINTS_ADDED', { points: (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit });
             var pointsAwarded = (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit;
             ViewStack.push({
               template: 'Awarded',
@@ -52,7 +52,7 @@
                   Transactions.buyPoints(currentView.amount, pointsAwarded, $rootScope.loyaltyPoints, WidgetCode.currentLoggedInUser, currentView.title, currentView.iconUrl);
                 } else if(currentView.type === 'buyProducts') {
                   Transactions.buyProducts(currentView.items, $rootScope.loyaltyPoints, WidgetCode.currentLoggedInUser);
-                }  else 
+                }  else
                   return;
               }
 
@@ -69,7 +69,7 @@
           };
           Buildfire.spinner.show();
           checkIfUserDailyLimitExceeded(currentView, WidgetCode, function (err, res){
-            if(err) error(err);
+            if(err) return error(err);
             buildfire.auth.getCurrentUser(function (err, user) {
               if(user){
                 WidgetCode.currentLoggedInUser = user;
@@ -83,7 +83,7 @@
                     });
                     Transactions.redeemReward(currentView.reward, currentView.pointsToRedeem, $rootScope.loyaltyPoints, WidgetCode.currentLoggedInUser);
                   };
-        
+
                   var redeemFailure = function (error) {
                     Buildfire.spinner.hide();
                     if (error && error.code == 2103) {
@@ -113,7 +113,7 @@
                   }
                   else {
                     buildfire.auth.login({}, function () {
-        
+
                     });
                   }
 
@@ -151,7 +151,7 @@
 
           };
 
-          
+
           LoyaltyAPI.validatePasscode(WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode).then(success, error);
         };
 

@@ -244,7 +244,7 @@
           if (item && item.description) {
             WidgetItem.reward.description = item.description;
           }
-          if (item && item.pointsToRedeem) {
+          if (item && (item.pointsToRedeem || item.pointsToRedeem === 0)) {
             WidgetItem.reward.pointsToRedeem = item.pointsToRedeem;
           }
         });
