@@ -64,7 +64,8 @@
 
                 $(elem).append(parTpl);
                 views++;
-
+                if (!scope.$$phase) scope.$apply();
+                if (!$rootScope.$$phase) $rootScope.$apply();
               } else if (type === 'POP') {
 
                 var _elToRemove = $(elem).find('#' + view.template),
@@ -219,7 +220,7 @@
                 restrict: 'A',
                 link: function (scope, element, attrs) {
                     element.attr("src", "../../../styles/media/holder-" + attrs.loadImage + ".gif");
-                    
+
                     var _img = attrs.finalSrc;
 
                     let croppedImage = buildfire.imageLib.cropImage(
