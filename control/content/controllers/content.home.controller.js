@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal', 'RewardCache', '$location', '$timeout', 'context', 'TAG_NAMES',
-      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache, $location, $timeout, context, TAG_NAMES) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal', 'RewardCache', '$location', '$timeout', 'context', 'TAG_NAMES', 'StateSeeder', '$rootScope',
+      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache, $location, $timeout, context, TAG_NAMES, StateSeeder, $rootScope) {
         var ContentHome = this;
         var _data = {
           redemptionPasscode: '12345',
@@ -24,7 +24,7 @@
           },
           image: []
         };
-
+        let stateSeeder;
         //Scroll current view to top when page loaded.
         buildfire.navigation.scrollTop();
         ContentHome.title = "";
@@ -127,8 +127,12 @@
               };
               ContentHome.successloyaltyRewards = function (result) {
                   ContentHome.loyaltyRewards = result;
-                  if (!ContentHome.loyaltyRewards)
-                      ContentHome.loyaltyRewards = [];
+                  if (!ContentHome.loyaltyRewards) {
+                    ContentHome.loyaltyRewards = [];
+                    $rootScope.showEmptyState = true;
+                  } else {
+                    $rootScope.showEmptyState = false;
+                  }
                   ContentHome.loyaltyRewardsCloned = ContentHome.loyaltyRewards
                   ContentHome.addDeepLinks(result);
                   console.info('init success result loyaltyRewards:', result);
@@ -141,12 +145,14 @@
                   }
               };
               LoyaltyAPI.getRewards(context.instanceId).then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
+              ContentHome.loyaltyRewards = [];
               LoyaltyAPI.getApplication(context.instanceId).then(ContentHome.success, ContentHome.error);
               buildfire.auth.getCurrentUser(function (err, user) {
                   console.log("!!!!!!!!!!User!!!!!!!!!!!!", user);
                   if (user && user._cpUser) {
                       ContentHome.currentLoggedInUser = user._cpUser;
                       if (!$scope.$$phase) $scope.$digest();
+                      $rootScope.reloadRewards = false;
                   }
               });
           };
@@ -353,6 +359,17 @@
         $scope.$watch(function () {
           return ContentHome.data;
         }, saveDataWithDelay, true);
+
+        $rootScope.$watch('reloadRewards', function(newValue, oldValue) {
+          if (newValue) {
+            ContentHome.init();
+          }
+        })
+        $rootScope.$watch('showEmptyState', function(newValue, oldValue) {
+          if ((typeof newValue === 'undefined' || newValue == true) && !stateSeeder) {
+            stateSeeder = StateSeeder.initStateSeeder();
+          }
+         });
 
         ContentHome.init();
 
