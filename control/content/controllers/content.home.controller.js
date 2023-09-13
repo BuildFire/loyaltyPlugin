@@ -365,6 +365,7 @@
             ContentHome.init();
           }
         })
+
         $rootScope.$watch('showEmptyState', function(newValue, oldValue) {
           if ((typeof newValue === 'undefined' || newValue == true) && !stateSeeder) {
             stateSeeder = StateSeeder.initStateSeeder();

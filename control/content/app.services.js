@@ -164,7 +164,7 @@
           return deferred.promise;
         }
       };
-    }]).factory('StateSeeder', ['Context', 'LoyaltyAPI', '$rootScope', 'Buildfire' ,function(Context, LoyaltyAPI, $rootScope, Buildfire) {
+    }]).factory('StateSeeder', ['Context', 'LoyaltyAPI', '$rootScope', 'Buildfire', '$timeout' ,function(Context, LoyaltyAPI, $rootScope, Buildfire, $timeout) {
       let itemsList;
       let currentUser;
       let currentContext;
@@ -176,23 +176,22 @@
               pointsToRedeem: 0,
               description: "",
               listImage: "",
-              pointsPerItem: 0
             },
           ],
         };
-       let handleAIReq = function(err, data) {
-          if (
-            err ||
-            !data ||
-            typeof data !== "object" ||
-            !Object.keys(data).length || !data.data || !data.data.items || !data.data.items.length
-          ) {
-            return buildfire.dialog.toast({
-              message: "Bad AI request, please try changing your request.",
-              type: "danger",
-            });
-          }
-    
+      let handleAIReq = function(err, data) {
+        if (
+          err ||
+          !data ||
+          typeof data !== "object" ||
+          !Object.keys(data).length || !data.data || !data.data.items || !data.data.items.length
+        ) {
+          return buildfire.dialog.toast({
+            message: "Bad AI request, please try changing your request.",
+            type: "danger",
+          });
+        }
+        getUserAndContext().then(() => {
           itemsList = data.data.items;
           //Check image URLs
           let items = itemsList.map(item => {
@@ -220,7 +219,7 @@
               }
             })
             if (!itemsList.length) {
-              stateSeederInstance.requestResult?.complete();
+              stateSeederInstance?.requestResult?.complete();
               return buildfire.dialog.toast({
                 message: "Bad AI request, please try changing your request.",
                 type: "danger",
@@ -230,75 +229,98 @@
             // reset old data
             deleteAll().then(() => {
               // save new data
-              itemsList.forEach((item, i) => {
-                item = _applyDefaults(item);
-                LoyaltyAPI.addReward(item).then(result => {
-                  console.info('Saved data result: ', result);
-                  item.deepLinkUrl = Buildfire.deeplink.createLink({id: result._id});
-                  item = Object.assign(item, result);
-                }).catch(err => {
-                  console.error('Error while saving data : ', err);
-                }).finally(() => {
-                  if (i == (itemsList.length - 1)) {
-                    $rootScope.reloadRewards = true;
-                    buildfire.messaging.sendMessageToWidget({
-                      type: 'refresh'
-                    });
-                  }
+              let promises = itemsList.map((item, i) => {
+                return new Promise((resolve, reject) => {
+                  itemsList[i] = _applyDefaults(item);
+                  LoyaltyAPI.addReward(itemsList[i]).then(result => {
+                    console.info('Saved data result: ', result);
+                    itemsList[i].deepLinkUrl = Buildfire.deeplink.createLink({id: result._id});
+                    itemsList[i] = Object.assign(itemsList[i], result);
+                    resolve();
+                  })
+                  .catch(err => {
+                    console.error('Error while saving data : ', err);
+                    resolve('Error while saving data : ', err);
+                  })
+                })
+              }) 
+              Promise.allSettled(promises).then(res => {
+                $timeout(() => {
+                  $rootScope.reloadRewards = true;
+                  buildfire.messaging.sendMessageToWidget({
+                    type: 'refresh'
+                  });
+                  stateSeederInstance?.requestResult?.complete();
                 })
               })
-            stateSeederInstance.requestResult?.complete();
+            stateSeederInstance?.requestResult?.complete();
             }).catch(err => console.warn('old data delete error', err));
           })
-        }
+        }).catch(err => {
+          console.error(err);
+          stateSeederInstance?.requestResult?.complete();
+          return buildfire.dialog.toast({
+            message: "Bad AI request, please try changing your request.",
+            type: "danger",
+          });
+        })
+      }
     
-        // UTILITIES
-      let _applyDefaults = function(item) {
-          if (item.title) {
-            return {
-              title: item.title,
-              pointsToRedeem: item.pointsToRedeem || 10,
-              description: item.description || "",
-              listImage: item.listImage || "",
-              pointsPerItem: item.pointsPerItem || 10,
-              appId: currentContext.appId,
-              loyaltyUnqiueId: currentContext.instanceId,
-              userToken: currentUser && currentUser.userToken,
-              auth: currentUser && currentUser.auth,
-            }
+    // UTILITIES
+    let _applyDefaults = function(item) {
+        if (item.title) {
+          return {
+            title: item.title,
+            pointsToRedeem: checkPointtoRedeem(item.pointsToRedeem),
+            description: item.description || "",
+            listImage: item.listImage || "",
+            pointsPerItem: Math.ceil(checkPointtoRedeem(item.pointsToRedeem) * 0.1),
+            appId: currentContext.appId,
+            loyaltyUnqiueId: currentContext.instanceId,
+            userToken: currentUser && currentUser.userToken,
+            auth: currentUser && currentUser.auth,
           }
-          return null
         }
+        return null
+      }
 
-        let elimanateNotFoundImages = function(url) {
-          const optimisedURL = url.replace('1080x720', '100x100'); 
-          return new Promise((resolve) => {
-            if (url.includes("http")){
-              const xhr = new XMLHttpRequest();
-              xhr.open("GET", optimisedURL);
-              xhr.onerror = (error) => {
-                console.warn('provided URL is not a valid image', error);
-                resolve({isValid: false, newURL: null});
+      let checkPointtoRedeem = function(points) {
+        if (points && points > 0) {
+          return points;
+        } else {
+          return 100;
+        }
+      }
+
+      let elimanateNotFoundImages = function(url) {
+        const optimisedURL = url.replace('1080x720', '100x100'); 
+        return new Promise((resolve) => {
+          if (url.includes("http")){
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", optimisedURL);
+            xhr.onerror = (error) => {
+              console.warn('provided URL is not a valid image', error);
+              resolve({isValid: false, newURL: null});
+            }
+            xhr.onload = () => {
+              if (xhr.responseURL.includes('source-404') || xhr.status == 404) {
+                return resolve({isValid: false ,newURL: null});
+              } else {
+                return resolve({isValid: true, newURL: xhr.responseURL.replace('h=100', 'h=720').replace('w=100', 'w=1080') });
               }
-              xhr.onload = () => {
-                if (xhr.responseURL.includes('source-404') || xhr.status == 404) {
-                  return resolve({isValid: false ,newURL: null});
-                } else {
-                  return resolve({isValid: true, newURL: xhr.responseURL.replace('h=100', 'h=720').replace('w=100', 'w=1080') });
-                }
-              };
-              xhr.send();
-            } else resolve(false);
-            });
-        };
+            };
+            xhr.send();
+          } else resolve(false);
+        });
+      };
           
-        let deleteAll = function() {
-          const data = {
-            userToken: currentUser.userToken,
-            auth: currentUser.auth,
-            appId: currentContext.appId
-          };
-          return new Promise(resolve => {
+      let deleteAll = function() {
+        const data = {
+          userToken: currentUser.userToken,
+          auth: currentUser.auth,
+          appId: currentContext.appId
+        };
+        return new Promise(resolve => {
           if (stateSeederInstance.requestResult.resetData){
             LoyaltyAPI.getRewards(currentContext.instanceId).then(items => {
               const promises = items.map((item) => deleteItem(item._id, data));
@@ -309,60 +331,70 @@
             resolve();
           }
         })
-        }
+      }
 
-        let deleteItem = function(itemId, data) {
-          return new Promise((resolve, reject) => {
-            LoyaltyAPI.removeReward(itemId, data).then(res => {
-            Deeplink.deleteById(itemId);
-            resolve(res);
-            }).catch(err => {
-              if (err) reject(err);
-            })
-          });
-        }
-
-        let getCurrentUser = function() {
-          return new Promise(resolve => {
-            buildfire.auth.getCurrentUser(function (err, user) {
-              if (user && user._cpUser) {
-                resolve(user._cpUser);
-              }
-            });
+      let deleteItem = function(itemId, data) {
+        return new Promise((resolve, reject) => {
+          LoyaltyAPI.removeReward(itemId, data).then(res => {
+          Deeplink.deleteById(itemId);
+          resolve(res);
+          }).catch(err => {
+            if (err) reject(err);
           })
-        }
+        });
+      }
 
-        let getUserAndContext = function() {
-          getCurrentUser().then((user) => {
-            currentUser = user;
+      let getCurrentUser = function() {
+        return new Promise(resolve => {
+          buildfire.auth.getCurrentUser(function (err, user) {
+            if (user && user._cpUser) {
+              resolve(user._cpUser);
+            }
+          });
+        })
+      }
+
+      let getUserAndContext = function() {
+        let promises = [
+          new Promise((resolve, reject) => {
+            getCurrentUser().then((user) => {
+              currentUser = user;
+              resolve();
+          }).catch(err => reject(err))
+          }), 
+          new Promise((resolve, reject) => {
             Context.getContext().then(context => {
               currentContext = context;
+              resolve();
             })
-          })
-        }
+          }).catch(err => reject(err))
+        ]
+        return Promise.all(promises);
+      }
+
       return {
-          initStateSeeder: function() {
-              getUserAndContext();
-              stateSeederInstance = new buildfire.components.aiStateSeeder({
-                  generateOptions: {
-                  userMessage: `Generate a sample redeemable items for a new [business-type].`,
-                  maxRecords: 5, 
-                  systemMessage:
-                  'listImage URL related to title and the list type use source.unsplash.com for image URL, URL should not have premium_photo or source.unsplash.com/random, cost to redeem which is a number greater than zero and less than 100, return description as HTML.',
-                  jsonTemplate: jsonTemplate,
-                  callback: handleAIReq.bind(this),
-                  hintText: 'Replace values between brackets to match your requirements.',
-                  },
-                  importOptions: {
-                  jsonTemplate: jsonTemplate,
-                  sampleCSV: "Hotel Voucher, 50, Redeem this voucher for a one-night stay at a luxurious hotel of your choice. Experience top-notch service and enjoy a comfortable stay, 15, https://source.unsplash.com/featured/?hotel\nFlight Upgrade, 30, Upgrade your economy class ticket to business class and enjoy a more luxurious and comfortable flight experience, 10, https://source.unsplash.com/featured/?flight\nCity Tour, 20, Explore the city with a guided tour that covers all the major attractions and landmarks. Get to know the history and culture of the city, 5, https://source.unsplash.com/featured/?city\nAdventure Activity, 80, Embark on an adrenaline-pumping adventure activity such as bungee jumping, skydiving, or white-water rafting. Experience the thrill of a lifetime!, 55, https://source.unsplash.com/featured/?adventure",
-                  maxRecords: 15,
-                  hintText: 'Please enter values in the following order: Item title, Cost to redeem, Item description, Points earned, Image URL',
-                  systemMessage: ``,
-                  callback: handleAIReq.bind(this),
-                  },
+        initStateSeeder: function() {
+          getUserAndContext();
+          stateSeederInstance = new buildfire.components.aiStateSeeder({
+            generateOptions: {
+              userMessage: `Generate a sample of redeemable items for a new [business-type].`,
+              maxRecords: 5, 
+              systemMessage:
+              'listImage URL related to title and the list type. use source.unsplash.com for image URL, URL should not have premium_photo or source.unsplash.com/random, cost to redeem which is a number greater than zero and less than 100, return description as HTML.',
+              jsonTemplate: jsonTemplate,
+              callback: handleAIReq.bind(this),
+              hintText: 'Replace values between brackets to match your requirements.',
+            },
+            importOptions: {
+              jsonTemplate: jsonTemplate,
+              sampleCSV: "Hotel Voucher, 50, Redeem this voucher for a one-night stay at a luxurious hotel of your choice, https://source.unsplash.com/featured/?hotel\nFlight Upgrade, 30, Upgrade your economy class ticket to business class, https://source.unsplash.com/featured/?flight\nCity Tour, 20, Explore the city with a guided tour that covers all the major attractions and landmarks, https://source.unsplash.com/featured/?city\nAdventure Activity, 80, Embark on an adrenaline-pumping adventure activity such as bungee jumping or skydiving, https://source.unsplash.com/featured/?adventure",
+              maxRecords: 15,
+              hintText: 'Each row sequentially starts with a Loyalty item title, Cost to redeem, Description, Image URL',
+              systemMessage: ``,
+              callback: handleAIReq.bind(this),
+            },
           }).smartShowEmptyState();
-          },
+        },
       }
   }])
 })(window.angular, window.buildfire);
