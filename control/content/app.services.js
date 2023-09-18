@@ -166,10 +166,11 @@
       };
     }]).factory('StateSeeder', ['Context', 'LoyaltyAPI', '$rootScope', 'Buildfire', '$timeout' ,function(Context, LoyaltyAPI, $rootScope, Buildfire, $timeout) {
       let itemsList;
+      let orderedItems = [];
       let currentUser;
       let currentContext;
       let stateSeederInstance;
-      let jsonTemplate = {
+      let generateJSONTemplate = {
           items: [
             {
               title: "",
@@ -179,7 +180,18 @@
             },
           ],
         };
-      let handleAIReq = function(err, data) {
+        let importJSONTemplate = {
+          items: [
+            {
+              title: "",
+              pointsToRedeem: 0,
+              pointsPerItem: 0,
+              description: "",
+              listImage: "",
+            },
+          ],
+        };
+      let handleAIReq = function(isImport, err, data) {
         if (
           err ||
           !data ||
@@ -194,11 +206,13 @@
         getUserAndContext().then(() => {
           itemsList = data.data.items;
           //Check image URLs
-          let items = itemsList.map(item => {
+          let items = itemsList.map((item, i) => {
             return new Promise((resolve, reject) => {
               elimanateNotFoundImages(item.listImage).then(res => {
                 if (res.isValid) {
                   item.listImage = res.newURL;
+                  item.order = i;
+                  orderedItems.push(item);
                   resolve(item);
                 } else {
                   reject('image URL not valid');
@@ -221,7 +235,7 @@
             if (!itemsList.length) {
               stateSeederInstance?.requestResult?.complete();
               return buildfire.dialog.toast({
-                message: "Bad AI request, please try changing your request.",
+                message: isImport ? "Each row must have a valid image URL." : "Bad AI request, please try changing your request.",
                 type: "danger",
               });
             }
@@ -245,15 +259,46 @@
                 })
               }) 
               Promise.allSettled(promises).then(res => {
-                $timeout(() => {
+                if (isImport) {
+                  let sortedItems = orderedItems.sort((a,b) => a.order - b.order);
+                  let sortedIds =[];
+                  LoyaltyAPI.getRewards(currentContext.instanceId).then(results => {
+                    sortedItems.forEach(item => {
+                      if (results) {
+                        results.forEach(result => {
+                          if (item.title == result.title && item.listImage == result.listImage ) {
+                           sortedIds.push(result._id);
+                          }
+                        })
+                     }
+                    })
+                    const data = {
+                      appId: currentContext.appId,
+                      loyaltyUnqiueId: currentContext.instanceId,
+                      userToken: currentUser && currentUser.userToken,
+                      auth: currentUser && currentUser.auth,
+                      loyaltyRewardIds: sortedIds
+                    } 
+                    LoyaltyAPI.sortRewards(data).finally(() => {
+                      $timeout(() => {
+                        $rootScope.reloadRewards = true;
+                        buildfire.messaging.sendMessageToWidget({
+                          type: 'refresh'
+                        });
+                        stateSeederInstance?.requestResult?.complete();
+                      })
+                    });
+                  });
+                } else {
+                  $timeout(() => {
                   $rootScope.reloadRewards = true;
                   buildfire.messaging.sendMessageToWidget({
                     type: 'refresh'
                   });
                   stateSeederInstance?.requestResult?.complete();
                 })
+                }
               })
-            stateSeederInstance?.requestResult?.complete();
             }).catch(err => console.warn('old data delete error', err));
           })
         }).catch(err => {
@@ -269,12 +314,13 @@
     // UTILITIES
     let _applyDefaults = function(item) {
         if (item.title) {
+          const points = checkPoints(item.pointsToRedeem, item.pointsPerItem);
           return {
             title: item.title,
-            pointsToRedeem: checkPointtoRedeem(item.pointsToRedeem),
+            pointsToRedeem: points.pointsToRedeem,
             description: item.description || "",
             listImage: item.listImage || "",
-            pointsPerItem: Math.ceil(checkPointtoRedeem(item.pointsToRedeem) * 0.1),
+            pointsPerItem: points.pointsPerItem,
             appId: currentContext.appId,
             loyaltyUnqiueId: currentContext.instanceId,
             userToken: currentUser && currentUser.userToken,
@@ -284,12 +330,23 @@
         return null
       }
 
-      let checkPointtoRedeem = function(points) {
-        if (points && points > 0) {
-          return points;
+      let checkPoints = function(pointsToRedeem, pointsPerItem) {
+        let points = {
+          pointsToRedeem: 0,
+          pointsPerItem: 0,
+        };
+        if (pointsToRedeem && pointsToRedeem > 0) {
+          points.pointsToRedeem = pointsToRedeem;
         } else {
-          return 100;
+          points.pointsToRedeem = 100;
         }
+
+        if (pointsPerItem && pointsPerItem > 0) {
+          points.pointsPerItem = pointsPerItem;
+        } else {
+          points.pointsPerItem = Math.ceil(points.pointsToRedeem * 0.1);
+        }
+        return points;
       }
 
       let elimanateNotFoundImages = function(url) {
@@ -381,17 +438,17 @@
               maxRecords: 5, 
               systemMessage:
               'listImage URL related to title and the list type. use source.unsplash.com for image URL, URL should not have premium_photo or source.unsplash.com/random, cost to redeem which is a number greater than zero and less than 100, return description as HTML.',
-              jsonTemplate: jsonTemplate,
-              callback: handleAIReq.bind(this),
+              jsonTemplate: generateJSONTemplate,
+              callback: handleAIReq.bind(this, false),
               hintText: 'Replace values between brackets to match your requirements.',
             },
             importOptions: {
-              jsonTemplate: jsonTemplate,
-              sampleCSV: "Hotel Voucher, 50, Redeem this voucher for a one-night stay at a luxurious hotel of your choice, https://source.unsplash.com/featured/?hotel\nFlight Upgrade, 30, Upgrade your economy class ticket to business class, https://source.unsplash.com/featured/?flight\nCity Tour, 20, Explore the city with a guided tour that covers all the major attractions and landmarks, https://source.unsplash.com/featured/?city\nAdventure Activity, 80, Embark on an adrenaline-pumping adventure activity such as bungee jumping or skydiving, https://source.unsplash.com/featured/?adventure",
+              jsonTemplate: importJSONTemplate,
+              sampleCSV: "Hotel Voucher, 50, 10, Redeem this voucher for a one-night stay at a luxurious hotel of your choice, https://source.unsplash.com/featured/?hotel\nFlight Upgrade, 30, 15, Upgrade your economy class ticket to business class, https://source.unsplash.com/featured/?flight\nCity Tour, 20, 5, Explore the city with a guided tour that covers all the major attractions and landmarks, https://source.unsplash.com/featured/?city\nAdventure Activity, 80, 30, Embark on an adrenaline-pumping adventure activity such as bungee jumping or skydiving, https://source.unsplash.com/featured/?adventure",
               maxRecords: 15,
-              hintText: 'Each row sequentially starts with a Loyalty item title, Cost to redeem, Description, Image URL',
+              hintText: 'Each row should start with a Loyalty item title, Cost to redeem, Points earned, Description, and Image URL',
               systemMessage: ``,
-              callback: handleAIReq.bind(this),
+              callback: handleAIReq.bind(this, true),
             },
           }).smartShowEmptyState();
         },
