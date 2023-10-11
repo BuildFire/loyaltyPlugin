@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentRewardCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$location', '$routeParams', 'RewardCache', 'context',
-      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $location, $routeParams, RewardCache, context) {
+    .controller('ContentRewardCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$location', '$routeParams', 'RewardCache', 'context', '$rootScope',
+      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $location, $routeParams, RewardCache, context, $rootScope) {
         var ContentReward = this;
         ContentReward.item = {
           title: "",
@@ -338,6 +338,14 @@
         /*
          * watch for changes in data and trigger the saveDataWithDelay function on change
          * */
+
+        $rootScope.$watch('reloadRewards', function(newValue, oldValue) {
+          if (newValue) {
+            if ($location.$$path.includes("/reward")) {
+              $location.path("/");
+            }
+          }
+        })
 
         $scope.$watch(function () {
           return ContentReward.item;

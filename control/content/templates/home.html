@@ -1,6 +1,9 @@
 <div class="loyalty-plugin">
+  <p ng-if="ContentHome.showRedemptionPasscodeHint" class="info-note margin-bottom-ten" style="font-size: 13px;">
+    Your default staff confirmation passcode is {{ContentHome.defaultPassCode}}, you can change it in the <a class="link" ng-click="ContentHome.openSettingsPage()">Settings</a> tab.
+  </p>
   <p class="info-note margin-bottom-twenty" style="font-size: 13px;">
-    Add redemption items here. You can set how user earns points and reedmes items in the  <a class="link" ng-click="ContentHome.openSettingsPage()">Settings</a> tab.
+    Add redemption items here. You can set how the user earns points and redeem items in the <a class="link" ng-click="ContentHome.openSettingsPage()">Settings</a> tab.
   </p>
   <div class="row">
     <div class="col-md-9">

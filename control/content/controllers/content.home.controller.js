@@ -3,11 +3,12 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal', 'RewardCache', '$location', '$timeout', 'context', 'TAG_NAMES',
-      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache, $location, $timeout, context, TAG_NAMES) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'LoyaltyAPI', 'STATUS_CODE', '$modal', 'RewardCache', '$location', '$timeout', 'context', 'TAG_NAMES', 'StateSeeder', '$rootScope',
+      function ($scope, Buildfire, LoyaltyAPI, STATUS_CODE, $modal, RewardCache, $location, $timeout, context, TAG_NAMES, StateSeeder, $rootScope) {
         var ContentHome = this;
+        ContentHome.defaultPassCode = '12345';
         var _data = {
-          redemptionPasscode: '12345',
+          redemptionPasscode: ContentHome.defaultPassCode,
           unqiueId: context.instanceId,
           externalAppId: context.appId,
           appId: context.appId,
@@ -24,7 +25,7 @@
           },
           image: []
         };
-
+        let stateSeeder;
         //Scroll current view to top when page loaded.
         buildfire.navigation.scrollTop();
         ContentHome.title = "";
@@ -38,9 +39,6 @@
           theme: 'modern'
         };
         ContentHome.currentLoggedInUser = null;
-
-
-
 
         function updateMasterItem(data) {
           ContentHome.masterData = angular.copy(data);
@@ -77,7 +75,7 @@
                   console.info('init success result:', result);
                   ContentHome.data = result;
                   if (!ContentHome.data)
-                      ContentHome.data = angular.copy(_data);
+                    ContentHome.data = angular.copy(_data);
 
                   //make sure to assign to the right appId
                   ContentHome.data.appId = _data.appId;
@@ -87,6 +85,12 @@
 
                   buildfire.datastore.get(TAG_NAMES.LOYALTY_INFO,function(err,data){
                     ContentHome.settings = data.data.settings;
+                    if (!ContentHome.settings || !ContentHome.settings.redemptionPasscode){
+                      ContentHome.showRedemptionPasscodeHint = true;
+                    } else {
+                      ContentHome.showRedemptionPasscodeHint = false;
+                    }
+                    if (!$scope.$$phase) $scope.$digest();
                     updateMasterItem(ContentHome.data); 
                     if(Number(ContentHome.data.pointsPerDollar) <= 0) {
                       ContentHome.data.pointsPerDollar = 1;
@@ -95,6 +99,7 @@
                   });
               };
               ContentHome.error = function (err) {
+                ContentHome.showRedemptionPasscodeHint = true;
                   if (err && err.code == 2100) {
                       console.error('Error while getting application:', err);
                       var success = function (result) {
@@ -108,6 +113,7 @@
                           , error = function (err) {
                           console.log('Error while saving data : ', err);
                           if(err && err.code == 2000) {
+                            ContentHome.data = angular.copy(_data);
                             buildfire.messaging.sendMessageToWidget({
                               type: 'AppCreated'
                             });
@@ -127,8 +133,12 @@
               };
               ContentHome.successloyaltyRewards = function (result) {
                   ContentHome.loyaltyRewards = result;
-                  if (!ContentHome.loyaltyRewards)
-                      ContentHome.loyaltyRewards = [];
+                  if (!ContentHome.loyaltyRewards) {
+                    ContentHome.loyaltyRewards = [];
+                    $rootScope.showEmptyState = true;
+                  } else {
+                    $rootScope.showEmptyState = false;
+                  }
                   ContentHome.loyaltyRewardsCloned = ContentHome.loyaltyRewards
                   ContentHome.addDeepLinks(result);
                   console.info('init success result loyaltyRewards:', result);
@@ -141,12 +151,14 @@
                   }
               };
               LoyaltyAPI.getRewards(context.instanceId).then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
+              ContentHome.loyaltyRewards = [];
               LoyaltyAPI.getApplication(context.instanceId).then(ContentHome.success, ContentHome.error);
               buildfire.auth.getCurrentUser(function (err, user) {
                   console.log("!!!!!!!!!!User!!!!!!!!!!!!", user);
                   if (user && user._cpUser) {
                       ContentHome.currentLoggedInUser = user._cpUser;
                       if (!$scope.$$phase) $scope.$digest();
+                      $rootScope.reloadRewards = false;
                   }
               });
           };
@@ -353,6 +365,18 @@
         $scope.$watch(function () {
           return ContentHome.data;
         }, saveDataWithDelay, true);
+
+        $rootScope.$watch('reloadRewards', function(newValue, oldValue) {
+          if (newValue) {
+            ContentHome.init();
+          }
+        })
+
+        $rootScope.$watch('showEmptyState', function(newValue, oldValue) {
+          if ((typeof newValue === 'undefined' || newValue == true) && !stateSeeder) {
+            stateSeeder = StateSeeder.initStateSeeder();
+          }
+         });
 
         ContentHome.init();
 
