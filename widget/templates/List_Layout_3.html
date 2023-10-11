@@ -44,7 +44,7 @@
       <div class="list-item" ng-repeat="reward in WidgetHome.loyaltyRewards | filter: { pointsToRedeem: '!38762499627' }" ng-click="WidgetHome.openReward(reward, $index)">
         <div class="list-media-holder"
               ng-if="reward.listImage">
-          <img load-image="16:9"
+          <img load-image="16x9" aspect-ratio="16:9"
                 data-final-src="{{reward.listImage}}">
         </div>
         <div

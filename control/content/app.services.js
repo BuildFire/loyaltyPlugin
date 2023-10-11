@@ -203,7 +203,21 @@
             type: "danger",
           });
         }
-        getUserAndContext().then(() => {
+        let initPromises = [
+          new Promise((resolve, reject) => {
+            getCurrentUser().then((user) => {
+              currentUser = user;
+              resolve();
+          }).catch(err => reject(err))
+          }), 
+          new Promise((resolve, reject) => {
+            Context.getContext().then(context => {
+              currentContext = context;
+              resolve();
+            }).catch(err => reject(err))
+          })
+        ]
+        Promise.all(initPromises).then(() => {
           itemsList = data.data.items;
           //Check image URLs
           let items = itemsList.map((item, i) => {
@@ -221,7 +235,6 @@
             })
           })
     
-          // Check image URLs
           Promise.allSettled(items).then(results => {
             itemsList = [];
             results.forEach(res => {
@@ -272,6 +285,10 @@
                         })
                      }
                     })
+                    results.forEach(result => {
+                      if (!sortedIds.includes(result._id))
+                      sortedIds.push(result._id);
+                    })
                     const data = {
                       appId: currentContext.appId,
                       loyaltyUnqiueId: currentContext.instanceId,
@@ -281,6 +298,8 @@
                     } 
                     LoyaltyAPI.sortRewards(data).finally(() => {
                       $timeout(() => {
+                        sortedItems = [];
+                        orderedItems = [];
                         $rootScope.reloadRewards = true;
                         buildfire.messaging.sendMessageToWidget({
                           type: 'refresh'
@@ -292,6 +311,7 @@
                 } else {
                   $timeout(() => {
                   $rootScope.reloadRewards = true;
+                  orderedItems = [];
                   buildfire.messaging.sendMessageToWidget({
                     type: 'refresh'
                   });
@@ -304,10 +324,6 @@
         }).catch(err => {
           console.error(err);
           stateSeederInstance?.requestResult?.complete();
-          return buildfire.dialog.toast({
-            message: "Bad AI request, please try changing your request.",
-            type: "danger",
-          });
         })
       }
     
@@ -411,27 +427,8 @@
         })
       }
 
-      let getUserAndContext = function() {
-        let promises = [
-          new Promise((resolve, reject) => {
-            getCurrentUser().then((user) => {
-              currentUser = user;
-              resolve();
-          }).catch(err => reject(err))
-          }), 
-          new Promise((resolve, reject) => {
-            Context.getContext().then(context => {
-              currentContext = context;
-              resolve();
-            })
-          }).catch(err => reject(err))
-        ]
-        return Promise.all(promises);
-      }
-
       return {
         initStateSeeder: function() {
-          getUserAndContext();
           stateSeederInstance = new buildfire.components.aiStateSeeder({
             generateOptions: {
               userMessage: `Generate a sample of redeemable items for a new [business-type].`,
@@ -446,7 +443,7 @@
               jsonTemplate: importJSONTemplate,
               sampleCSV: "Hotel Voucher, 50, 10, Redeem this voucher for a one-night stay at a luxurious hotel of your choice, https://source.unsplash.com/featured/?hotel\nFlight Upgrade, 30, 15, Upgrade your economy class ticket to business class, https://source.unsplash.com/featured/?flight\nCity Tour, 20, 5, Explore the city with a guided tour that covers all the major attractions and landmarks, https://source.unsplash.com/featured/?city\nAdventure Activity, 80, 30, Embark on an adrenaline-pumping adventure activity such as bungee jumping or skydiving, https://source.unsplash.com/featured/?adventure",
               maxRecords: 15,
-              hintText: 'Each row should start with a Loyalty item title, Cost to redeem, Points earned, Description, and Image URL',
+              hintText: 'Each row should start with a loyalty item title, cost to redeem, points earned, description, and image URL.',
               systemMessage: ``,
               callback: handleAIReq.bind(this, true),
             },

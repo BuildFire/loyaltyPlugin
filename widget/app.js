@@ -224,7 +224,7 @@
 
                     let croppedImage = buildfire.imageLib.cropImage(
                       _img,
-                      { size: "full_width", aspect: attrs.loadImage }
+                      { size: "full_width", aspect: attrs.aspectRatio || '1:1' }
                     );
                     replaceImg(croppedImage);
 
