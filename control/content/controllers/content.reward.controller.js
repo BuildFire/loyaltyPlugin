@@ -157,15 +157,15 @@
           };
           if(!ContentReward.item.title || ContentReward.item.title.length == 0) {
             ContentReward.validations.title = true;
-          } 
-          if (((!ContentReward.item.pointsToRedeem && ContentReward.item.pointsToRedeem !== 0) || ContentReward.item.pointsToRedeem.length == 0) && 
+          }
+          if (((!ContentReward.item.pointsToRedeem && ContentReward.item.pointsToRedeem !== 0) || ContentReward.item.pointsToRedeem.length == 0) &&
           (!ContentReward.item.pointsPerItem || ContentReward.item.pointsPerItem.length == 0) ){
             ContentReward.validations.points = true;
-          } 
+          }
            if (!ContentReward.validations.title && !ContentReward.validations.points){
             // "Hack" for overcoming pointsToRedeem validation if the item can only be bought but not redeemed
-            if(ContentReward.item.pointsPerItem && ContentReward.item.pointsPerItem.length > 0 
-              && 
+            if(ContentReward.item.pointsPerItem && ContentReward.item.pointsPerItem.length > 0
+              &&
               ((!ContentReward.item.pointsToRedeem && ContentReward.item.pointsToRedeem !== 0) || ContentReward.item.pointsToRedeem.length === 0 || ContentReward.item.pointsToRedeem === '38762499627')) {
                 ContentReward.item.pointsToRedeem = '38762499627'
             }
@@ -181,7 +181,7 @@
           ContentReward.loading = true;
           var data = newObj;
           data.appId = context.appId;
-          data.loyaltyUnqiueId = context.instanceId;
+          data.loyaltyUnqiueId = `${context.appId}_${context.instanceId}`;
           data.userToken = ContentReward.currentLoggedInUser && ContentReward.currentLoggedInUser.userToken;
           data.auth = ContentReward.currentLoggedInUser && ContentReward.currentLoggedInUser.auth;
           var success = function (result) {
@@ -226,7 +226,7 @@
           updateMasterItem(newObj);
           var data = newObj;
           data.appId = context.appId;
-          data.loyaltyUnqiueId = context.instanceId;
+          data.loyaltyUnqiueId = `${context.appId}_${context.instanceId}`;
           data.userToken = ContentReward.currentLoggedInUser.userToken;
           data.auth = ContentReward.currentLoggedInUser.auth;
           if(newObj.pointsToRedeem != '38762499627') {
@@ -308,7 +308,7 @@
             ContentReward.editor.loadItems([]);
             changeCarouselActionItemDesign()
           }
-            
+
           else
             ContentReward.editor.loadItems(ContentReward.item.carouselImage);
             changeCarouselActionItemDesign()

@@ -56,7 +56,7 @@
         ItemsPurchased.Update = (status) => {
             var success = function (result) {
                 if(status == STATUS.Approved){
-                    LoyaltyAPI.addLoyaltyPoints(ItemsPurchased.Item.data.createdBy._id, ItemsPurchased.Item.data.createdBy.userToken, ItemsPurchased.context.instanceId, ItemsPurchased.Settings.redemptionPasscode, ItemsPurchased.TotalPoints).then();
+                    LoyaltyAPI.addLoyaltyPoints(ItemsPurchased.Item.data.createdBy._id, ItemsPurchased.Item.data.createdBy.userToken, `${ItemsPurchased.context.appId}_${ItemsPurchased.context.instanceId}`, ItemsPurchased.Settings.redemptionPasscode, ItemsPurchased.TotalPoints).then();
                     buildfire.dialog.toast({
                         message: ItemsPurchased.TotalPoints + " points approved for " + (ItemsPurchased.Item.data.createdBy.displayName ?  ItemsPurchased.Item.data.createdBy.displayName :  ItemsPurchased.Item.data.createdBy.email),
                         type: "success"

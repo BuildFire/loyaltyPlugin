@@ -275,10 +275,10 @@
                     }
                     var _data = {
                         redemptionPasscode: isPurchaseOptionFtqSelected ? "12345" : (newObj.settings.redemptionPasscode ? newObj.settings.redemptionPasscode : '12345'),
-                        unqiueId: SettingsHome.context.instanceId,
+                        unqiueId: `${SettingsHome.context.appId}_${SettingsHome.context.instanceId}`,
                         externalAppId: SettingsHome.context.appId,
                         appId: SettingsHome.context.appId,
-                        name: SettingsHome.context.pluginId, 
+                        name: SettingsHome.context.pluginId,
                         pointsPerVisit: isPurchaseOptionFtqSelected ? 0 : ((typeof (newObj.settings.pointsPerVisit) != undefined && newObj.settings.pointsPerVisit != null) ? newObj.settings.pointsPerVisit : 1),
                         pointsPerDollar: isPurchaseOptionFtqSelected ? 0 : ((typeof (newObj.settings.pointsPerDollar) != undefined && newObj.settings.pointsPerDollar != null) ? newObj.settings.pointsPerDollar : 1),
                         totalLimit: isPurchaseOptionFtqSelected ? 50000 : ((typeof (newObj.settings.totalLimit) != undefined && newObj.settings.totalLimit != null) ? newObj.settings.totalLimit : 5000),

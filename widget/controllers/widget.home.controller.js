@@ -191,7 +191,7 @@
               }
             };
             if (userId)
-                LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, WidgetHome.context.instanceId).then(success, error);
+                LoyaltyAPI.getLoyaltyPoints(userId, WidgetHome.currentLoggedInUser.userToken, `${WidgetHome.context.appId}_${WidgetHome.context.instanceId}`).then(success, error);
         };
 
         /**
@@ -250,16 +250,16 @@
           };
           if(WidgetHome.context && WidgetHome.context.instanceId){
             getLoggedInUser();
-            LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
-            LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
+            LoyaltyAPI.getApplication(`${WidgetHome.context.appId}_${WidgetHome.context.instanceId}`).then(successApplication, errorApplication);
+            LoyaltyAPI.getRewards(`${WidgetHome.context.appId}_${WidgetHome.context.instanceId}`).then(successLoyaltyRewards, errorLoyaltyRewards);
           }
           else{
             Context.getContext(function (ctx) {
               console.log('COntext got successfully-----------------' +
                   '');
               WidgetHome.context = ctx;
-             LoyaltyAPI.getApplication(WidgetHome.context.instanceId).then(successApplication, errorApplication);
-             LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
+             LoyaltyAPI.getApplication(`${WidgetHome.context.appId}_${WidgetHome.context.instanceId}`).then(successApplication, errorApplication);
+             LoyaltyAPI.getRewards(`${WidgetHome.context.appId}_${WidgetHome.context.instanceId}`).then(successLoyaltyRewards, errorLoyaltyRewards);
            });
           }
         };
@@ -417,7 +417,7 @@
                         console.error('Error while getting data loyaltyRewards--------------------------------------', err);
                     }
                 };
-            LoyaltyAPI.getRewards(WidgetHome.context.instanceId).then(successLoyaltyRewards, errorLoyaltyRewards);
+            LoyaltyAPI.getRewards(`${WidgetHome.context.appId}_${WidgetHome.context.instanceId}`).then(successLoyaltyRewards, errorLoyaltyRewards);
         });
 
         /**

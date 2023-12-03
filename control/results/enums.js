@@ -31,7 +31,7 @@
       ITEM_ARRAY_FOUND: 'Array of Items provided'
     })
     .constant('SERVER', {
-      URL: 'https://loyalty.buildfire.com'
+      URL: 'https://uat-loyalty.buildfire.com'
     })
 
 })(window.angular);

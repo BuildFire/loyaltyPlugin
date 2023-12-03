@@ -202,7 +202,7 @@
                     });
                   };
                 if (user._id)
-                  LoyaltyAPI.getLoyaltyPoints(user._id, WidgetItem.currentLoggedInUser.userToken, ctx.instanceId).then(success, error);
+                  LoyaltyAPI.getLoyaltyPoints(user._id, WidgetItem.currentLoggedInUser.userToken, `${ctx.appId}_${ctx.instanceId}`).then(success, error);
 
               });
             } else {
@@ -282,7 +282,7 @@
             $scope.$destroy();
           }
         });
-        
+
         WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
           if (ViewStack.getCurrentView().template == 'Item' || ViewStack.getCurrentView().template == 'Item_Details') {
             $scope.$destroy();

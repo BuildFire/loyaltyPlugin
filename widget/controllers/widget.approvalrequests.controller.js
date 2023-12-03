@@ -107,7 +107,7 @@
                     message: item.data.points + " points approved for " + item.title,
                     type: "success"
                   });
-                  LoyaltyAPI.redeemPoints(selectedItem.data.createdBy._id, selectedItem.data.createdBy.userToken, ApprovalRequests.context.instanceId, selectedItem.data.item._id).then();
+                  LoyaltyAPI.redeemPoints(selectedItem.data.createdBy._id, selectedItem.data.createdBy.userToken, `${ApprovalRequests.context.appId}_${ApprovalRequests.context.instanceId}`, selectedItem.data.item._id).then();
 
                   buildfire.notifications.pushNotification.schedule(
                     {
@@ -208,7 +208,7 @@
               }
               Transactions.updateRequestedRedeemStatus(selectedItem, status, ApprovalRequests.currentLoggedInUser.displayName ? ApprovalRequests.currentLoggedInUser.displayName : ApprovalRequests.currentLoggedInUser.email).then(success, error).then(x=>{
                 if(status == STATUS.Approved){
-                  LoyaltyAPI.addLoyaltyPoints(selectedItem.data.createdBy._id, selectedItem.data.createdBy.userToken, ApprovalRequests.context.instanceId, ApprovalRequests.Settings.redemptionPasscode, item.data.points).then(successLoyaltyPoints, errorLoyaltyPoints);
+                  LoyaltyAPI.addLoyaltyPoints(selectedItem.data.createdBy._id, selectedItem.data.createdBy.userToken, `${ApprovalRequests.context.appId}_${ApprovalRequests.context.instanceId}`, ApprovalRequests.Settings.redemptionPasscode, item.data.points).then(successLoyaltyPoints, errorLoyaltyPoints);
                 } else {
                   var updatedItem = ApprovalRequests.PointResult.find(x => x.id == item.id ) ;
                   buildfire.dialog.toast({
