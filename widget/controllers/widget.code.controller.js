@@ -102,7 +102,7 @@
                     console.log(currentView.reward)
                     if (WidgetCode.application.dailyLimit > currentView.pointsToRedeem) {
                       Buildfire.spinner.show();
-                      LoyaltyAPI.redeemPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, currentView.reward._id).then(redeemSuccess, redeemFailure);
+                      LoyaltyAPI.redeemPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, `${WidgetCode.context.appId}_${WidgetCode.context.instanceId}`, currentView.reward._id).then(redeemSuccess, redeemFailure);
                     }
                     else {
                       buildfire.dialog.toast({
@@ -118,7 +118,7 @@
                   }
 
                 } else {
-                  LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode, currentView.amount).then(success, error);
+                  LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, `${WidgetCode.context.appId}_${WidgetCode.context.instanceId}`, WidgetCode.passcode, currentView.amount).then(success, error);
                 }
               }
             })
@@ -152,7 +152,7 @@
           };
 
 
-          LoyaltyAPI.validatePasscode(WidgetCode.currentLoggedInUser.userToken, WidgetCode.context.instanceId, WidgetCode.passcode).then(success, error);
+          LoyaltyAPI.validatePasscode(WidgetCode.currentLoggedInUser.userToken, `${WidgetCode.context.appId}_${WidgetCode.context.instanceId}`, WidgetCode.passcode).then(success, error);
         };
 
         WidgetCode.preventClickBehavior = function (event) {

@@ -9,7 +9,7 @@
         ContentHome.defaultPassCode = '12345';
         var _data = {
           redemptionPasscode: ContentHome.defaultPassCode,
-          unqiueId: context.instanceId,
+          unqiueId: `${context.appId}_${context.instanceId}`,
           externalAppId: context.appId,
           appId: context.appId,
           name: context.pluginId,
@@ -58,7 +58,7 @@
             });
             var data = {
               appId: context.appId,
-              loyaltyUnqiueId: context.instanceId,
+              loyaltyUnqiueId: `${context.appId}_${context.instanceId}`,
               loyaltyRewardIds: rewardsId,
               userToken: ContentHome.currentLoggedInUser.userToken,
               auth: ContentHome.currentLoggedInUser.auth
@@ -91,7 +91,7 @@
                       ContentHome.showRedemptionPasscodeHint = false;
                     }
                     if (!$scope.$$phase) $scope.$digest();
-                    updateMasterItem(ContentHome.data); 
+                    updateMasterItem(ContentHome.data);
                     if(Number(ContentHome.data.pointsPerDollar) <= 0) {
                       ContentHome.data.pointsPerDollar = 1;
                       saveData(JSON.parse(angular.toJson(ContentHome.data)));
@@ -150,9 +150,9 @@
                       if (tmrDelay) clearTimeout(tmrDelay);
                   }
               };
-              LoyaltyAPI.getRewards(context.instanceId).then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
+              LoyaltyAPI.getRewards(`${context.appId}_${context.instanceId}`).then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
               ContentHome.loyaltyRewards = [];
-              LoyaltyAPI.getApplication(context.instanceId).then(ContentHome.success, ContentHome.error);
+              LoyaltyAPI.getApplication(`${context.appId}_${context.instanceId}`).then(ContentHome.success, ContentHome.error);
               buildfire.auth.getCurrentUser(function (err, user) {
                   console.log("!!!!!!!!!!User!!!!!!!!!!!!", user);
                   if (user && user._cpUser) {
@@ -182,7 +182,7 @@
                     if (tmrDelay) clearTimeout(tmrDelay);
                 }
             };
-            LoyaltyAPI.getRewards(context.instanceId).then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
+            LoyaltyAPI.getRewards(`${context.appId}_${context.instanceId}`).then(ContentHome.successloyaltyRewards, ContentHome.errorloyaltyRewards);
           }
         }
 
@@ -323,7 +323,7 @@
         ContentHome.removeDeeplink =function(loyaltyId){
           Deeplink.deleteById(loyaltyId);
         }
-        
+
         ContentHome.openReward = function (data, index) {
           RewardCache.setReward(data);
           $location.path('/reward/' + data._id + '/' + index);

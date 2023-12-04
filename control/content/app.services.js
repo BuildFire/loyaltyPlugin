@@ -209,7 +209,7 @@
               currentUser = user;
               resolve();
           }).catch(err => reject(err))
-          }), 
+          }),
           new Promise((resolve, reject) => {
             Context.getContext().then(context => {
               currentContext = context;
@@ -234,7 +234,7 @@
               })
             })
           })
-    
+
           Promise.allSettled(items).then(results => {
             itemsList = [];
             results.forEach(res => {
@@ -252,7 +252,7 @@
                 type: "danger",
               });
             }
-            
+
             // reset old data
             deleteAll().then(() => {
               // save new data
@@ -270,12 +270,12 @@
                     resolve('Error while saving data : ', err);
                   })
                 })
-              }) 
+              })
               Promise.allSettled(promises).then(res => {
                 if (isImport) {
                   let sortedItems = orderedItems.sort((a,b) => a.order - b.order);
                   let sortedIds =[];
-                  LoyaltyAPI.getRewards(currentContext.instanceId).then(results => {
+                  LoyaltyAPI.getRewards(`${currentContext.appId}_${currentContext.instanceId}`).then(results => {
                     sortedItems.forEach(item => {
                       if (results) {
                         results.forEach(result => {
@@ -291,11 +291,11 @@
                     })
                     const data = {
                       appId: currentContext.appId,
-                      loyaltyUnqiueId: currentContext.instanceId,
+                      loyaltyUnqiueId: `${currentContext.appId}_${currentContext.instanceId}`,
                       userToken: currentUser && currentUser.userToken,
                       auth: currentUser && currentUser.auth,
                       loyaltyRewardIds: sortedIds
-                    } 
+                    }
                     LoyaltyAPI.sortRewards(data).finally(() => {
                       $timeout(() => {
                         sortedItems = [];
@@ -326,7 +326,7 @@
           stateSeederInstance?.requestResult?.complete();
         })
       }
-    
+
     // UTILITIES
     let _applyDefaults = function(item) {
         if (item.title) {
@@ -338,7 +338,7 @@
             listImage: item.listImage || "",
             pointsPerItem: points.pointsPerItem,
             appId: currentContext.appId,
-            loyaltyUnqiueId: currentContext.instanceId,
+            loyaltyUnqiueId: `${currentContext.appId}_${currentContext.instanceId}`,
             userToken: currentUser && currentUser.userToken,
             auth: currentUser && currentUser.auth,
           }
@@ -366,7 +366,7 @@
       }
 
       let elimanateNotFoundImages = function(url) {
-        const optimisedURL = url.replace('1080x720', '100x100'); 
+        const optimisedURL = url.replace('1080x720', '100x100');
         return new Promise((resolve) => {
           if (url.includes("http")){
             const xhr = new XMLHttpRequest();
@@ -386,7 +386,7 @@
           } else resolve(false);
         });
       };
-          
+
       let deleteAll = function() {
         const data = {
           userToken: currentUser.userToken,
@@ -395,9 +395,9 @@
         };
         return new Promise(resolve => {
           if (stateSeederInstance.requestResult.resetData){
-            LoyaltyAPI.getRewards(currentContext.instanceId).then(items => {
+            LoyaltyAPI.getRewards(`${currentContext.appId}_${currentContext.instanceId}`).then(items => {
               const promises = items.map((item) => deleteItem(item._id, data));
-              resolve(Promise.all(promises)); 
+              resolve(Promise.all(promises));
             }).catch(err => console.warn('old data get error', err));
           }
           else {
@@ -432,7 +432,7 @@
           stateSeederInstance = new buildfire.components.aiStateSeeder({
             generateOptions: {
               userMessage: `Generate a sample of redeemable items for a new [business-type].`,
-              maxRecords: 5, 
+              maxRecords: 5,
               systemMessage:
               'listImage URL related to title and the list type. use source.unsplash.com for image URL, URL should not have premium_photo or source.unsplash.com/random, cost to redeem which is a number greater than zero and less than 100, return description as HTML.',
               jsonTemplate: generateJSONTemplate,

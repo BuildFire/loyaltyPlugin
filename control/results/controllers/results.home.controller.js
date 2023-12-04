@@ -100,7 +100,7 @@
             ResultsHome.loading = true;
             Transactions.get($scope.skip).then(success, error);
           }
-          
+
           if(!ResultsHome.noMore) {
             getThreads();
           } else {
@@ -156,7 +156,7 @@
           ResultsHome.exporting = true;
 
           function uploadFile() {
-            LoyaltyAPI.getApplication(context.instanceId).then(loyaltyApp => {
+            LoyaltyAPI.getApplication(`${context.appId}_${context.instanceId}`).then(loyaltyApp => {
               ResultsHome.getCurrentUser().then(user => {
                 if (user && Object.keys(user).length && loyaltyApp && Object.keys(loyaltyApp).length) {
                   ResultsHome.currentUser = user
@@ -271,7 +271,7 @@
 													return Promise.resolve();
 												}
 											});
-                  } 
+                  }
                   else {
 										ResultsHome.openWaitingPopup(false)
 										ResultsHome.notFoundEmails=[...data.emails]
@@ -523,7 +523,7 @@
         } else {
           init();
         }
-      
+
       }]);
 })(window.angular, window.buildfire);
 
