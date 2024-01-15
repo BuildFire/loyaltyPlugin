@@ -1,19 +1,19 @@
 <div class="holder padding-zero" sty ng-controller="WidgetRewardsCtrl as WidgetRewards" style="height: 100%">
     <div style="display: flex;flex-direction: column;">
             <div ng-show="!WidgetRewards.isUpcomingRewardsEmpty">
-                <label class="title-item-purchased reward-title">Upcoming Rewards</label>
-                <div id="upcomingRewardsContainer"></div> 
+                <label class="title-item-purchased reward-title mdc-theme--text-primary-on-background">Upcoming Rewards</label>
+                <div id="upcomingRewardsContainer"></div>
             </div>
             <div ng-show="!WidgetRewards.isPastRewardsEmpty">
-                <label  ng-if="!WidgetRewards.isUpcomingRewardsEmpty" class="title-item-purchased reward-title">Past Rewards</label>
-                <div id="pastRewardsContainer"></div> 
+                <label  ng-if="!WidgetRewards.isUpcomingRewardsEmpty" class="title-item-purchased reward-title mdc-theme--text-primary-on-background">Past Rewards</label>
+                <div id="pastRewardsContainer"></div>
             </div>
-           
+
     </div>
     <div ng-show="WidgetRewards.isPastRewardsEmpty && WidgetRewards.isUpcomingRewardsEmpty" style="height: 100%">
         <div id="empty_state">
           <img src="./assets/.images/ic_bookmark_empty.svg" />
-          <label style="color:black;font-weight: bold;margin-top: 32px;font-size: 16px;">No rewards yet!</label>
+          <label style="font-weight: bold;margin-top: 32px;font-size: 16px;" class="mdc-theme--text-primary-on-background">No rewards yet!</label>
           <label style="margin-top: 8px;font-size:14px;font-weight: 400;">Collected rewards will appear here</label>
         </div>
     </div>

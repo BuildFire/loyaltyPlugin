@@ -4,10 +4,10 @@
          build-fire-carousel2="" ng-style="WidgetItem.reward.carouselImage.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
     <div ng-if="WidgetItem.reward">
         <div ng-if="WidgetItem.reward.listImage != null && (!WidgetItem.reward.carouselImage || WidgetItem.reward.carouselImage.length == 0)">
-          
+
           <img  load-image="16x9" aspect-ratio="16:9" style="width: 100%; height:211px" data-final-src="{{WidgetItem.reward.listImage}}" />
         </div>
-        <div style="display: flex;flex-direction: row;justify-content: space-between;align-items: center;margin: 16px;">
+        <div class="mdc-theme--text-primary-on-background" style="display: flex;flex-direction: row;justify-content: space-between;align-items: center;margin: 16px;">
           <div>
             <p class="redeem-title">{{WidgetItem.reward.title}}</p>
 
@@ -21,7 +21,7 @@
                  ng-click="WidgetItem.confirmCancel()">{{WidgetItem.strings["general.redeem"]}}</a>
           </div>
         </div>
-      <div class="editor padded word-break" style="margin: 0 8px">
+      <div class="editor padded word-break mdc-theme--text-primary-on-background" style="margin: 0 8px">
         <p class="margin-zero"
            ng-bind-html="WidgetItem.safeHtml(WidgetItem.reward.description)"></p>
       </div>
@@ -32,11 +32,11 @@
 <script>
   buildfire.appearance.getAppTheme((err, appTheme) => {
           let redeemTitle = document.querySelector(".redeem-title");
-          redeemTitle.style.color = appTheme.colors.titleBar;
+          redeemTitle.style.color = appTheme.colors.headerText;
 
           let redeemPoints = document.querySelector(".redeem-points");
           redeemPoints.style.color = appTheme.colors.primaryTheme
-          
+
           let btnPrimaries = document.querySelectorAll(".btn-primary")
           btnPrimaries.forEach(el => {
             el.style.backgroundColor = appTheme.colors.primaryTheme

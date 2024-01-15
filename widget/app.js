@@ -59,7 +59,7 @@
                 _el.focus();
 
                 var newScope = $rootScope.$new();
-                var _newView = '<div  id="' + view.template + '" ><div class="slide content" data-back-img="{{itemDetailsBackgroundImage}}" ng-include="\'templates/' + view.template + '.html\'"></div></div>';
+                var _newView = '<div  id="' + view.template + '" ><div class="mdc-theme--background slide content" data-back-img="{{itemDetailsBackgroundImage}}" ng-include="\'templates/' + view.template + '.html\'"></div></div>';
                 var parTpl = $compile(_newView)(newScope);
 
                 $(elem).append(parTpl);
@@ -137,9 +137,6 @@
                             if (imgUrl) {
                                 img = imgUrl;
                                 element.attr("style", 'background:url(' + img + ') !important;background-size:cover !important');
-                            } else {
-                                img = '';
-                                element.attr("style", 'background-color:white');
                             }
                             element.css({
                                 'background-size': 'cover !important'
@@ -149,7 +146,6 @@
                     }
                     else {
                         img = "";
-                        element.attr("style", 'background-color:white');
                         element.css({
                             'background-size': 'cover !important'
                         });

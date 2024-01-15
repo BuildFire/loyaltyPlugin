@@ -12,7 +12,7 @@
 
   <!-- Plugin CSS -->
   <link rel="stylesheet" href="assets/styles/style.css">
- 
+
   <!-- BuildFire JS -->
   <script src="../../../scripts/jquery/jquery-1.11.2.min.js"></script>
   <script src="../../../scripts/smartcrop.js"></script>
@@ -53,7 +53,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <script src="js/shared/strings.js"></script>
   <script src="js/shared/stringsConfig.js"></script>
-  
+
   <script>
     function initStrings() {
       let strings = new buildfire.services.Strings("en-us", stringsConfig);
@@ -66,7 +66,7 @@
   <meta charset="utf-8">
 </head>
 <body class="body-scroll slide no-scroll">
-<div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content" data-back-img="{{itemListbackgroundImage}}">
+<div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content mdc-theme--background" data-back-img="{{itemListbackgroundImage}}">
   <!--<h3>Loyalty Plugin App has been Loaded</h3>-->
   <div ng-if="WidgetHome.data.design.listLayout" ng-include="'templates/' + WidgetHome.data.design.listLayout + '.html'">
   </div>

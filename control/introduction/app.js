@@ -1,4 +1,4 @@
-let editor = new buildfire.components.carousel.editor(".carousel", []);
+let carouselInstance = new buildfire.components.carousel.editor(".carousel", []);
 let introduction;
 function init() {
   Introduction.get()
@@ -6,7 +6,7 @@ function init() {
       if (result) {
         introduction = new IntroductionItem(result.data);
         initTinymce();
-        editor.loadItems(introduction.images);
+        carouselInstance.loadItems(introduction.images);
         changeDefaultDeleteIcon();
       }
     })
@@ -41,19 +41,19 @@ function initTinymce() {
 }
 
 function setupCarouselHandlers() {
-  editor.onItemChange = (item, index) => {
+  carouselInstance.onItemChange = (item, index) => {
     if (introduction.images.length > index) {
       introduction.images[index] = item;
       save();
     }
   };
 
-  editor.onOrderChange = (item, oldIndex, newIndex) => {
+  carouselInstance.onOrderChange = (item, oldIndex, newIndex) => {
     reOrderCarousel(oldIndex, newIndex);
     save();
   };
 
-  editor.onAddItems = (items) => {
+  carouselInstance.onAddItems = (items) => {
     items.forEach((itm) => {
       itm.iconUrl = buildfire.imageLib.cropImage(
         itm.iconUrl, {
@@ -67,7 +67,7 @@ function setupCarouselHandlers() {
     changeDefaultDeleteIcon();
   };
 
-  editor.onDeleteItem = (item, index) => {
+  carouselInstance.onDeleteItem = (item, index) => {
     introduction.images.splice(index, 1);
     save();
   };
