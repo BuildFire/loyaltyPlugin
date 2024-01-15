@@ -398,7 +398,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	min-height: inherit;
 	background: 0 0;
 }
-input[type="text"].form-control, 
+input[type="text"].form-control,
 input[type="number"].form-control,
 input[type="password"].form-control {
 	font-size: 32px;
@@ -500,7 +500,7 @@ input[type="password"].form-control::placeholder{
 	display: flex;
 	justify-content: space-around;
   }
-  
+
   /* Style the buttons inside the tab */
   .tab button {
 	width: 100%;
@@ -514,12 +514,12 @@ input[type="password"].form-control::placeholder{
 	font-weight: 500;
 	letter-spacing: 1.25px;
   }
-  
+
   /* Create an active/current tablink class */
   .tab button.active {
 	border-bottom: 2px solid white;
   }
-  
+
   /* Style the tab content */
   .tabcontent {
 	display: none;
@@ -545,7 +545,6 @@ input[type="password"].form-control::placeholder{
 	margin: 0;
 	font-size: 16px;
 	font-weight: 500;
-	color: black !important;
   }
 
   .listViewItemSubtitle {
@@ -574,7 +573,6 @@ input[type="password"].form-control::placeholder{
 
 
   .title-item-purchased {
-	color: black !important;
 	font-weight: bold;
 	font-size: 20px;
 	margin: 16px 8px 0 8px;;
