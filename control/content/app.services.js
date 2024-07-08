@@ -433,7 +433,7 @@
       userMessage: `Generate a sample of redeemable items for a new [business-type].`,
       maxRecords: 5,
       systemMessage:
-      'listImage URL related to title and the list type. Use https://app.buildfire.com/api/stockImages/?topic=title&imageType=medium , A maximum of 2 comma-separated title can be used for each URL.  cost to redeem which is a number greater than zero and less than 100, return description as HTML.',
+      'listImage URL related to the title or the list type. Use https://app.buildfire.com/api/stockImages/?topic={topic}&imageType=medium, A maximum of 2 comma-separated topics can be used for each URL. cost to redeem which is a number greater than zero and less than 100, return description as HTML.',
       jsonTemplate: generateJSONTemplate,
       callback: handleAIReq.bind(this, false),
       hintText: 'Replace values between brackets to match your requirements.',
