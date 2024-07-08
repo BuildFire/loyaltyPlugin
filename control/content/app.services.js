@@ -221,19 +221,17 @@
           itemsList = data.data.items;
           //Check image URLs
           let items = itemsList.map((item, i) => {
-            return new Promise((resolve, reject) => {
-              elimanateNotFoundImages(item.listImage).then(res => {
-                if (res.isValid) {
-                  item.listImage = res.newURL;
-                  item.order = i;
-                  orderedItems.push(item);
-                  resolve(item);
-                } else {
-                  reject('image URL not valid');
-                }
-              })
-            })
-          })
+            return elimanateNotFoundImages(item.listImage).then(res => {
+              if (res.isValid) {
+                item.listImage = res.newURL;
+                item.order = i;
+                orderedItems.push(item);
+                return item;
+              } else {
+                throw new Error('image URL not valid');
+              }
+            });
+          });
 
           Promise.allSettled(items).then(results => {
             itemsList = [];
@@ -366,24 +364,25 @@
       }
 
       let elimanateNotFoundImages = function(url) {
-        const optimisedURL = url.replace('1080x720', '100x100');
         return new Promise((resolve) => {
-          if (url.includes("http")){
+          if (url.includes("http")) {
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", optimisedURL);
+            xhr.open("GET", url);
             xhr.onerror = (error) => {
-              console.warn('provided URL is not a valid image', error);
+              console.warn('Provided URL is not a valid image', error);
               resolve({isValid: false, newURL: null});
-            }
+            };
             xhr.onload = () => {
               if (xhr.responseURL.includes('source-404') || xhr.status == 404) {
-                return resolve({isValid: false ,newURL: null});
+                resolve({isValid: false, newURL: null});
               } else {
-                return resolve({isValid: true, newURL: xhr.responseURL.replace('h=100', 'h=720').replace('w=100', 'w=1080') });
+                resolve({isValid: true, newURL: xhr.responseURL});
               }
             };
             xhr.send();
-          } else resolve(false);
+          } else {
+            resolve({isValid: false, newURL: null});
+          }
         });
       };
 
@@ -428,27 +427,27 @@
       }
 
       return {
-        initStateSeeder: function() {
-          stateSeederInstance = new buildfire.components.aiStateSeeder({
-            generateOptions: {
-              userMessage: `Generate a sample of redeemable items for a new [business-type].`,
-              maxRecords: 5,
-              systemMessage:
-              'listImage URL related to title and the list type. use source.unsplash.com for image URL, URL should not have premium_photo or source.unsplash.com/random, cost to redeem which is a number greater than zero and less than 100, return description as HTML.',
-              jsonTemplate: generateJSONTemplate,
-              callback: handleAIReq.bind(this, false),
-              hintText: 'Replace values between brackets to match your requirements.',
-            },
-            importOptions: {
-              jsonTemplate: importJSONTemplate,
-              sampleCSV: "Hotel Voucher, 50, 10, Redeem this voucher for a one-night stay at a luxurious hotel of your choice, https://source.unsplash.com/featured/?hotel\nFlight Upgrade, 30, 15, Upgrade your economy class ticket to business class, https://source.unsplash.com/featured/?flight\nCity Tour, 20, 5, Explore the city with a guided tour that covers all the major attractions and landmarks, https://source.unsplash.com/featured/?city\nAdventure Activity, 80, 30, Embark on an adrenaline-pumping adventure activity such as bungee jumping or skydiving, https://source.unsplash.com/featured/?adventure",
-              maxRecords: 15,
-              hintText: 'Each row should start with a loyalty item title, cost to redeem, points earned, description, and image URL.',
-              systemMessage: ``,
-              callback: handleAIReq.bind(this, true),
-            },
-          }).smartShowEmptyState();
-        },
+      initStateSeeder: function() {
+  stateSeederInstance = new buildfire.components.aiStateSeeder({
+    generateOptions: {
+      userMessage: `Generate a sample of redeemable items for a new [business-type].`,
+      maxRecords: 5,
+      systemMessage:
+      'listImage URL related to title and the list type. Use https://app.buildfire.com/api/stockImages/?topic=title&imageType=medium , A maximum of 2 comma-separated title can be used for each URL.  cost to redeem which is a number greater than zero and less than 100, return description as HTML.',
+      jsonTemplate: generateJSONTemplate,
+      callback: handleAIReq.bind(this, false),
+      hintText: 'Replace values between brackets to match your requirements.',
+    },
+    importOptions: {
+      jsonTemplate: importJSONTemplate,
+      sampleCSV: "Hotel Voucher, 50, 10, Redeem this voucher for a one-night stay at a luxurious hotel of your choice, https://app.buildfire.com/api/stockImages/?topic=hotel&imageType=medium\nFlight Upgrade, 30, 15, Upgrade your economy class ticket to business class, https://app.buildfire.com/api/stockImages/?topic=flight&imageType=medium\nCity Tour, 20, 5, Explore the city with a guided tour that covers all the major attractions and landmarks, https://app.buildfire.com/api/stockImages/?topic=city&imageType=medium\nAdventure Activity, 80, 30, Embark on an adrenaline-pumping adventure activity such as bungee jumping or skydiving, https://app.buildfire.com/api/stockImages/?topic=adventure&imageType=medium",
+      maxRecords: 15,
+      hintText: 'Each row should start with a loyalty item title, cost to redeem, points earned, description, and image URL.',
+      systemMessage: ``,
+      callback: handleAIReq.bind(this, true),
+    },
+  }).smartShowEmptyState();
+},
       }
   }])
 })(window.angular, window.buildfire);
