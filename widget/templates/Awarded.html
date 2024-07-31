@@ -2,15 +2,15 @@
      ng-controller="WidgetAwardedCtrl as WidgetAwarded">
   <div class="loyalty-plugin amount">
     <div class="purchase-amount mdc-theme--text-primary-on-background padded margin-top-ten">
-      <h5 class="text-center">{{WidgetAwarded.strings["awarded.awesome"]}}</h5>
-        <p class="text-center">{{WidgetAwarded.strings["awarded.justEarned"]}}</p>
+      <h5 class="text-center" bfString="awarded.awesome"></h5>
+        <p class="text-center" bfString="awarded.justEarned"></p>
         <h4 class="text-center">{{WidgetAwarded.pointsAwarded}}</h4>
-        <p class="text-center">{{WidgetAwarded.strings["general.points"]}}!</p>
-        <p class="text-center check-rewards"> {{WidgetAwarded.strings["awarded.checkList"]}}</p>
+        <p class="text-center" bfString="general.points"></p>!
+        <p class="text-center check-rewards" bfString="awarded.checkList"></p>
 
       <div class="next-btn margin-top-twenty">
         <a class="btn btn-primary stretch margin-top" href="javascript:void(0);"
-           ng-click="WidgetAwarded.goToHome()">{{WidgetAwarded.strings["general.done"]}}</a>
+           ng-click="WidgetAwarded.goToHome()" bfString="general.done"></a>
         <input class="hide-input" type="text" get-focus>
       </div>
     </div>

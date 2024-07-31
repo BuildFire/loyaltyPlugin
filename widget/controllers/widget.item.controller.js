@@ -3,13 +3,12 @@
 (function (angular, window) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetItemCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'RewardCache', 'Context', '$sce', '$rootScope', '$timeout', 'Transactions',
-      function ($scope, ViewStack, LoyaltyAPI, RewardCache, Context, $sce, $rootScope, $timeout, Transactions) {
+    .controller('WidgetItemCtrl', ['$scope', 'Utils', 'ViewStack', 'LoyaltyAPI', 'RewardCache', 'Context', '$sce', '$rootScope', '$timeout', 'Transactions',
+      function ($scope, Utils, ViewStack, LoyaltyAPI, RewardCache, Context, $sce, $rootScope, $timeout, Transactions) {
 
         var WidgetItem = this;
         var breadCrumbFlag = true;
 
-        WidgetItem.strings = $rootScope.strings;
 
         WidgetItem.listeners = {};
         WidgetItem.currentLoggedInUser = null;
@@ -60,20 +59,26 @@
         /**
          * Check if user's total loyalty points are enough to redeem the reward, if yes redirect to next page.
          */
-        WidgetItem.confirmCancel = function () {
+        WidgetItem.confirmCancel = async function () {
           if (!WidgetItem.currentLoggedInUser) {
             buildfire.auth.login({}, () => { });
             return;
           }
+
+          const title =await Utils.getLanguage('redeem.titleNote');
+          const message =await Utils.getLanguage('redeem.importantNote');
+          const confirmButtonText =await Utils.getLanguage('redeem.confirmActionNote');
+          const cancelButtonText =await Utils.getLanguage('redeem.cancelActionNote');
+
           buildfire.dialog.confirm(
             {
-              title: WidgetItem.strings["redeem.titleNote"],
-              message: WidgetItem.strings["redeem.importantNote"],
+              title: title,
+              message: message,
               confirmButton: {
-                text: WidgetItem.strings["redeem.confirmActionNote"],
+                text: confirmButtonText,
                 type: "primary",
               },
-              cancelButtonText: WidgetItem.strings["redeem.cancelActionNote"],
+              cancelButtonText: cancelButtonText,
             },
             (err, isConfirmed) => {
               if (err) return;
@@ -83,9 +88,12 @@
                     WidgetItem.redeemPoints()
                     return;
                   } else {
-                    buildfire.dialog.toast({
-                      message: WidgetItem.strings["redeem.insufficientFunds"],
-                      type: "danger",
+
+                    Utils.getLanguage('redeem.insufficientFunds').then(message=>{
+                      buildfire.dialog.toast({
+                        message: message,
+                        type: "danger",
+                      });
                     });
                   }
                 } else {
@@ -101,7 +109,7 @@
           if (WidgetItem.currentLoggedInUser) {
             if (WidgetItem.application.dailyLimit > WidgetItem.reward.pointsToRedeem) {
               buildfire.spinner.show();
-              buildfire.auth.getCurrentUser(function (err, user) {
+              buildfire.auth.getCurrentUser(async function (err, user) {
                 if (user) {
                   if (currentView.settings && currentView.settings.approvalType
                     && currentView.settings.approvalType == "REMOVE_VIA_APP") {
@@ -118,14 +126,19 @@
                         if (err) return console.error(err);
                       })
                     buildfire.spinner.hide();
+
+                    const title =await Utils.getLanguage('redeem.itemRedeemedTitle');
+                    const message =await Utils.getLanguage('redeem.itemRedeemedBody');
+                    const confirmButtonText =await Utils.getLanguage('redeem.closeitemRedeemedAction');
+
                     buildfire.dialog.show(
                       {
-                        title: WidgetItem.strings["redeem.itemRedeemedTitle"],
-                        message: WidgetItem.strings["redeem.itemRedeemedBody"],
+                        title: title,
+                        message: message,
                         showCancelButton: false,
                         actionButtons: [
                           {
-                            text: WidgetItem.strings["redeem.closeitemRedeemedAction"],
+                            text: confirmButtonText,
                             type: "primary",
                             action: () => {
                               console.log(" ")
@@ -159,10 +172,13 @@
             }
             else {
               buildfire.spinner.hide();
-              buildfire.dialog.toast({
-                message: WidgetItem.strings["redeem.redeemDailyLimit"],
-                type: "danger",
+              Utils.getLanguage('redeem.redeemDailyLimit').then(message=>{
+                buildfire.dialog.toast({
+                  message: message,
+                  type: "danger",
+                });
               });
+
             }
           }
           else {
@@ -186,9 +202,11 @@
                   if (WidgetItem.reward.pointsToRedeem <= result.totalPoints) {
                     WidgetItem.redeemPoints()
                   } else {
-                    buildfire.dialog.toast({
-                      message: WidgetItem.strings["redeem.insufficientFunds"],
-                      type: "danger",
+                    Utils.getLanguage('redeem.insufficientFunds').then(message=>{
+                      buildfire.dialog.toast({
+                        message: message,
+                        type: "danger",
+                      });
                     });
                   }
                 },
@@ -196,20 +214,26 @@
                     if (err && err.code !== STATUS_CODE.NOT_FOUND) {
                       console.error('Error while getting points data----------------------------------------', err);
                     }
-                    buildfire.dialog.toast({
-                      message: WidgetItem.strings["redeem.insufficientFunds"],
-                      type: "danger",
+                    Utils.getLanguage('redeem.insufficientFunds').then(message=>{
+                      buildfire.dialog.toast({
+                        message: message,
+                        type: "danger",
+                      });
                     });
+
                   };
                 if (user._id)
                   LoyaltyAPI.getLoyaltyPoints(user._id, WidgetItem.currentLoggedInUser.userToken, `${ctx.appId}_${ctx.instanceId}`).then(success, error);
 
               });
             } else {
-              buildfire.dialog.toast({
-                message: WidgetItem.strings["redeem.insufficientFunds"],
-                type: "danger",
+              Utils.getLanguage('redeem.insufficientFunds').then(message=>{
+                buildfire.dialog.toast({
+                  message: message,
+                  type: "danger",
+                });
               });
+
             }
           });
         };

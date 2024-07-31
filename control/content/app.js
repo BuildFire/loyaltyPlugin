@@ -76,13 +76,5 @@
                 }
             };
 
-              Buildfire.analytics.registerEvent(
-                  { title: "Reward redeemed", key: 'reward-redeemed', description: "User has redeemed a reward" }, 
-                  { silentNotification: true }
-              );
-              Buildfire.analytics.registerEvent(
-                { title: "Points earned", key: 'points-earned', description: "User has earned points" }, 
-                { silentNotification: true }
-              );
         }])
 })(window.angular, window.buildfire);

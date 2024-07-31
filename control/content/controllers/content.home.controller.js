@@ -75,7 +75,7 @@
                   console.info('init success result:', result);
                   ContentHome.data = result;
                   if (!ContentHome.data)
-                    ContentHome.data = angular.copy(_data);
+                      ContentHome.data = angular.copy(_data);
 
                   //make sure to assign to the right appId
                   ContentHome.data.appId = _data.appId;
@@ -84,22 +84,23 @@
                   if (tmrDelay) clearTimeout(tmrDelay);
 
                   buildfire.datastore.get(TAG_NAMES.LOYALTY_INFO,function(err,data){
-                    ContentHome.settings = data.data.settings;
-                    if (!ContentHome.settings || !ContentHome.settings.redemptionPasscode){
-                      ContentHome.showRedemptionPasscodeHint = true;
-                    } else {
-                      ContentHome.showRedemptionPasscodeHint = false;
-                    }
-                    if (!$scope.$$phase) $scope.$digest();
-                    updateMasterItem(ContentHome.data);
-                    if(Number(ContentHome.data.pointsPerDollar) <= 0) {
-                      ContentHome.data.pointsPerDollar = 1;
+                      ContentHome.settings = data.data.settings;
+                      if (!ContentHome.settings || !ContentHome.settings.redemptionPasscode){
+                          ContentHome.showRedemptionPasscodeHint = true;
+                      } else {
+                          ContentHome.showRedemptionPasscodeHint = false;
+                      }
+                     ContentHome.initializeSettings();
+                      if (!$scope.$$phase) $scope.$digest();
+                      updateMasterItem(ContentHome.data);
+                      if(Number(ContentHome.data.pointsPerDollar) <= 0) {
+                          ContentHome.data.pointsPerDollar = 1;
                       saveData(JSON.parse(angular.toJson(ContentHome.data)));
-                    }
+                      }
                   });
               };
               ContentHome.error = function (err) {
-                ContentHome.showRedemptionPasscodeHint = true;
+                  ContentHome.showRedemptionPasscodeHint = true;
                   if (err && err.code == 2100) {
                       console.error('Error while getting application:', err);
                       var success = function (result) {
@@ -110,13 +111,13 @@
                               type: 'AppCreated'
                           });
                       }
-                          , error = function (err) {
+                        , error = function (err) {
                           console.log('Error while saving data : ', err);
                           if(err && err.code == 2000) {
-                            ContentHome.data = angular.copy(_data);
-                            buildfire.messaging.sendMessageToWidget({
-                              type: 'AppCreated'
-                            });
+                              ContentHome.data = angular.copy(_data);
+                              buildfire.messaging.sendMessageToWidget({
+                                  type: 'AppCreated'
+                              });
                           }
                       };
                       if (ContentHome.currentLoggedInUser) {
@@ -124,20 +125,20 @@
                           _data.auth = ContentHome.currentLoggedInUser.auth;
                           LoyaltyAPI.addEditApplication(_data).then(success, error);
                       } else {
-                        buildfire.dialog.toast({
-                          message: "Please make sure you are logged In",
-                          type: "danger",
-                        });
+                          buildfire.dialog.toast({
+                              message: "Please make sure you are logged In",
+                              type: "danger",
+                          });
                       }
                   }
               };
               ContentHome.successloyaltyRewards = function (result) {
                   ContentHome.loyaltyRewards = result;
                   if (!ContentHome.loyaltyRewards) {
-                    ContentHome.loyaltyRewards = [];
-                    $rootScope.showEmptyState = true;
+                      ContentHome.loyaltyRewards = [];
+                      $rootScope.showEmptyState = true;
                   } else {
-                    $rootScope.showEmptyState = false;
+                      $rootScope.showEmptyState = false;
                   }
                   ContentHome.loyaltyRewardsCloned = ContentHome.loyaltyRewards
                   ContentHome.addDeepLinks(result);
@@ -154,13 +155,39 @@
               ContentHome.loyaltyRewards = [];
               LoyaltyAPI.getApplication(`${context.appId}_${context.instanceId}`).then(ContentHome.success, ContentHome.error);
               buildfire.auth.getCurrentUser(function (err, user) {
-                  console.log("!!!!!!!!!!User!!!!!!!!!!!!", user);
                   if (user && user._cpUser) {
                       ContentHome.currentLoggedInUser = user._cpUser;
                       if (!$scope.$$phase) $scope.$digest();
                       $rootScope.reloadRewards = false;
                   }
               });
+          };
+
+          ContentHome.initializeSettings = function() {
+              if (!ContentHome.settings || Object.keys(ContentHome.settings).length === 0) {
+                  ContentHome.settings = {
+                      purchaseOption: {
+                          name: "Per Money Spent",
+                          value: "perMoneySpent"
+                      }
+                  };
+                  buildfire.datastore.save({settings: ContentHome.settings}, TAG_NAMES.LOYALTY_INFO, function (err, data) {
+                      if (err) {
+                          console.error('Error while saving data:', err);
+                      }
+                      else {
+                          Buildfire.analytics.registerEvent(
+                            { title: "Reward redeemed", key: 'reward-redeemed', description: "User has redeemed a reward" },
+                            { silentNotification: true }
+                          );
+                          Buildfire.analytics.registerEvent(
+                            { title: "Points earned", key: 'points-earned', description: "User has earned points" },
+                            { silentNotification: true }
+                          );
+                      }
+                  });
+
+              }
           };
 
         ContentHome.search = function() {

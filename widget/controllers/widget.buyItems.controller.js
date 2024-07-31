@@ -12,7 +12,6 @@
         WidgetBuyItems.items = [];
         WidgetBuyItems.listeners = {};
         WidgetBuyItems.totalPoints = 0;
-        WidgetBuyItems.strings = $rootScope.strings;
           buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
               if(result && result.length) {
                   result.forEach(function(breadCrumb) {
@@ -120,12 +119,14 @@
           var amount = calculatedPoints;
           calculatedPoints +=  WidgetBuyItems.application.pointsPerVisit + currentView.loyaltyPoints;
           if (WidgetBuyItems.application.totalLimit <= calculatedPoints) {
-            buildfire.dialog.toast({
-              message: WidgetBuyItems.strings["redeem.redeemDailyLimit"],
-              type: "danger",
+            Utils.getLanguage('redeem.redeemDailyLimit').then(message=>{
+              buildfire.dialog.toast({
+                message: message,
+                type: "danger",
+              });
             });
           }
-          else if(WidgetBuyItems.data.settings && WidgetBuyItems.data.settings.approvalType 
+          else if(WidgetBuyItems.data.settings && WidgetBuyItems.data.settings.approvalType
             && WidgetBuyItems.data.settings.approvalType == "REMOVE_VIA_APP") {
               let items = [];
               let points = 0
@@ -154,7 +155,7 @@
                 });
                 $rootScope.$broadcast('POINTS_WAITING_APPROVAL_ADDED', (points * WidgetBuyItems.application.pointsPerDollar) + WidgetBuyItems.application.pointsPerVisit);
                 ViewStack.pop();
-          } 
+          }
           else {
             ViewStack.push({
               template: 'Code',
@@ -164,7 +165,7 @@
             });
           }
 
-         
+
 
         };
 

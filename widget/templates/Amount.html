@@ -1,7 +1,7 @@
 <div class="holder padding-zero amount-holder" ng-controller="WidgetAmountCtrl as
      WidgetAmount">
 
-  <h5 class="text-center margin-bottom-thirty mdc-theme--text-primary-on-background">{{WidgetAmount.strings["amount.enterAmount"]}}</h5>
+  <h5 class="text-center margin-bottom-thirty mdc-theme--text-primary-on-background" bfString="amount.enterAmount"></h5>
   <form name="myform">
     <div class="enter-price">
       <span class="currency"
@@ -12,10 +12,10 @@
     </div>
   </form>
   <div class="next-btn margin-top-twenty">
-    <button class="btn btn-primary stretch margin-top"
+    <button class="amount-next-btn btn btn-primary stretch margin-top"
             href="javascript:void(0);" ng-click="WidgetAmount.confirmCode()"
             ng-disabled="!(WidgetAmount.amount > 0) || !myform.$valid"
-        >{{WidgetAmount.strings["general.next"]}}
+            bfString="general.next">
     </button>
   </div>
 

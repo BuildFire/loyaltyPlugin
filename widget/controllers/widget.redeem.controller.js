@@ -3,13 +3,12 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetRedeemCtrl', ['$scope', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope', 'Buildfire', 'Context', 'Transactions', 
-      function ($scope, ViewStack, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire, Context, Transactions) {
+    .controller('WidgetRedeemCtrl', ['$scope', 'Utils', 'ViewStack', 'RewardCache', 'LoyaltyAPI', '$timeout', '$rootScope', 'Buildfire', 'Context', 'Transactions',
+      function ($scope, ViewStack,Utils, RewardCache, LoyaltyAPI, $timeout, $rootScope, Buildfire, Context, Transactions) {
 
         var WidgetRedeem = this;
         var breadCrumbFlag = true;
 
-        WidgetRedeem.strings = $rootScope.strings;
 
         /**
          * Initialize show error message to false
@@ -60,14 +59,16 @@
                 if (user) {
                   Transactions.requestRedeem(WidgetRedeem.reward, WidgetRedeem.reward.pointsToRedeem, $rootScope.loyaltyPoints, user);
                   $rootScope.$broadcast('POINTS_WAITING_APPROVAL_ADDED', WidgetRedeem.reward.pointsToRedeem);
-          
+
                 }
               })
             }
             else {
-              buildfire.dialog.toast({
-                message: WidgetRedeem.strings["redeem.insufficientFunds"],
-                type: "danger",
+              Utils.getLanguage('redeem.insufficientFunds').then(message=>{
+                buildfire.dialog.toast({
+                  message: message,
+                  type: "danger",
+                });
               });
             }
           }

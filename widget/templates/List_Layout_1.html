@@ -1,5 +1,5 @@
 <div class="holder padding-zero layout1">
-
+  
   <div class="icon-button" ng-if="WidgetHome.isEmployer">
     <button ng-click="WidgetHome.openApprovalRequests()" class="icon ">
       <span class="material-icons">manage_accounts</span>
@@ -10,6 +10,7 @@
       <span class="material-icons">workspace_premium</span>
     </button>
   </div>
+  
   <div class="loyalty-plugin" data-ng-init="setWidth()">
     <div id="carousel" ng-if="WidgetHome.carouselImages.length"
          build-fire-carousel=""
@@ -18,25 +19,30 @@
          ng-if="WidgetHome.showDescription(WidgetHome.description)">
       <p ng-bind-html='WidgetHome.safeHtml(WidgetHome.description)'></p>
     </div>
-    <div class="current-points mdc-theme--text-primary-on-background" ng-if="WidgetHome.carouselImages && WidgetHome.loyaltyRewards">
+    <div class="current-points mdc-theme--text-primary-on-background" ng-show="WidgetHome.carouselImages && WidgetHome.loyaltyRewards">
       <div class="text-center">
-        <p ng-if="!(WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)"><span
-            class="text-primary"><a href="javascript:void(0);"
-                                    ng-click="WidgetHome.openLogin()">{{WidgetHome.strings["general.loginOrRegister"]}}</a></span>
-                                    <span>{{WidgetHome.strings["general.toGetPoints"]}}</span></p>
+        <p ng-if="!(WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)">
+            <span class="text-primary">
+                <a bfString="general.loginOrRegister" href="javascript:void(0);" ng-click="WidgetHome.openLogin()">
+                </a>
+            </span>
+           <span bfString="general.toGetPoints"></span>
+        </p>
 
         <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id">
-          <span>{{WidgetHome.strings["general.currentlyHave"]}} </span><span
-                class="text-primary">{{loyaltyPoints | number : 2}}</span> <span style="text-transform: lowercase;">{{WidgetHome.strings["general.points"]}}</span>.
+          <span bfString="general.currentlyHave"></span><span
+                class="text-primary"> {{loyaltyPoints | number : 2}}</span> <span style="text-transform: lowercase;" bfString="general.points"></span>.
         </p>
         <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id && PointsWaitingForApproval > 0">
           <span class="text-primary">{{PointsWaitingForApproval | number : 2}}</span> <span style="text-transform: lowercase;">points waiting for approval</span>.
         </p>
-        <a class="btn btn-primary padding-left-twenty padding-right-twenty"
+          <a ng-show="WidgetHome.data.settings.enableGetMorePointsButton" class="btn btn-primary padding-left-twenty padding-right-twenty"
+           bfString="general.getMore"
            href="javascript:void(0);"
            ng-disabled="!WidgetHome.applicationExists"
            ng-click="WidgetHome.openGetPoints()"
-            >{{WidgetHome.strings["general.getMore"]}}</a>
+            >
+        </a>
       </div>
     </div>
     <div class="list-grid" ng-if="WidgetHome.loyaltyRewards && WidgetHome.carouselImages">
@@ -50,7 +56,7 @@
           <div class="info-bar bg-primary">
             <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">
               {{reward.pointsToRedeem}}
-              <span class="whiteTheme">{{WidgetHome.strings["general.points"]}}</span></p>
+              <span class="whiteTheme" bfString="general.points"></span></p>
           </div>
         </div>
         <div class="copy margin-top-five text-center">

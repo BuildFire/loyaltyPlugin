@@ -34,3 +34,11 @@
 .copy.pull-right > .title.ellipsis {
   width: initial !important;
 }
+
+.add-new-carousel {
+  background-color: #09A3EE !important;
+}
+
+.add-new-carousel:hover {
+  background-color: #0089d1 !important;
+}

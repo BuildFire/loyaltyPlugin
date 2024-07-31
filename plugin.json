@@ -13,16 +13,20 @@
   , "customTabs": [
     { "title": "Introduction", "url": "/introduction/index.html" },
     { "title": "Points/Redeems", "url": "/results/index.html" },
-    { "title": "Tests", "url": "/tests/index.html" },
-    { "title": "Language", "url": "/strings/index.html" }
+    { "title": "Tests", "url": "/tests/index.html" }
   ]
 , "design":{
     "enabled":true
-  }
-, "settings":{
+  },
+  "settings":{
     "enabled":true
+  },
+  "language": {
+    "enabled": true,
+    "languageJsonPath": "resources/languages.json",
+    "tagName": "$bfLanguageSettings_en-us"
   }
-  
+
 }
 ,"widget":{
 

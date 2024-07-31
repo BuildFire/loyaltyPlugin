@@ -13,21 +13,21 @@
         <div style="width: 100%;">
           <p class="redeem-title">{{WidgetRedeem.reward.title}}</p>
 
-          <h5 class="margin-zero ellipsis opacity-seventy">
-            {{WidgetRedeem.reward.pointsToRedeem}} {{WidgetRedeem.strings["general.points"]}}</h5>
+          <h5 class="redeem-points margin-zero ellipsis opacity-seventy">
+            {{WidgetRedeem.reward.pointsToRedeem}} <span bfString="general.points"></span></h5>
         </div>
       </div>
       <div class="editor padded">
-        <p class="redeem-title">{{WidgetRedeem.strings["redeem.importantNote"]}}</p>
+        <p class="redeem-title" bfString="redeem.importantNote"></p>
 
         <div class="confirm-cancel">
           <div class="text-center margin-bottom-fifteen">
             <a class="btn btn-success stretch" href="javascript:void(0);"
-            ng-click="WidgetRedeem.redeemPoints(WidgetRedeem.reward._id)">{{WidgetRedeem.strings["general.confirm"]}}</a>
+            ng-click="WidgetRedeem.redeemPoints(WidgetRedeem.reward._id)" bfString="general.confirm"></a>
           </div>
           <div class="text-center">
             <a class="btn-text bodyTextTheme stretch" href="javascript:void(0);"
-                ng-click="WidgetRedeem.backToHome()">{{WidgetRedeem.strings["general.cancel"]}}</a>
+                ng-click="WidgetRedeem.backToHome()" bfString="general.cancel"></a>
           </div>
         </div>
         <br>

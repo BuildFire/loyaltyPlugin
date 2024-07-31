@@ -1,19 +1,18 @@
 <div class="holder code-holder padding-zero" ng-controller="WidgetCodeCtrl as WidgetCode">
   <!-- <div class="loyalty-plugin"> -->
     <div class="purchase-amount mdc-theme--text-primary-on-background padded margin-top-ten">
-      <h5 class="text-center">{{WidgetCode.strings["staffApproval.handDevice"]}}</h5>
+      <h5 class="text-center" bfString="staffApproval.handDevice"></h5>
 
       <div class="enter-price">
-        <input type="password" placeholder="{{WidgetCode.strings['staffApproval.enterCode']}}"
+        <input type="password" placeholder="{{WidgetCode.enterCodeText}}"
                class="form-control text-center border-none"
                ng-model="WidgetCode.passcode" maxlength="5" get-focus
                ng-click="WidgetCode.preventClickBehavior($event)">
       </div>
       <div class="next-btn margin-top-twenty">
-        <button class="btn btn-success stretch" href="javascript:void(0);"
+        <button bfString="general.confirm" class="btn btn-success stretch" href="javascript:void(0);"
                 ng-click="WidgetCode.confirmPasscode()"
                 ng-disabled="!WidgetCode.passcode">
-          {{WidgetCode.strings["general.confirm"]}}
         </button>
       </div>
     </div>
