@@ -68,7 +68,6 @@
         <div id="customTagsInputContainer"></div>
     </div>
 </div>
-<hr class="none">
 <div class="flex">
     <label class="tooltip-container col-md-4">Staff Confirmation Passcode</label>
     <div class="main col-xs-9">
@@ -100,7 +99,8 @@
 <div ng-if="SettingsHome.data.settings.purchaseOption.value != 'scoreFromFreeTextQuestionnaire'">
   <hr class="none">
     <div class="flex">
-        <label class="tooltip-container col-md-4">Extra Points Per Purchase*
+        <label class="tooltip-container col-md-4">
+            <span>Extra Points Per Purchase<span class="text-danger">*</span></span>
             <span class="btn-info-icon btn-primary">
         <span class="cp-tooltip">
         Offer bonus points for every purchase made by a user
@@ -157,8 +157,6 @@
                    ng-model="SettingsHome.data.settings.totalLimit">
         </div>
     </div>
- 
-    <hr class="none">
 </div>
 <div ng-show="SettingsHome.data.settings.purchaseOption.value == 'scoreFromFreeTextQuestionnaire'">
   <hr class="none">
@@ -180,7 +178,7 @@
       <div class="item clearfix row">
         <div class="labels col-md-3 pull-left tooltip-container">
         </div>
-        <div class="main col-xs-9 pull-right">
+        <div class="main col-xs-8 pull-right">
           <div   class="action-item-container"  ng-repeat="feature in SettingsHome.ftqFeatureItems" >
             <div style="display: flex;align-items:center;margin-left:12px">
               <img style="width: 42px;height:38px;border-radius: 4px;" ng-src={{feature.iconUrl}}/>
@@ -219,6 +217,7 @@
     
     </div>
 </div>
+<hr class="none">
 
 <div class="flex checkbox-field">
     <label class="tooltip-container col-md-4">Get More Points</label>

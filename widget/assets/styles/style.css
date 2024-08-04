@@ -259,7 +259,6 @@ html[safe-area="true"] body.has-safe-area .done-btn-container {
     padding: 16px;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(98, 98, 98, 0.3);
-    margin-top: 0px;
 }
 
 .description {
@@ -647,7 +646,6 @@ The 'position: fixed' property does not work well with transform.
 
 .icon-button {
     margin-top: 18px;
-    margin-bottom: 11px;
     margin-right: 11.5px;
     text-align: right;
 }

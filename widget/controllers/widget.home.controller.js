@@ -13,9 +13,7 @@
         WidgetHome.tags = null;
         WidgetHome.skeleton = {
           currentPoints: null ,
-          layoutOne: null,
-          layoutTwo: null,
-          layoutThree: null
+         layout: null,
         };
         var features = []
 
@@ -586,57 +584,37 @@
             return Promise.all([
               pointsPromise,
               WidgetHome.getApplicationAndRewards()
-            ]);
-          }).finally(() => {
-            stopSkeleton();
-          }).catch((err) => {
-            console.error('Error in promises:', err);
-            stopSkeleton();
-          });
+            ]).then(() => {
+              stopSkeleton();
+            }).catch((err) => {
+              console.error('Error in promises:', err);
+              stopSkeleton();
+            });;
+          })
         };
 
         var startSkeleton = function (){
           const currentLayout = WidgetHome.data.design.listLayout;
-          if (currentLayout=== "List_Layout_1"){
-            WidgetHome.skeleton.currentPoints  = new buildfire.components.skeleton('.current-points-skeleton', { type: 'image' });
-            WidgetHome.skeleton.layoutOne = new buildfire.components.skeleton('.item', { type: 'image' });
-            WidgetHome.skeleton.currentPoints.start();
-            WidgetHome.skeleton.layoutOne.start();
-          }
-          else if (currentLayout=== "List_Layout_2"){
-            WidgetHome.skeleton.currentPoints  = new buildfire.components.skeleton('.current-points-skeleton', { type: 'image' });
-            WidgetHome.skeleton.layoutTwo = new buildfire.components.skeleton('.item', { type: 'button, list-item-two-line' });
-            WidgetHome.skeleton.currentPoints.start();
-            WidgetHome.skeleton.layoutTwo.start();
-          }
-          else if (currentLayout=== "List_Layout_3"){
-            WidgetHome.skeleton.currentPoints   =  new buildfire.components.skeleton('.current-points-skeleton', { type: 'image' });
-            WidgetHome.skeleton.layoutThree  =  new buildfire.components.skeleton('.item', { type: 'button, list-item-two-line' });
-            WidgetHome.skeleton.currentPoints.start();
-            WidgetHome.skeleton.layoutThree.start();
-          }
+          const layoutSkeletonTypes = {
+            "List_Layout_1": { currentPointsType: 'image', layoutType: 'image' },
+            "List_Layout_2": { currentPointsType: 'image', layoutType: 'button, list-item-two-line' },
+            "List_Layout_3": { currentPointsType: 'image', layoutType: 'button, list-item-two-line' }
+          };
 
+          if (layoutSkeletonTypes[currentLayout]) {
+            WidgetHome.skeleton.currentPoints = new buildfire.components.skeleton('.current-points-skeleton', { type: layoutSkeletonTypes[currentLayout].currentPointsType });
+            WidgetHome.skeleton.layout = new buildfire.components.skeleton('.item', { type: layoutSkeletonTypes[currentLayout].layoutType });
+            WidgetHome.skeleton.currentPoints.start();
+            WidgetHome.skeleton.layout.start();
+          }
         }
         var stopSkeleton = function (){
           const currentLayout = WidgetHome.data.design.listLayout;
-          if (currentLayout=== "List_Layout_1"){
-            WidgetHome.skeleton.currentPoints.stop();
-            WidgetHome.skeleton.layoutOne.stop();
-            WidgetHome.skeleton.currentPoints = null;
-            WidgetHome.skeleton.layoutOne = null;
-          }
-          else if (currentLayout=== "List_Layout_2"){
-            WidgetHome.skeleton.currentPoints.stop();
-            WidgetHome.skeleton.layoutTwo.stop();
-            WidgetHome.skeleton.currentPoints = null;
-            WidgetHome.skeleton.layoutTwo = null;
-          }
-          else if (currentLayout=== "List_Layout_3"){
-            WidgetHome.skeleton.currentPoints.stop();
-            WidgetHome.skeleton.layoutThree.stop();
-            WidgetHome.skeleton.currentPoints = null;
-            WidgetHome.skeleton.layoutThree = null;
-          }
+          WidgetHome.skeleton.currentPoints.stop();
+          WidgetHome.skeleton.layout.stop();
+          WidgetHome.skeleton.currentPoints = null;
+          WidgetHome.skeleton.layout = null;
+          $rootScope.$digest();
          }
 
         var loginCallback = function () {

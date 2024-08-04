@@ -87,7 +87,7 @@
           "defaultValue": "CANCEL"
         },
         "confirmActionNote": {
-          "title": "Redemption Confirm action link",
+          "title": "Confirm Redemption action link",
           "placeholder": "REDEEM",
           "maxLength": 20,
           "defaultValue": "REDEEM"
