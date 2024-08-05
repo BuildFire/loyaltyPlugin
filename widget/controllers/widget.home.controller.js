@@ -12,7 +12,7 @@
         WidgetHome.approvalRequestsTab = 0
         WidgetHome.tags = null;
         WidgetHome.skeleton = {
-         currentPoints: null ,
+         currentPoints: null,
          layout: null,
         };
         WidgetHome.pointMessage = "";
