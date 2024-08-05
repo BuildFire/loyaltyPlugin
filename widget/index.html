@@ -88,7 +88,7 @@
     
     
     <!--<h3>Loyalty Plugin App has been Loaded</h3>-->
-  <div ng-if="WidgetHome.data.design.listLayout " ng-include="'templates/' + WidgetHome.data.design.listLayout + '.html'">
+  <div ng-if="WidgetHome.data.design.listLayout && WidgetHome.skeleton.layout === null" ng-include="'templates/' + WidgetHome.data.design.listLayout + '.html'">
   </div>
 
 </div>

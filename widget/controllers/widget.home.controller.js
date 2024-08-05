@@ -12,9 +12,10 @@
         WidgetHome.approvalRequestsTab = 0
         WidgetHome.tags = null;
         WidgetHome.skeleton = {
-          currentPoints: null ,
+         currentPoints: null ,
          layout: null,
         };
+        WidgetHome.pointMessage = "";
         var features = []
 
 
@@ -529,6 +530,9 @@
 
             startSkeleton();
             getFTQPointsIfAnyAndUpdate();
+            Utils.getLanguage('general.points').then(pointText => {
+              WidgetHome.pointMessage = pointText;
+            })
 
             if (!WidgetHome.data.settings) {
               WidgetHome.data.settings = {

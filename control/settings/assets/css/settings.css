@@ -237,3 +237,6 @@ input:disabled + label {
 .checkbox-field {
     justify-content: space-between;
 }
+.info-note{
+    font-size:13px;
+}

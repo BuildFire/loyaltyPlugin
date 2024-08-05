@@ -40,7 +40,7 @@
 			</div>
 		</div>
      	<div class="list" ng-if="WidgetHome.loyaltyRewards && WidgetHome.carouselImages">
-			<div class="list-item" ng-repeat="reward in WidgetHome.loyaltyRewards | filter: { pointsToRedeem: '!38762499627' }" ng-click="WidgetHome.openReward(reward, $index)"">
+			<div class="list-item" ng-repeat="reward in WidgetHome.loyaltyRewards | filter: { pointsToRedeem: '!38762499627' }" ng-click="WidgetHome.openReward(reward, $index)">
         <div class="list-media-holder square-icon pull-left" ng-click="WidgetHome.openReward(reward, $index)" ng-if="reward.listImage">
           <img load-image="1x1" aspect-ratio="1:1"
                 data-final-src="{{reward.listImage}}">
@@ -48,7 +48,9 @@
         <div class="list-item-copy ellipsis">
           <a class="text-primary ellipsis" href="javascript:void(0);">{{reward.title}}</a>
           <p  class="caption ellipsis margin-zero opacity-seventy mdc-theme--text-primary-on-background">{{reward.pointsToRedeem}}
-            <span class="opacity-seventy" bfString="general.points"></span></p>
+            <span class="opacity-seventy">
+                  {{WidgetHome.pointMessage}}
+            </span></p>
         </div>
 			</div>
 		</div>

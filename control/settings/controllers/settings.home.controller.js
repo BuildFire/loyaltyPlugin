@@ -169,6 +169,9 @@
                                         if (!SettingsHome.data.settings.approvalType) {
                                             SettingsHome.data.settings.approvalType = "ON_SITE_VIA_PASSCODE"
                                         }
+                                        if (!SettingsHome.data.settings.hasOwnProperty('enableGetMorePointsButton')) {
+                                            SettingsHome.data.settings.enableGetMorePointsButton = true
+                                        }
                                     } else {
                                         SettingsHome.data.settings = {
                                             approvalType: "ON_SITE_VIA_PASSCODE",
