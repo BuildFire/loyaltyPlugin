@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('itemsPurchasedCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'Context', '$window', 'Transactions', 'STATUS',
-    function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, Context, $window, Transactions, STATUS) {
+    .controller('itemsPurchasedCtrl', ['$scope', 'Utils', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'Context', '$window', 'Transactions', 'STATUS',
+    function ($scope, Utils, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, Context, $window, Transactions, STATUS) {
         var ItemsPurchased = this;
 
         var currentView = ViewStack.getCurrentView();
@@ -15,18 +15,8 @@
 
         ItemsPurchased.currentLoggedInUser = null
         ItemsPurchased.Settings = null;
-        ItemsPurchased.strings = $rootScope.strings;
         ItemsPurchased.Settings = null;
-        ItemsPurchased.drawerItems = [
-          {
-            text: ItemsPurchased.strings["staffApproval.approve"],
-            value: "Approve"
-          },
-          {
-            text: ItemsPurchased.strings["staffApproval.deny"],
-            value:"Deny"
-          }
-        ]
+        ItemsPurchased.drawerItems = []
 
         //create new instance of buildfire carousel viewer
         ItemsPurchased.view = null;
@@ -38,6 +28,24 @@
         ItemsPurchased.currentLoggedInUser = null;
 
         const itemsPurchasedListView = new buildfire.components.listView('itemsPurchasedContainer');
+
+        async function setDrawerItems() {
+            const approveMessage = await Utils.getLanguage("staffApproval.approve");
+            const denyMessage = await Utils.getLanguage("staffApproval.deny");
+
+            ItemsPurchased.drawerItems = [
+                {
+                    text: approveMessage,
+                    value: "Approve"
+                },
+                {
+                    text: denyMessage,
+                    value:"Deny"
+                }
+            ];
+        }
+
+        setDrawerItems()
 
 
         buildfire.appearance.getAppTheme((err, appTheme) => {

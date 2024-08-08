@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('ApprovalRequestsCtrl', ['$scope', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'Context', '$window', 'Transactions', 'STATUS',
-    function ($scope, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, Context, $window, Transactions, STATUS) {
+    .controller('ApprovalRequestsCtrl', ['$scope','Utils', 'ViewStack', 'LoyaltyAPI', 'STATUS_CODE', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'RewardCache', '$rootScope', '$sce', 'Context', '$window', 'Transactions', 'STATUS',
+    function ($scope, Utils, ViewStack, LoyaltyAPI, STATUS_CODE, TAG_NAMES, LAYOUTS, DataStore, RewardCache, $rootScope, $sce, Context, $window, Transactions, STATUS) {
         var ApprovalRequests = this;
         ApprovalRequests.deepLinkingDone = false;
         ApprovalRequests.isEmployer = false;
@@ -18,19 +18,26 @@
         ApprovalRequests.isPointItemsLoading = false;
         ApprovalRequests.isRedeemItemsLoading = false;
         ApprovalRequests.currentLoggedInUser = null
-        ApprovalRequests.strings = $rootScope.strings;
         ApprovalRequests.Settings = null;
-        ApprovalRequests.drawerItems = [
-          {
-            text: ApprovalRequests.strings["staffApproval.approve"],
-            value: "Approve"
-          },
-          {
-            text: ApprovalRequests.strings["staffApproval.deny"],
-            value:"Deny"
-          }
-        ]
+        ApprovalRequests.drawerItems = []
         var breadCrumbFlag = true;
+        async function setDrawerItems() {
+            const approveMessage = await Utils.getLanguage("staffApproval.approve");
+            const denyMessage = await Utils.getLanguage("staffApproval.deny");
+
+            ApprovalRequests.drawerItems = [
+                {
+                    text: approveMessage,
+                    value: "Approve"
+                },
+                {
+                    text: denyMessage,
+                    value:"Deny"
+                }
+            ];
+        }
+
+        setDrawerItems();
 
         buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
           if (result && result.length) {
@@ -47,17 +54,6 @@
           }
         });
 
-        $window.strings.getLanguage(function(err, response){
-          const obj = response[0] ? response[0].data : $window.strings._data;
-          const strings = {};
-           Object.keys(obj).forEach(function (section){
-             Object.keys(obj[section]).forEach(function (label) {
-               strings[section + '.' + label] = obj[section][label].value || obj[section][label].defaultValue;
-             });
-           });
-           ApprovalRequests.strings = {...ApprovalRequests.strings, ...strings};
-           $rootScope.strings = {...ApprovalRequests.strings, ...strings};
-        });
 
         //create new instance of buildfire carousel viewer
         ApprovalRequests.view = null;

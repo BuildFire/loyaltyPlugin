@@ -261,7 +261,7 @@
             },
             imageUrl: imageUrl,
             pluginTitle: pluginTitle,
-            _buildfire :{ 
+            _buildfire :{
               index: {
                 text: user.displayName ? user.displayName : user.email,
                 date1: new Date(),
@@ -303,7 +303,7 @@
               pluginTitle: pluginTitle,
               approvedOn: null,
               approvedBy: null,
-              _buildfire :{ 
+              _buildfire :{
                 index: {
                   text: user.displayName ? user.displayName : user.email,
                   date1: new Date()
@@ -339,7 +339,7 @@
             status: STATUS.Approved,
             currentPointsAmount: currentPointsAmount,
             pluginTitle: pluginTitle,
-            _buildfire :{ 
+            _buildfire :{
               index: {
                 text: user.displayName ? user.displayName : user.email,
                 date1: new Date(),
@@ -381,7 +381,7 @@
               pluginTitle: pluginTitle,
               approvedOn: null,
               approvedBy: null,
-              _buildfire :{ 
+              _buildfire :{
                 index: {
                   text: user.displayName ? user.displayName : user.email,
                   date1: new Date()
@@ -412,7 +412,7 @@
             pointsSpent: pointsSpent,
             currentPointsAmount: currentPointsAmount,
             pluginTitle: pluginTitle,
-            _buildfire :{ 
+            _buildfire :{
               index: {
                 text: user.displayName ? user.displayName : user.email,
                 date1: new Date(),
@@ -434,7 +434,7 @@
           });
           return deferred.promise;
         },
-        
+
         requestRedeem: function (item, pointsSpent, currentPointsAmount, user) {
           var pluginTitle = buildfire.getContext().title;
           const data = {
@@ -448,7 +448,7 @@
             pointsSpent: pointsSpent,
             currentPointsAmount: currentPointsAmount,
             pluginTitle: pluginTitle,
-            _buildfire :{ 
+            _buildfire :{
               index: {
                 text: user.displayName ? user.displayName : user.email,
                 date1: new Date(),
@@ -475,12 +475,12 @@
           item.data.approvedOn = new Date();
           var deferred = $q.defer();
           buildfire.publicData.update(
-            item.id, 
+            item.id,
             item.data,
             TAG_NAMES.TRANSACTIONS,
             (err, result) => {
               if (err) return deferred.reject(err);
-          
+
               return deferred.resolve(result);
             }
           );
@@ -651,6 +651,20 @@
             });
           }
         }
+      };
+    }])
+    .factory('Utils', [function () {
+      return {
+      getLanguage: function (key) {
+        return new Promise((resolve, reject) => {
+          buildfire.language.get({ stringKey: key }, (err, res) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(res);
+          });
+        });
+      },
       };
     }])
 })(window.angular, window.buildfire);

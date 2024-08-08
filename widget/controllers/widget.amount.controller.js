@@ -3,15 +3,14 @@
 (function (angular) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetAmountCtrl', ['$scope', 'ViewStack', 'RewardCache', 'TAG_NAMES', 'DataStore', '$sce', '$rootScope', 'Transactions',
-      function ($scope, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce, $rootScope, Transactions) {
+    .controller('WidgetAmountCtrl', ['$scope', 'Utils', 'ViewStack', 'RewardCache', 'TAG_NAMES', 'DataStore', '$sce', '$rootScope', 'Transactions',
+      function ($scope, Utils, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce, $rootScope, Transactions) {
 
         var WidgetAmount = this;
         var breadCrumbFlag = true;
 
         WidgetAmount.data = [];
         WidgetAmount.listeners = {};
-        WidgetAmount.strings = $rootScope.strings;
         WidgetAmount.currentUser = null;
 
           buildfire.history.get('pluginBreadcrumbsOnly', function (err, result) {
@@ -94,12 +93,15 @@
         WidgetAmount.confirmCode = function () {
           var calculatedPoints = (WidgetAmount.amount * WidgetAmount.application.pointsPerDollar) + WidgetAmount.application.pointsPerVisit + currentView.loyaltyPoints;
           if (WidgetAmount.application.totalLimit <= calculatedPoints) {
-            buildfire.dialog.toast({
-              message: WidgetAmount.strings["redeem.redeemDailyLimit"],
-              type: "danger",
+
+            Utils.getLanguage('redeem.redeemDailyLimit').then(message=>{
+              buildfire.dialog.toast({
+                message: message,
+                type: "danger",
+              });
             });
           }
-          else if(WidgetAmount.data.settings && WidgetAmount.data.settings.approvalType 
+          else if(WidgetAmount.data.settings && WidgetAmount.data.settings.approvalType
                 && WidgetAmount.data.settings.approvalType == "REMOVE_VIA_APP") {
               Transactions.requestPoints(WidgetAmount.amount, WidgetAmount.amount, $rootScope.loyaltyPoints, WidgetAmount.currentUser, "POINTS PURCHASE", null)
               buildfire.notifications.pushNotification.schedule(

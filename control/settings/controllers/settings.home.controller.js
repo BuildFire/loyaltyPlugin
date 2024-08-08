@@ -6,10 +6,12 @@
             function ($scope, Buildfire, LoyaltyAPI, TAG_NAMES, $sce) {
                 var SettingsHome = this;
                 SettingsHome.data = null;
+                SettingsHome.userTagsInput = null;
                 SettingsHome.ftqFeatureItems = [];
                 SettingsHome.tags = [];
                 SettingsHome.redemptionCodeError = false;
                 SettingsHome.showRedemptionCode = true;
+                SettingsHome.enableGetMorePointsButton = true;
                 SettingsHome.currency = [{
                     name: "USD, AUD, NZD, CAD, Peso, Real, etc. ",
                     symbol: '&#36;'
@@ -50,7 +52,6 @@
                     name: "Rand",
                     symbol: "ZAR"
                 }];
-
                 SettingsHome.purchaseOptions = [{
                     name: "Per Money Spent",
                     value: "perMoneySpent"
@@ -78,7 +79,6 @@
                     }
 
                     if (result && result.data && result.data.length > 0) {
-                        console.log(result)
                         SettingsHome.ftqFeatureItems = result.data;
                         if (!$scope.$$phase) $scope.$digest();
                         changeActionItemIcon();
@@ -152,6 +152,8 @@
                 }
 
                 var init = function () {
+
+                    handleUserTagsInput();
                     buildfire.datastore.get(TAG_NAMES.LOYALTY_INFO, function (err, data) {
                         if (err)
                             console.error('Error while getting data', err);
@@ -167,9 +169,13 @@
                                         if (!SettingsHome.data.settings.approvalType) {
                                             SettingsHome.data.settings.approvalType = "ON_SITE_VIA_PASSCODE"
                                         }
+                                        if (!SettingsHome.data.settings.hasOwnProperty('enableGetMorePointsButton')) {
+                                            SettingsHome.data.settings.enableGetMorePointsButton = true
+                                        }
                                     } else {
                                         SettingsHome.data.settings = {
-                                            approvalType: "ON_SITE_VIA_PASSCODE"
+                                            approvalType: "ON_SITE_VIA_PASSCODE",
+                                            enableGetMorePointsButton: true
                                         }
                                     }
 
@@ -177,13 +183,22 @@
                                         && SettingsHome.data.settings.approvalType == "REMOVE_VIA_APP" && SettingsHome.data.settings.purchaseOption
                                         && SettingsHome.data.settings.purchaseOption.value == "scoreFromFreeTextQuestionnaire") {
                                         SettingsHome.showRedemptionCode = false;
+
                                     }
                                     buildfire.datastore.get("Tags", function (err, result) {
                                         if (err || !result) {
                                             console.error("Error saving the widget details: ", err);
                                         } else {
-                                            SettingsHome.tags = result.data
-
+                                            SettingsHome.tags = result.data;
+                                            if (SettingsHome.tags && SettingsHome.tags.length > 0) {
+                                                SettingsHome.tags = SettingsHome.tags.map(tag => {
+                                                    return {
+                                                        ...tag,
+                                                        value: tag.tagName
+                                                    };
+                                                });
+                                                SettingsHome.userTagsInput.append(SettingsHome.tags);
+                                            }
                                             if (!$scope.$$phase) $scope.$apply();
                                             updateMasterItem(SettingsHome.data);
                                             if (tmrDelay) clearTimeout(tmrDelay);
@@ -194,29 +209,23 @@
                         }
                     });
                 };
-
-                SettingsHome.openTagDialog = function () {
-                    buildfire.auth.showTagsSearchDialog(null, (err, result) => {
-                        if (err) return console.error(err);
-                        if (result && result != null) {
-                            SettingsHome.tags = result;
-                            if (!$scope.$$phase) $scope.$apply();
-                            buildfire.datastore.save(SettingsHome.tags, "Tags", function (err, result) {
-                                if (err || !result) {
-                                    console.error("Error saving the widget details: ", err);
-                                }
-                            });
-                        }
+                var handleUserTagsInput = function () {
+                    SettingsHome.userTagsInput = new buildfire.components.control.userTagsInput('#customTagsInputContainer', {
+                        languageSettings: {
+                            placeholder: 'User Tags',
+                        },
                     });
-                }
-
-                SettingsHome.removeTag = function (index) {
-                    SettingsHome.tags.splice(index, 1);
-                    buildfire.datastore.save(SettingsHome.tags, "Tags", function (err, result) {
-                        if (err || !result) {
-                            console.error("Error saving the widget details: ", err);
+                    SettingsHome.userTagsInput.onUpdate = function (data) {
+                        if (SettingsHome.tags.length === data.tags.length) {
+                            return ;
                         }
-                    });
+                        SettingsHome.tags = data.tags;
+                        buildfire.datastore.save(SettingsHome.tags, "Tags", function (err, result) {
+                            if (err || !result) {
+                                console.error("Error saving the widget details: ", err);
+                            }
+                        });
+                    }
                 }
 
                 SettingsHome.changeCurrency = function (currency) {
@@ -259,7 +268,6 @@
                 };
 
                 var addEditApplication = function (newObj) {
-                    console.log(newObj)
                     let isPurchaseOptionFtqSelected = false;
                     if (newObj.settings.purchaseOption && newObj.settings.purchaseOption.value == "scoreFromFreeTextQuestionnaire"
                         && newObj.settings.approvalType && newObj.settings.approvalType == "REMOVE_VIA_APP") {
@@ -299,7 +307,6 @@
                         });
                     },
                         error = function (err) {
-                            console.log('Error while saving data : ', err);
                             if (err && err.code == 2000) {
                                 buildfire.messaging.sendMessageToWidget({
                                     type: 'AppCreated'
@@ -324,13 +331,16 @@
                         if (tmrDelay) {
                             clearTimeout(tmrDelay);
                         }
-                        if (newObj.settings.purchaseOption && newObj.settings.purchaseOption.value == "scoreFromFreeTextQuestionnaire"
-                            && newObj.settings.approvalType && newObj.settings.approvalType == "REMOVE_VIA_APP") {
+                        if (newObj.settings.purchaseOption && newObj.settings.purchaseOption.value === "scoreFromFreeTextQuestionnaire"
+                            && newObj.settings.approvalType && newObj.settings.approvalType === "REMOVE_VIA_APP") {
                             newObj.settings.redemptionPasscode = "12345"
                             newObj.settings.pointsPerVisit = 0
                             newObj.settings.pointsPerDollar = 0
                             newObj.settings.totalLimit = 50000
                             newObj.settings.dailyLimit = 10000
+                        }
+                        if (newObj.settings.purchaseOption && newObj.settings.purchaseOption.value !== "scoreFromFreeTextQuestionnaire"){
+                            SettingsHome.data.settings.enableGetMorePointsButton = true;
                         }
 
                         if (newObj.settings.redemptionPasscode && newObj.settings.redemptionPasscode.length != 5) {

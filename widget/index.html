@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="loyaltyPluginWidget">
 <head>
-  <meta name="buildfire" content="enableMDTheme" />
-  <meta name="buildfire" content="disableBootstrap" />
-  <!-- CSS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="buildfire" content="enableMDTheme,disableBootstrap,enablePluginJsonLoad" />
+  <meta charset="utf-8"/>
+    
+    <!-- CSS -->
   <link rel="stylesheet" href="../../../styles/bootstrap.css">
   <link rel="stylesheet" href="../../../styles/siteIcons.css">
   <link rel="stylesheet" href="../../../styles/appStyle.css">
@@ -43,33 +45,52 @@
   <script src="controllers/widget.awarded.controller.js"></script>
   <script src="../../../scripts/angular/angular-animate.min.js"></script>
   <link rel="stylesheet" href="../../../styles/transitionAnimation.css">
-
-  <!-- listView -->
+  <link rel="stylesheet" href="../../../styles/components/skeleton.css" />
+    
+    
+    <!-- listView -->
   <link rel="stylesheet" href="../../../styles/components/listView.css" />
   <script src="../../../scripts/buildfire/components/listView/listView.js"></script>
   <link href="../../../styles/materialDesign/material-components-web@4.0.0.min.css" rel="stylesheet">
   <script src="../../../scripts/materialDesign/material-components-web@4.0.0.min.js" type="text/javascript"></script>
-
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <script src="js/shared/strings.js"></script>
-  <script src="js/shared/stringsConfig.js"></script>
-
-  <script>
-    function initStrings() {
-      let strings = new buildfire.services.Strings("en-us", stringsConfig);
-      window.strings = strings;
-    }
-    initStrings();
-  </script>
-
+  <script src="../../../scripts/buildfire/components/skeleton/skeleton.js"></script>
+    
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <!-- Meta -->
   <meta charset="utf-8">
 </head>
 <body class="body-scroll slide no-scroll">
 <div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content mdc-theme--background" data-back-img="{{itemListbackgroundImage}}">
-  <!--<h3>Loyalty Plugin App has been Loaded</h3>-->
-  <div ng-if="WidgetHome.data.design.listLayout" ng-include="'templates/' + WidgetHome.data.design.listLayout + '.html'">
+  
+  
+  <div ng-show="WidgetHome.skeleton.layout!==null && WidgetHome.data.design.listLayout === 'List_Layout_1'" class="skeleton-layout-1">
+      <div class="current-points-skeleton"></div>
+        <div class="list-layout-1">
+          <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+        </div>
+    </div>
+    
+  <div ng-show="WidgetHome.skeleton.layout !== null && (WidgetHome.data.design.listLayout==='List_Layout_2' || WidgetHome.data.design.listLayout ==='List_Layout_3')"
+    ng-class="{
+    'skeleton-layout-2': WidgetHome.data.design.listLayout === 'List_Layout_2',
+    'skeleton-layout-3': WidgetHome.data.design.listLayout === 'List_Layout_3'
+}">
+    <div class="current-points-skeleton"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
   </div>
+    
+    
+    <!--<h3>Loyalty Plugin App has been Loaded</h3>-->
+  <div ng-if="WidgetHome.data.design.listLayout && WidgetHome.skeleton.layout === null" ng-include="'templates/' + WidgetHome.data.design.listLayout + '.html'">
+  </div>
+
 </div>
 <div view-switcher=""></div>
 </body>

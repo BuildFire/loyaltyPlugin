@@ -16,30 +16,31 @@
     <div class="description padding-bottom-zero word-break mdc-theme--text-primary-on-background" ng-if="WidgetHome.showDescription(WidgetHome.description)">
       <p ng-bind-html='WidgetHome.safeHtml(WidgetHome.description)'></p>
     </div>
-		<div class="current-points mdc-theme--text-primary-on-background" ng-if="WidgetHome.carouselImages && WidgetHome.loyaltyRewards">
+		<div class="current-points mdc-theme--text-primary-on-background" ng-show="WidgetHome.carouselImages && WidgetHome.loyaltyRewards">
 			<div class="text-center">
         <p ng-if="!(WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)"><span
           class="text-primary"><a href="javascript:void(0);"
-                                  ng-click="WidgetHome.openLogin()">{{WidgetHome.strings["general.loginOrRegister"]}}</a></span>
-                                  <span>{{WidgetHome.strings["general.toGetPoints"]}}</span></p>
+                                  ng-click="WidgetHome.openLogin()" bfString="general.loginOrRegister"></a></span>
+                                  <span bfString="general.toGetPoints"></span></p>
 
         <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id">
-          <span>{{WidgetHome.strings["general.currentlyHave"]}} </span><span
-            class="text-primary">{{loyaltyPoints | number : 2}}</span>
-            <span style="text-transform: lowercase;">{{WidgetHome.strings["general.points"]}}</span>.
+          <span bfString="general.currentlyHave"></span><span
+            class="text-primary"> {{loyaltyPoints | number : 2}}</span>
+            <span style="text-transform: lowercase;" bfString="general.points"></span>.
         </p>
         <p ng-if="WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id && PointsWaitingForApproval > 0">
           <span class="text-primary">{{PointsWaitingForApproval | number : 2}}</span> <span style="text-transform: lowercase;">points waiting for approval</span>.
         </p>
-        <a class="btn btn-primary padding-left-twenty padding-right-twenty"
+        <a ng-show="WidgetHome.data.settings.enableGetMorePointsButton" class="btn btn-primary padding-left-twenty padding-right-twenty"
            href="javascript:void(0);"
            ng-click="WidgetHome.openGetPoints()"
            ng-disabled="!WidgetHome.applicationExists"
-           >{{WidgetHome.strings["general.getMore"]}}</a>
+           bfString="general.getMore"
+           ></a>
 			</div>
 		</div>
      	<div class="list" ng-if="WidgetHome.loyaltyRewards && WidgetHome.carouselImages">
-			<div class="list-item" ng-repeat="reward in WidgetHome.loyaltyRewards | filter: { pointsToRedeem: '!38762499627' }" ng-click="WidgetHome.openReward(reward, $index)"">
+			<div class="list-item" ng-repeat="reward in WidgetHome.loyaltyRewards | filter: { pointsToRedeem: '!38762499627' }" ng-click="WidgetHome.openReward(reward, $index)">
         <div class="list-media-holder square-icon pull-left" ng-click="WidgetHome.openReward(reward, $index)" ng-if="reward.listImage">
           <img load-image="1x1" aspect-ratio="1:1"
                 data-final-src="{{reward.listImage}}">
@@ -47,13 +48,15 @@
         <div class="list-item-copy ellipsis">
           <a class="text-primary ellipsis" href="javascript:void(0);">{{reward.title}}</a>
           <p  class="caption ellipsis margin-zero opacity-seventy mdc-theme--text-primary-on-background">{{reward.pointsToRedeem}}
-            <span class="opacity-seventy">{{WidgetHome.strings["general.points"]}}</span></p>
+            <span class="opacity-seventy">
+                  {{WidgetHome.pointMessage}}
+            </span></p>
         </div>
 			</div>
 		</div>
     <div ng-show="WidgetHome.loyaltyRewards.length == 0">
       <div id="empty_state">
-        <img src="./assets/.images/ic_bookmark_empty.svg" />
+        <img src="./assets/images/ic_bookmark_empty.svg" />
         <label style="font-weight: bold;margin-top: 32px;font-size: 16px;" class="mdc-theme--text-primary-on-background">Nothing To Redeem Yet</label>
         <label style="margin-top: 8px;font-size:14px;font-weight: 400;">Rewards will appear here</label>
       </div>

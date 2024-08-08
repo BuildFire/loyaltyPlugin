@@ -2,9 +2,9 @@
      WidgetBuyItems">
 
   <div class="buy-products-header">
-    <p>{{WidgetBuyItems.strings["buyItems.productName"]}}</p>
-    <p>{{WidgetBuyItems.strings["buyItems.pointsPerProduct"]}}</p>
-    <p>{{WidgetBuyItems.strings["buyItems.quantity"]}}</p>
+    <p bfString="buyItems.productName"></p>
+    <p bfString="buyItems.pointsPerProduct"></p>
+    <p bfString="buyItems.quantity"></p>
   </div>
 
   <div class="buy-products-body" ng-repeat="item in WidgetBuyItems.items" ng-if="item.pointsPerItem > 0">
@@ -15,16 +15,17 @@
   </div>
 
   <div class="buy-products-body">
-    <p class="redeem-title" style="text-align: left;"><strong>{{WidgetBuyItems.strings["buyItems.totalPoints"]}}</strong></p>
+    <p class="redeem-title" style="text-align: left;"><strong bfString="buyItems.totalPoints"></strong></p>
     <p>{{WidgetBuyItems.totalPoints}}</p>
     <div></div>
   </div>
 
-  <div class="next-btn margin-top-twenty">
+  <div class="next-btn buy-product-btn-container margin-bottom-thirty">
     <button class="btn btn-primary stretch margin-top"
             href="javascript:void(0);" ng-click="WidgetBuyItems.confirmCode()"
             ng-disabled="WidgetBuyItems.isNextDisabled()"
-        >{{WidgetBuyItems.strings["general.next"]}}
+            bfString="general.next"
+        >
     </button>
   </div>
 </div>
