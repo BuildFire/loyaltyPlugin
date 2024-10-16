@@ -92,9 +92,9 @@
 
         WidgetAmount.confirmCode = function () {
           var calculatedPoints = (WidgetAmount.amount * WidgetAmount.application.pointsPerDollar) + WidgetAmount.application.pointsPerVisit + currentView.loyaltyPoints;
-          if (WidgetAmount.application.totalLimit <= calculatedPoints) {
+          if (WidgetAmount.application.totalLimit < calculatedPoints) {
 
-            Utils.getLanguage('redeem.redeemDailyLimit').then(message=>{
+            Utils.getLanguage('redeem.redeemTotalLimit').then(message=>{
               buildfire.dialog.toast({
                 message: message,
                 type: "danger",

@@ -161,6 +161,15 @@
                       $rootScope.reloadRewards = false;
                   }
               });
+              buildfire.datastore.get(TAG_NAMES.LOYALTY_INFO,function(err,data){
+                  ContentHome.settings = data.data.settings;
+                  if (!ContentHome.settings || !ContentHome.settings.redemptionPasscode){
+                      ContentHome.showRedemptionPasscodeHint = true;
+                  } else {
+                      ContentHome.showRedemptionPasscodeHint = false;
+                  }
+                  ContentHome.initializeSettings();
+              });
           };
 
           ContentHome.initializeSettings = function() {
@@ -169,7 +178,11 @@
                       purchaseOption: {
                           name: "Per Money Spent",
                           value: "perMoneySpent"
-                      }
+                      },
+                      pointsPerDollar: 1,
+                      pointsPerVisit: 1,
+                      totalLimit: 5000,
+                      dailyLimit: 1000,
                   };
                   buildfire.datastore.save({settings: ContentHome.settings}, TAG_NAMES.LOYALTY_INFO, function (err, data) {
                       if (err) {
@@ -187,6 +200,33 @@
                       }
                   });
 
+              }
+              else {
+                  var saveSettingForCompatibility = false;
+                  if (!ContentHome.settings.hasOwnProperty('totalLimit')) {
+                      ContentHome.settings.totalLimit = 5000;
+                      saveSettingForCompatibility = true;
+                  }
+                  if (!ContentHome.settings.hasOwnProperty('dailyLimit')) {
+                      ContentHome.settings.dailyLimit = 1000;
+                      saveSettingForCompatibility = true;
+                  }
+                  if (!ContentHome.settings.hasOwnProperty('pointsPerVisit')) {
+                      ContentHome.settings.pointsPerVisit = 1;
+                      saveSettingForCompatibility = true;
+                  }
+                  if (!ContentHome.settings.hasOwnProperty('pointsPerDollar')) {
+                      ContentHome.settings.pointsPerDollar = 1;
+                      saveSettingForCompatibility = true;
+                  }
+
+                  if (saveSettingForCompatibility){
+                      buildfire.datastore.save({settings: ContentHome.settings}, TAG_NAMES.LOYALTY_INFO, function (err, data) {
+                          if (err){
+                              console.error('Error while saving data:', err);
+                          }
+                      })
+                  }
               }
           };
 

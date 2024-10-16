@@ -172,10 +172,14 @@
                                         if (!SettingsHome.data.settings.hasOwnProperty('enableGetMorePointsButton')) {
                                             SettingsHome.data.settings.enableGetMorePointsButton = true
                                         }
+                                        if (!SettingsHome.data.settings.hasOwnProperty('redemptionPasscode')) {
+                                            SettingsHome.data.settings.redemptionPasscode = "12345"
+                                        }
                                     } else {
                                         SettingsHome.data.settings = {
                                             approvalType: "ON_SITE_VIA_PASSCODE",
-                                            enableGetMorePointsButton: true
+                                            enableGetMorePointsButton: true,
+                                            redemptionPasscode: "12345",
                                         }
                                     }
 

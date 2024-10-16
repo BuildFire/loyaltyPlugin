@@ -3,8 +3,8 @@
 (function (angular) {
   angular
     .module('loyaltyPluginWidget')
-    .controller('WidgetBuyItemsCtrl', ['$scope', 'ViewStack', 'RewardCache', 'TAG_NAMES', 'DataStore', '$sce', '$rootScope', 'Transactions',
-      function ($scope, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce, $rootScope, Transactions) {
+    .controller('WidgetBuyItemsCtrl', ['$scope','Utils', 'ViewStack', 'RewardCache', 'TAG_NAMES', 'DataStore', '$sce', '$rootScope', 'Transactions',
+      function ($scope, Utils, ViewStack, RewardCache, TAG_NAMES, DataStore, $sce, $rootScope, Transactions) {
 
         var WidgetBuyItems = this;
         var breadCrumbFlag = true;
@@ -118,8 +118,8 @@
           });
           var amount = calculatedPoints;
           calculatedPoints +=  WidgetBuyItems.application.pointsPerVisit + currentView.loyaltyPoints;
-          if (WidgetBuyItems.application.totalLimit <= calculatedPoints) {
-            Utils.getLanguage('redeem.redeemDailyLimit').then(message=>{
+          if (WidgetBuyItems.application.totalLimit < calculatedPoints) {
+            Utils.getLanguage('redeem.redeemTotalLimit').then(message=>{
               buildfire.dialog.toast({
                 message: message,
                 type: "danger",
