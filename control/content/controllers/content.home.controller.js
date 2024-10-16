@@ -183,7 +183,6 @@
                       pointsPerVisit: 1,
                       totalLimit: 5000,
                       dailyLimit: 1000,
-                      redemptionPasscode: ContentHome.defaultPassCode
                   };
                   buildfire.datastore.save({settings: ContentHome.settings}, TAG_NAMES.LOYALTY_INFO, function (err, data) {
                       if (err) {
@@ -220,10 +219,7 @@
                       ContentHome.settings.pointsPerDollar = 1;
                       saveSettingForCompatibility = true;
                   }
-                  if (!ContentHome.settings.hasOwnProperty('redemptionPasscode')) {
-                      ContentHome.settings.redemptionPasscode = ContentHome.defaultPassCode;
-                      saveSettingForCompatibility = true;
-                  }
+
                   if (saveSettingForCompatibility){
                       buildfire.datastore.save({settings: ContentHome.settings}, TAG_NAMES.LOYALTY_INFO, function (err, data) {
                           if (err){
