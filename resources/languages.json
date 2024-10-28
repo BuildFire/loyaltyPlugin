@@ -122,6 +122,12 @@
           "maxLength": 60,
           "defaultValue": "You have exceeded the daily limit."
         },
+        "redeemTotalLimit": {
+          "title": "Exceeded Total Limit Message",
+          "placeholder": "You have exceeded the total limit.",
+          "maxLength": 60,
+          "defaultValue": "You have exceeded the total limit."
+        },
         "insufficientFunds": {
           "title": "Insufficient Funds Error Messages",
           "placeholder": "You have insufficient points. Please get points to redeem awards.",
