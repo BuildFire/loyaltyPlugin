@@ -135,7 +135,6 @@ i {
 
  }
  .add-item-a, .add-item-a:hover {
-	font-family: 'Conv_apercu_regular';
 	color: white;
  }
 .icon-edit{
@@ -181,9 +180,9 @@ i {
  }
 
  .action-items {
-	width:100%; 
-	position:fixed; 
-	background-color:white; 
-	bottom:0px; 
+	width:100%;
+	position:fixed;
+	background-color:white;
+	bottom:0px;
 	z-index:1;
  }
