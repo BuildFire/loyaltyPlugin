@@ -129,12 +129,17 @@
           return deferred.promise;
         };
 
-        var addLoyaltyPoints = function (userId, userToken, loyaltyUnqiueId, passcode, amount) {
+        var addLoyaltyPoints = function (userId, userToken, loyaltyUnqiueId, passcode, amount, points) {
           var deferred = $q.defer();
           if (!loyaltyUnqiueId) {
             deferred.reject(new Error('Undefined application'));
           }
-          $http.get(getProxyServerUrl() + '/api/loyaltyUserAddPoint/' + userId + '?userToken=' + encodeURIComponent(userToken) + '&loyaltyUnqiueId=' + loyaltyUnqiueId + '&redemptionPasscode=' + passcode + '&purchaseAmount=' + amount)
+
+          var url = getProxyServerUrl() + '/api/loyaltyUserAddPoint/' + userId + '?userToken=' + encodeURIComponent(userToken) + '&loyaltyUnqiueId=' + loyaltyUnqiueId + '&redemptionPasscode=' + passcode + '&purchaseAmount=' + amount;
+          if (points !== undefined) {
+            url += '&points=' + points;
+          }
+          $http.get(url)
             .success(function (response) {
               if (response)
                 deferred.resolve(response);
@@ -146,7 +151,6 @@
             });
           return deferred.promise;
         };
-
         var validatePasscode = function (userToken, loyaltyUnqiueId, passcode) {
           var deferred = $q.defer();
           if (!loyaltyUnqiueId) {

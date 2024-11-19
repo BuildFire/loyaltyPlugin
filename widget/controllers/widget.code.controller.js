@@ -42,8 +42,16 @@
         WidgetCode.addPoints = function () {
           var success = function (result) {
             Buildfire.spinner.hide();
-            $rootScope.$broadcast('POINTS_ADDED', {points: (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit});
-            var pointsAwarded = (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit;
+            var pointsAwarded
+            var purchaseOptionValue =  WidgetCode.application.settings.value;
+            if(purchaseOptionValue === 'perMoneySpent'){
+              $rootScope.$broadcast('POINTS_ADDED', {points: (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit});
+              pointsAwarded = (currentView.amount * WidgetCode.application.pointsPerDollar) + WidgetCode.application.pointsPerVisit;
+            }
+            else {
+              $rootScope.$broadcast('POINTS_ADDED', {points: currentView.amount + WidgetCode.application.pointsPerVisit});
+              pointsAwarded = currentView.amount + WidgetCode.application.pointsPerVisit;
+            }
             ViewStack.push({
               template: 'Awarded',
               pointsAwarded: pointsAwarded
@@ -70,7 +78,8 @@
 
           };
           Buildfire.spinner.show();
-          checkIfUserDailyLimitExceeded(currentView, WidgetCode, function (err, res) {
+          var purchaseOptionValue =  WidgetCode.application.settings.value;
+          checkIfUserDailyLimitExceeded(currentView, WidgetCode, purchaseOptionValue, function (err, res) {
             if (err) return error(err);
             buildfire.auth.getCurrentUser(function (err, user) {
               if (user) {
@@ -123,7 +132,8 @@
                   }
 
                 } else {
-                  LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, `${WidgetCode.context.appId}_${WidgetCode.context.instanceId}`, WidgetCode.passcode, currentView.amount).then(success, error);
+                  LoyaltyAPI.addLoyaltyPoints(WidgetCode.currentLoggedInUser._id, WidgetCode.currentLoggedInUser.userToken, `${WidgetCode.context.appId}_${WidgetCode.context.instanceId}`, WidgetCode.passcode, currentView.amount, res.data.pointsAwarded
+                  ).then(success, error);
                 }
               }
             })
