@@ -116,6 +116,12 @@
           "maxLength": 60,
           "defaultValue": "Error redeeming reward. Please try again later."
         },
+        "notEnoughPoints": {
+          "title": "Not Enough Points Error Messages",
+          "placeholder": "The user does not have enough points to redeem this item.",
+          "maxLength": 100,
+          "defaultValue": "The user does not have enough points to redeem this item."
+        },
         "redeemDailyLimit": {
           "title": "Exceeded Daily Limit Message",
           "placeholder": "You have exceeded the daily limit.",
