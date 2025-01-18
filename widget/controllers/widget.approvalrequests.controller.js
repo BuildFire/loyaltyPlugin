@@ -68,78 +68,95 @@
         const pointslistView = new buildfire.components.listView('pointsContainer');
 
 
-        redeemslistView.onItemActionClicked = (item) => {
-          var success = function (result) {
-            ApprovalRequests.RedeemItems = ApprovalRequests.RedeemItems.filter(x => x.id != item.id )
-            redeemslistView.clear();
-            redeemslistView.loadListViewItems(ApprovalRequests.RedeemItems)
-            updateListViewDesign();
-
-          }
-          , error = function (err) {
-              if (err ) {
-                  console.error('Error Updating Reddeem Status', err);
-              }
-          };
-
-          buildfire.components.drawer.open(
-            {
-              listItems: ApprovalRequests.drawerItems
-            },
-            (err, result) => {
-              if (err) return console.error(err);
-              buildfire.components.drawer.closeDrawer();
-              var status = "";
-              if(result.value == "Approve"){
-                status = STATUS.Approved
-              } else {
-                status = STATUS.Denied
-              }
-              let selectedItem = ApprovalRequests.RedeemResult.find(x => x.id == item.id )
-
-              Transactions.updateRequestedRedeemStatus(selectedItem, status, ApprovalRequests.currentLoggedInUser.displayName ? ApprovalRequests.currentLoggedInUser.displayName : ApprovalRequests.currentLoggedInUser.email ).then(success, error).then(x =>{
-                if(status == STATUS.Approved){
-                  buildfire.dialog.toast({
-                    message: item.data.points + " points approved for " + item.title,
-                    type: "success"
-                  });
-                  LoyaltyAPI.redeemPoints(selectedItem.data.createdBy._id, selectedItem.data.createdBy.userToken, `${ApprovalRequests.context.appId}_${ApprovalRequests.context.instanceId}`, selectedItem.data.item._id).then();
-
-                  buildfire.notifications.pushNotification.schedule(
-                    {
-                      title: "Points Approved",
-                      text: item.data.points + " points earned from " + item.title + " have been approved",
-                      users: [selectedItem.data.createdBy._id]
-                    , at: new Date()
-                    },
-                    (err, result) => {
-                      if (err) return console.error(err);
-                    }
-                  );
-                } else {
-                  buildfire.dialog.toast({
-                    message: item.data.points + " points denied for " + item.title,
-                    type: "danger"
-                  });
-                  buildfire.notifications.pushNotification.schedule(
-                    {
-                      title: "Points Denied",
-                      text: item.data.points + " points earned from " + item.title + " have been denied",
-                      users: [selectedItem.data.createdBy._id]
-                    , at: new Date()
-                    },
-                    (err, result) => {
-                      if (err) return console.error(err);
-                    }
-                  );
-                }
-
-              });
+      redeemslistView.onItemActionClicked = (item) => {
+        var success = function (result) {
+          ApprovalRequests.RedeemItems = ApprovalRequests.RedeemItems.filter(x => x.id != item.id);
+          redeemslistView.clear();
+          redeemslistView.loadListViewItems(ApprovalRequests.RedeemItems);
+          updateListViewDesign();
+          },
+          error = function (err) {
+            if (err) {
+              console.error('Error Updating Redeem Status', err);
             }
-          );
-        };
+          };
+        buildfire.components.drawer.open(
+          {
+            listItems: ApprovalRequests.drawerItems
+          },
+          (err, result) => {
+            if (err) return console.error(err);
+            buildfire.components.drawer.closeDrawer();
+            var status = "";
+            if (result.value == "Approve") {
+              status = STATUS.Approved;
+            } else {
+              status = STATUS.Denied;
+            }
+            let selectedItem = ApprovalRequests.RedeemResult.find(x => x.id == item.id);
 
-        pointslistView.onItemActionClicked = (item) => {
+            LoyaltyAPI.getLoyaltyPoints(
+              selectedItem.data.createdBy.userId,
+              selectedItem.data.createdBy.userToken,
+              ApprovalRequests.context.appId + "_" + ApprovalRequests.context.instanceId
+            ).then(async (points) => {
+              // Check if user points are less than item points
+              if (points.totalPoints < item.data.points) {
+                const errorMessage = await Utils.getLanguage("redeem.notEnoughPoints");
+                buildfire.dialog.toast({message: errorMessage, type: "danger"});
+                return;
+              }
+
+              Transactions.updateRequestedRedeemStatus(selectedItem, status,
+                ApprovalRequests.currentLoggedInUser.displayName
+                  ? ApprovalRequests.currentLoggedInUser.displayName
+                  : ApprovalRequests.currentLoggedInUser.email
+              )
+                .then(success, error)
+                .then(() => {
+                  if (status == STATUS.Approved) {
+                    buildfire.dialog.toast({
+                      message: item.data.points + " points approved for " + item.title,
+                      type: "success"
+                    });
+                    LoyaltyAPI.redeemPoints(selectedItem.data.createdBy._id, selectedItem.data.createdBy.userToken, `${ApprovalRequests.context.appId}_${ApprovalRequests.context.instanceId}`, selectedItem.data.item._id).then();
+
+                    buildfire.notifications.pushNotification.schedule(
+                      {
+                        title: "Points Approved",
+                        text: item.data.points + " points earned from " + item.title + " have been approved",
+                        users: [selectedItem.data.createdBy._id],
+                        at: new Date()
+                      },
+                      (err, result) => {
+                        if (err) return console.error(err);
+                      }
+                    );
+                  } else {
+                    buildfire.dialog.toast({
+                      message: item.data.points + " points denied for " + item.title,
+                      type: "danger"
+                    });
+                    buildfire.notifications.pushNotification.schedule(
+                      {
+                        title: "Points Denied",
+                        text: item.data.points + " points earned from " + item.title + " have been denied",
+                        users: [selectedItem.data.createdBy._id],
+                        at: new Date()
+                      },
+                      (err, result) => {
+                        if (err) return console.error(err);
+                      }
+                    );
+                  }
+                });
+            });
+          }
+        );
+      };
+
+
+      pointslistView.onItemActionClicked = (item) => {
           var success = function (result) {
 
           }
