@@ -101,7 +101,7 @@
               ApprovalRequests.context.appId + "_" + ApprovalRequests.context.instanceId
             ).then(async (points) => {
               // Check if user points are less than item points
-              if (points.totalPoints < item.data.points) {
+              if (status !== STATUS.Denied && points.totalPoints < item.data.points) {
                 const errorMessage = await Utils.getLanguage("redeem.notEnoughPoints");
                 buildfire.dialog.toast({message: errorMessage, type: "danger"});
                 return;
