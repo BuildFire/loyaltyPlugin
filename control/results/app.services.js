@@ -24,7 +24,7 @@
           }
           if(title != ""){
             filter.$or = [
-              { "item.title": { $regex: "test", $options: 'i' } },
+              { "_buildfire.index.text": { $regex: title, $options: 'i' } },
             ];
           }
          
