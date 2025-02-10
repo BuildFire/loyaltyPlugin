@@ -6,12 +6,14 @@
             function ($scope, Buildfire, LoyaltyAPI, TAG_NAMES, $sce) {
                 var SettingsHome = this;
                 SettingsHome.data = null;
+                SettingsHome.clonedData = null;
                 SettingsHome.userTagsInput = null;
                 SettingsHome.ftqFeatureItems = [];
                 SettingsHome.tags = [];
                 SettingsHome.redemptionCodeError = false;
                 SettingsHome.showRedemptionCode = true;
                 SettingsHome.enableGetMorePointsButton = true;
+                SettingsHome.validationErrors = {};
                 SettingsHome.currency = [{
                     name: "USD, AUD, NZD, CAD, Peso, Real, etc. ",
                     symbol: '&#36;'
@@ -187,8 +189,9 @@
                                         && SettingsHome.data.settings.approvalType == "REMOVE_VIA_APP" && SettingsHome.data.settings.purchaseOption
                                         && SettingsHome.data.settings.purchaseOption.value == "scoreFromFreeTextQuestionnaire") {
                                         SettingsHome.showRedemptionCode = false;
-
                                     }
+                                    setDefaultSettingsValue();
+                                    SettingsHome.clonedData = angular.copy(SettingsHome.data);
                                     buildfire.datastore.get("Tags", function (err, result) {
                                         if (err || !result) {
                                             console.error("Error saving the widget details: ", err);
@@ -231,6 +234,35 @@
                         });
                     }
                 }
+
+                var setDefaultSettingsValue = function (data) {
+                    let settings = data ? data : SettingsHome.data.settings;
+                    
+                    if (SettingsHome.data && SettingsHome.data.settings && !SettingsHome.data.settings.pointsPerDollar) {
+                        SettingsHome.data.settings.pointsPerDollar = 1;
+                    } else if (SettingsHome.data && SettingsHome.data.settings && SettingsHome.data.settings.pointsPerDollar < 0) {
+                        SettingsHome.data.settings.pointsPerDollar = settings.pointsPerDollar > 0 ? settings.pointsPerDollar : 1;
+                    }
+
+                    if (SettingsHome.data && SettingsHome.data.settings && !SettingsHome.data.settings.pointsPerVisit) {
+                        SettingsHome.data.settings.pointsPerVisit = 1;
+                    } else if (SettingsHome.data && SettingsHome.data.settings && SettingsHome.data.settings.pointsPerVisit < 0) {
+                        SettingsHome.data.settings.pointsPerVisit = settings.pointsPerVisit > 0 ? settings.pointsPerVisit : 1;
+                    }
+
+                    if (SettingsHome.data && SettingsHome.data.settings && !SettingsHome.data.settings.dailyLimit) {
+                        SettingsHome.data.settings.dailyLimit = 1000;
+                    } else if (SettingsHome.data && SettingsHome.data.settings && SettingsHome.data.settings.dailyLimit < 1) {
+                        SettingsHome.data.settings.dailyLimit = settings.dailyLimit > 0 ? settings.dailyLimit : 1000;
+                    }
+
+                    if (SettingsHome.data && SettingsHome.data.settings && !SettingsHome.data.settings.totalLimit) {
+                        SettingsHome.data.settings.totalLimit = settings.redemptionPasscode || 5000;
+                    } else if (SettingsHome.data && SettingsHome.data.settings && SettingsHome.data.settings.totalLimit < 0) {
+                        SettingsHome.data.settings.totalLimit = settings.totalLimit > 0 ? settings.totalLimit : 5000;
+                    }
+                }
+
 
                 SettingsHome.changeCurrency = function (currency) {
                     if (!SettingsHome.data.settings) {
@@ -335,6 +367,11 @@
                         if (tmrDelay) {
                             clearTimeout(tmrDelay);
                         }
+                        const isSettingsValid = $scope.validateSettings(newObj.settings);
+                        if (isSettingsValid !== true) {
+                            return;
+                        }
+                    
                         if (newObj.settings.purchaseOption && newObj.settings.purchaseOption.value === "scoreFromFreeTextQuestionnaire"
                             && newObj.settings.approvalType && newObj.settings.approvalType === "REMOVE_VIA_APP") {
                             newObj.settings.redemptionPasscode = "12345"
@@ -346,6 +383,9 @@
                         if (newObj.settings.purchaseOption && newObj.settings.purchaseOption.value !== "scoreFromFreeTextQuestionnaire"){
                             SettingsHome.data.settings.enableGetMorePointsButton = true;
                         }
+                        else {
+                            SettingsHome.clonedData = angular.copy(SettingsHome.data);
+                        }
 
                         if (newObj.settings.redemptionPasscode && newObj.settings.redemptionPasscode.length != 5) {
                             SettingsHome.redemptionCodeError = true
@@ -353,12 +393,53 @@
                             SettingsHome.redemptionCodeError = false
 
                         }
+
                         tmrDelay = setTimeout(function () {
                             SettingsHome.saveData(JSON.parse(angular.toJson(newObj)), TAG_NAMES.LOYALTY_INFO);
                         }, 500);
 
                     }
                 };
+
+                $scope.validateSettings = function (settings) {
+                    SettingsHome.validationErrors = {};
+
+                    if (SettingsHome.showRedemptionCode && !SettingsHome.data.settings.redemptionPasscode) {
+                        SettingsHome.validationErrors.redemptionPasscode = "Required";
+                    }
+
+                    if (settings.purchaseOption && settings.purchaseOption.value === "scoreFromFreeTextQuestionnaire") {
+                        setDefaultSettingsValue(SettingsHome.clonedData.settings);
+                        return Object.keys(SettingsHome.validationErrors).length === 0 ? true : SettingsHome.validationErrors;
+                    }
+
+                    if (settings.pointsPerDollar === undefined || settings.pointsPerDollar === null || settings.pointsPerDollar === '') {
+                        SettingsHome.validationErrors.pointsPerDollar = "Required";
+                    } else if (settings.pointsPerDollar < 0) {
+                        SettingsHome.validationErrors.pointsPerDollar = "Points Per Dollar Spent cannot be less than zero";
+                    }
+                
+                    if (settings.pointsPerVisit === undefined || settings.pointsPerVisit === null || settings.pointsPerVisit === '') {
+                        SettingsHome.validationErrors.pointsPerVisit = "Required";
+                    } else if (settings.pointsPerVisit < 0) {
+                        SettingsHome.validationErrors.pointsPerVisit = "Extra Points Per Purchase cannot be less than zero";
+                    }
+                
+                    if (settings.totalLimit === undefined || settings.totalLimit === null || settings.totalLimit === '') {
+                        SettingsHome.validationErrors.totalLimit = "Required";
+                    } else if (settings.totalLimit < 0) {
+                        SettingsHome.validationErrors.totalLimit = "Total Points Limit cannot be less than zero";
+                    }
+                
+                    if (settings.dailyLimit === undefined || settings.dailyLimit === null || settings.dailyLimit === '') {
+                        SettingsHome.validationErrors.dailyLimit = "Required";
+                    } else if (settings.dailyLimit < 1) {
+                        SettingsHome.validationErrors.dailyLimit = "Daily Points Limit cannot be less than one";
+                    }
+                
+                    return Object.keys(SettingsHome.validationErrors).length === 0 ? true : SettingsHome.validationErrors;
+                };
+                
                 $scope.$watch(function () {
                     return SettingsHome.data;
                 }, SettingsHome.saveDataWithDelay, true);
