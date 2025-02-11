@@ -17,7 +17,8 @@
 
     <div class="col-md-12">
         <div class="input-group margin-bottom-twenty">
-            <input type="text" id="searchItemText" ng-model="ResultsHome.title" class="form-control" placeholder="Search By User Name" />
+            <input type="text" id="searchItemText" ng-model="ResultsHome.title" class="form-control" placeholder="Search Using Names or Email"
+                   ng-keydown="($event.keyCode === 13) ? ResultsHome.search() : 0" />
             <span class="input-group-btn">
             <button class="btn btn-info stretch margin-left-zero" ng-click="ResultsHome.search()">
                 <span class="icon icon-magnifier"></span>
