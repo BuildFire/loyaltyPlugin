@@ -17,7 +17,7 @@
 
     <div class="col-md-12">
         <div class="input-group margin-bottom-twenty">
-            <input type="text" id="searchItemText" ng-model="ResultsHome.title" class="form-control" placeholder="Search" />
+            <input type="text" id="searchItemText" ng-model="ResultsHome.title" class="form-control" placeholder="Search By User Name" />
             <span class="input-group-btn">
             <button class="btn btn-info stretch margin-left-zero" ng-click="ResultsHome.search()">
                 <span class="icon icon-magnifier"></span>
@@ -58,7 +58,7 @@
         </div>
     </div>
     <div    class="transactions transaction-tb"
-    infinite-container=".transactions"	
+    infinite-container=".transactions"
     infinite-scroll="getMoreTransactions()"
     infinite-scroll-disabled="ResultsHome.loading || ResultsHome.noMore"
     infinite-scroll-immediate-check="false"
@@ -70,7 +70,7 @@
             <tr class="firstRow">
                 <th style="text-align: center !important"  class="date-th" ng-click="ResultsHome.sortData()">Date   <span ng-if="ResultsHome.dateSort === -1" style="margin-left: 5px;"
                     class="btn-icon icon-chevron-down transition-third"
-                    ></span> 
+                    ></span>
                     <span ng-if="ResultsHome.dateSort === 1" style="margin-left: 5px;"
                     class="btn-icon icon-chevron-up transition-third"
                     ></span> </th>
