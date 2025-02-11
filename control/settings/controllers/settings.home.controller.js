@@ -263,9 +263,10 @@
                     } else if (SettingsHome.data && SettingsHome.data.settings && SettingsHome.data.settings.dailyLimit < 1) {
                         SettingsHome.data.settings.dailyLimit = settings.dailyLimit > 0 ? settings.dailyLimit : 1000;
                     }
+                    console.log(SettingsHome.data.settings);
 
                     if (SettingsHome.data && SettingsHome.data.settings && !SettingsHome.data.settings.totalLimit) {
-                        SettingsHome.data.settings.totalLimit = settings.redemptionPasscode || 5000;
+                        SettingsHome.data.settings.totalLimit = settings.totalLimit || 5000;
                     } else if (SettingsHome.data && SettingsHome.data.settings && SettingsHome.data.settings.totalLimit < 0) {
                         SettingsHome.data.settings.totalLimit = settings.totalLimit > 0 ? settings.totalLimit : 5000;
                     }
