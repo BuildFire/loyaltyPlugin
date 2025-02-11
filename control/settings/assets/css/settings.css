@@ -231,3 +231,14 @@ input:disabled + label {
 .info-note{
     font-size:13px;
 }
+
+.border-danger {
+    border: 1px solid #ed4b4b
+}
+
+.text-danger {
+    font-size: 12px;
+    margin: 0;
+    padding-top: 4px;
+    padding-left: 4px;
+}
