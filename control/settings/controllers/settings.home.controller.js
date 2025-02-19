@@ -61,7 +61,7 @@
                     value: "perProductsPurchased"
                 },
                 {
-                    name: "Score from Free Text Questionnaire",
+                    name: "Score from Questionnaire",
                     value: "scoreFromFreeTextQuestionnaire"
                 }];
 
