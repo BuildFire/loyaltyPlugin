@@ -70,10 +70,12 @@
 </div>
 <hr ng-show="SettingsHome.data.settings.approvalType=='REMOVE_VIA_APP'" class="none">
 <div class="flex">
-    <label class="tooltip-container col-md-4">Staff Confirmation Passcode</label>
+    <label class="tooltip-container col-md-4">
+        <span>Staff Confirmation Passcode<span class="text-danger"> *</span></span>
+    </label>
     <div class="main col-xs-9">
-        <input type="text" class="form-control "
-               ng-model="SettingsHome.data.settings.redemptionPasscode" maxlength="5">
+        <input type="text" class="form-control" ng-model="SettingsHome.data.settings.redemptionPasscode" ng-class="{'border-danger': SettingsHome.validationErrors.redemptionPasscode}" maxlength="5">
+        <p class="text-danger" ng-show="SettingsHome.validationErrors.redemptionPasscode">{{SettingsHome.validationErrors.redemptionPasscode}}</p>
         <p ng-show="SettingsHome.redemptionCodeError && SettingsHome.showRedemptionCode" class="text-warning margin-top-five">Staff Confirmation Passcode must consist of 5 characters</p>
     </div>
 </div>
@@ -101,17 +103,17 @@
   <hr class="none">
     <div class="flex">
         <label class="tooltip-container col-md-4">
-            <span>Extra Points Per Purchase<span class="text-danger">*</span></span>
+            <span>Extra Points Per Purchase<span class="text-danger"> *</span></span>
             <span class="btn-info-icon btn-primary">
         <span class="cp-tooltip">
         Offer bonus points for every purchase made by a user
         </span>
-      </span>
-        </label>
-        <div class="main col-xs-9">
-            <input type="number" class="form-control"
-                   ng-model="SettingsHome.data.settings.pointsPerVisit">
-        </div>
+    </span>
+      </label>
+      <div class="main col-xs-9">
+        <input type="number" class="form-control" ng-model="SettingsHome.data.settings.pointsPerVisit" ng-class="{'border-danger': SettingsHome.validationErrors.pointsPerVisit}">
+        <p class="text-danger" ng-show="SettingsHome.validationErrors.pointsPerVisit">{{SettingsHome.validationErrors.pointsPerVisit}}</p>
+      </div>
     </div>
     
     <hr class="none">
@@ -124,14 +126,15 @@
       </span>
         </label>
         <div class="main col-xs-9">
-            <input type="number" class="form-control"
-                   ng-model="SettingsHome.data.settings.pointsPerDollar">
-        </div>
+            <input type="number" class="form-control" ng-model="SettingsHome.data.settings.pointsPerDollar" ng-class="{'border-danger': SettingsHome.validationErrors.pointsPerDollar}">
+            <p class="text-danger" ng-show="SettingsHome.validationErrors.pointsPerDollar">{{SettingsHome.validationErrors.pointsPerDollar}}</p>
+         </div>
     </div>
     
     <hr class="none" ng-if="SettingsHome.data.settings.purchaseOption.value !== 'perProductsPurchased'">
     <div class="flex">
-        <label class="tooltip-container col-md-4">Daily Points Limit
+        <label class="tooltip-container col-md-4">
+            <span>Daily Points Limit<span class="text-danger"> *</span></span>
             <span class="btn-info-icon btn-primary">
         <span class="cp-tooltip">
        Determine the daily limit for the number of
@@ -140,22 +143,23 @@
       </span>
         </label>
         <div class="main col-xs-9">
-            <input type="number" class="form-control"
-                   ng-model="SettingsHome.data.settings.dailyLimit">
+            <input type="number" class="form-control" ng-model="SettingsHome.data.settings.dailyLimit" ng-class="{'border-danger': SettingsHome.validationErrors.dailyLimit}">
+            <p class="text-danger" ng-show="SettingsHome.validationErrors.dailyLimit">{{SettingsHome.validationErrors.dailyLimit}}</p>
         </div>
     </div>
     
     <hr class="none">
     <div class="flex">
-        <label class="tooltip-container col-md-4">Total Points Limit
+        <label class="tooltip-container col-md-4">
+            <span>Total Points Limit<span class="text-danger"> *</span></span>
             <span class="btn-info-icon btn-primary">
         <span class="cp-tooltip">Specify the maximum number of points that a user can earn through the rewards program
         </span>
       </span>
         </label>
         <div class="main col-xs-9">
-            <input type="number" class="form-control"
-                   ng-model="SettingsHome.data.settings.totalLimit">
+            <input type="number" class="form-control" ng-model="SettingsHome.data.settings.totalLimit" ng-class="{'border-danger': SettingsHome.validationErrors.totalLimit}">
+            <p class="text-danger" ng-show="SettingsHome.validationErrors.totalLimit">{{SettingsHome.validationErrors.totalLimit}}</p>
         </div>
     </div>
 </div>
