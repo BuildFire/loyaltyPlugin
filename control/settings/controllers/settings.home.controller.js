@@ -252,7 +252,7 @@
                         SettingsHome.data.settings.pointsPerDollar = settings.pointsPerDollar > 0 ? settings.pointsPerDollar : 1;
                     }
 
-                    if (SettingsHome.data && SettingsHome.data.settings && !SettingsHome.data.settings.pointsPerVisit) {
+                    if (SettingsHome.data && SettingsHome.data.settings && typeof SettingsHome.data.settings.pointsPerVisit !== 'number') {
                         SettingsHome.data.settings.pointsPerVisit = 1;
                     } else if (SettingsHome.data && SettingsHome.data.settings && SettingsHome.data.settings.pointsPerVisit < 0) {
                         SettingsHome.data.settings.pointsPerVisit = settings.pointsPerVisit > 0 ? settings.pointsPerVisit : 1;
