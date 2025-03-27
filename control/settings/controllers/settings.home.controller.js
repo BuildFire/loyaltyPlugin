@@ -423,7 +423,7 @@
                     }
 
 
-                    if (typeof settings.pointsPerVisit !== 'number') {
+                    if (settings.pointsPerVisit === undefined || settings.pointsPerVisit === null || settings.pointsPerVisit === '') {
                         SettingsHome.validationErrors.pointsPerVisit = "Required";
                     } else if (settings.pointsPerVisit < 0) {
                         SettingsHome.validationErrors.pointsPerVisit = "Extra Points Per Purchase cannot be less than zero";
