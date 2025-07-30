@@ -106,7 +106,6 @@
                 buildfire.dialog.toast({message: errorMessage, type: "danger"});
                 return;
               }
-
               Transactions.updateRequestedRedeemStatus(selectedItem, status,
                 ApprovalRequests.currentLoggedInUser.displayName
                   ? ApprovalRequests.currentLoggedInUser.displayName
@@ -224,6 +223,11 @@
                   LoyaltyAPI.addLoyaltyPoints(selectedItem.data.createdBy._id, selectedItem.data.createdBy.userToken, `${ApprovalRequests.context.appId}_${ApprovalRequests.context.instanceId}`, ApprovalRequests.Settings.redemptionPasscode, item.data.points).then(successLoyaltyPoints, errorLoyaltyPoints);
                 } else {
                   var updatedItem = ApprovalRequests.PointResult.find(x => x.id == item.id ) ;
+                  ApprovalRequests.PointItems = ApprovalRequests.PointItems.filter(x => x.id != item.id )
+
+                  pointslistView.clear();
+                  pointslistView.loadListViewItems(ApprovalRequests.PointItems)
+                  updateListViewDesign();
                   buildfire.dialog.toast({
                     message: item.data.points + " points denied for " + item.title,
                     type: "danger"
@@ -331,74 +335,100 @@
             var successRequestedRedeems = function(result){
               ApprovalRequests.isRedeemItemsLoading = false;
               if(result && result.length){
-                ApprovalRequests.RedeemResult = result;
+                const userIds = result.map(el => el.data.createdBy.userId);
+                getUserProfiles(userIds).then(users => {
+                  const validUsers = users.map(user => user.userId);
+                  ApprovalRequests.RedeemResult = result.filter(element => validUsers.includes(element.data.createdBy.userId));
+                  let items = []
+                  ApprovalRequests.RedeemResult.forEach(element => {
 
-                let items = []
-                result.forEach(element => {
-
-                  items.push({
-                    id: element.id,
-                    title: element.data.createdBy.displayName ? element.data.createdBy.displayName : element.data.createdBy.username ,
-                    imageUrl: buildfire.auth.getUserPictureUrl({ userId: element.data.createdBy.userId }),
-                    subtitle: element.data.item.title + " (" + element.data.item.pointsToRedeem + " Points)",
-                    description: formatDate(element.data.createdAt),
-                    data: {
-                      points: element.data.item.pointsToRedeem,
-                    },
-                    action: {
-                      icon: 'material-icons material-inject--more'
-                    }
-                  })
-                });
-                ApprovalRequests.RedeemItems = items;
-                redeemslistView.loadListViewItems(items)
-                updateListViewDesign();
-              }
-            }, errorRequestedRedeems = function (err) {
-              ApprovalRequests.isRedeemItemsLoading = false;
-              console.error('Error while getting data', err);
-            }
-
-            var successRequestedPoints = function(result){
-               ApprovalRequests.isPointItemsLoading = false;
-              if(result && result.length){
-                ApprovalRequests.PointResult = result;
-                let items = []
-                result.forEach(element => {
-                  let title = "";
-                  let subTitle = "";
-                  let isClickable = false;
-                  if(element.data.items){
-                    let title = "";
-                    element.data.items.forEach(item => {
-                      title == "" ? title = item.title : title += ", "+ item.title
-                    })
-                    subTitle = (element.data.items.length == 1 ? element.data.items.length  + " item" :   element.data.items.length + " items") + " • " +  element.data.pointsEarned + " Points"
-                    isClickable = true;
-                  } else if(element.data.item){
-                    title = element.data.item.title;
-                    subTitle = (element.data.item.title == "POINTS PURCHASE" ? element.data.purchaseAmount + "$" : element.data.item.title)    + " • " + element.data.pointsEarned + " Points"
-                  }
-                  items.push({
+                    items.push({
                       id: element.id,
                       title: element.data.createdBy.displayName ? element.data.createdBy.displayName : element.data.createdBy.username ,
                       imageUrl: buildfire.auth.getUserPictureUrl({ userId: element.data.createdBy.userId }),
-                      subtitle: subTitle,
+                      subtitle: element.data.item.title + " (" + element.data.item.pointsToRedeem + " Points)",
                       description: formatDate(element.data.createdAt),
                       data: {
-                        points: element.data.pointsEarned,
-                        isClickable: isClickable,
-                        title: title
+                        points: element.data.item.pointsToRedeem,
                       },
                       action: {
                         icon: 'material-icons material-inject--more'
                       }
                     })
+                  });
+                  ApprovalRequests.RedeemItems = items;
+                  redeemslistView.loadListViewItems(items)
+                  updateListViewDesign();
+                }).catch(error => {
+                  errorRequestedRedeems(error);
+                })
+              }
+            },
 
-                });
-                ApprovalRequests.PointItems = items;
-                pointslistView.loadListViewItems(items)
-                updateListViewDesign();
+              errorRequestedRedeems = function (err) {
+              ApprovalRequests.isRedeemItemsLoading = false;
+              console.error('Error while getting data', err);
+            }
+
+            var successRequestedPoints = function(result){
+              if(result && result.length){
+                const userIds = result.map(el => el.data.createdBy.userId);
+                getUserProfiles(userIds).then(users => {
+                  const validUsers = users.map(user => user.userId);
+                  result = result.filter(element => validUsers.includes(element.data.createdBy.userId));
+                  if (result && result.length) {
+                    ApprovalRequests.PointResult = result;
+
+                    let items = []
+                    result.forEach(element => {
+                      let title = "";
+                      let subTitle = "";
+                      let isClickable = false;
+                      if(element.data.items){
+                        let title = "";
+                        element.data.items.forEach(item => {
+                          title == "" ? title = item.title : title += ", "+ item.title
+                        })
+                        subTitle = (element.data.items.length == 1 ? element.data.items.length  + " item" :   element.data.items.length + " items") + " • " +  element.data.pointsEarned + " Points"
+                        isClickable = true;
+                      } else if(element.data.item){
+                        title = element.data.item.title;
+                        subTitle = (element.data.item.title == "POINTS PURCHASE" ? element.data.purchaseAmount + "$" : element.data.item.title)    + " • " + element.data.pointsEarned + " Points"
+                      }
+                      items.push({
+                        id: element.id,
+                        title: element.data.createdBy.displayName ? element.data.createdBy.displayName : element.data.createdBy.username ,
+                        imageUrl: buildfire.auth.getUserPictureUrl({ userId: element.data.createdBy.userId }),
+                        subtitle: subTitle,
+                        description: formatDate(element.data.createdAt),
+                        data: {
+                          points: element.data.pointsEarned,
+                          isClickable: isClickable,
+                          title: title
+                        },
+                        action: {
+                          icon: 'material-icons material-inject--more'
+                        }
+                      })
+
+                    });
+                    ApprovalRequests.PointItems = items;
+                    pointslistView.loadListViewItems(items)
+                    updateListViewDesign();
+                    ApprovalRequests.isPointItemsLoading = false;
+                    $scope.$apply();
+                  }
+                  else {
+                    ApprovalRequests.isPointItemsLoading = false;
+                    $scope.$apply();
+                  }
+                }).catch(error => {
+                  errorRequestedPoints(error);
+                })
+              }
+              else {
+                ApprovalRequests.isPointItemsLoading = false;
+                $scope.$apply();
               }
             }, errorRequestedPoints = function (err) {
               ApprovalRequests.isPointItemsLoading = false;
@@ -426,6 +456,16 @@
                   ApprovalRequests.Settings = result.data.settings
                 }
               })
+            });
+          })
+        }
+
+        var getUserProfiles = function (userIds){
+          return new Promise((resolve, reject) =>{
+            const uniqueUserIds = [...new Set(userIds)]
+            buildfire.auth.getUserProfiles({ userIds: uniqueUserIds }, (err, users) => {
+              if (err) return reject(err)
+              return resolve(users)
             });
           })
         }
