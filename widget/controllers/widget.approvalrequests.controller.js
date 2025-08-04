@@ -235,7 +235,7 @@
                   buildfire.notifications.pushNotification.schedule(
                     {
                       title: "Reward Denied",
-                      text:  (updatedItem.data.title == '' ? "BUY POINTS" : updatedItem.data.title) + " has been denied",
+                      text:  (updatedItem?.data?.item?.title || 'BUY POINTS') + " has been denied",
                       users: [updatedItem.data.createdBy._id]
                     , at: new Date()
                     },
