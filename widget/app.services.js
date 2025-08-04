@@ -669,6 +669,11 @@
           });
         });
       },
+      getUserName: function (user)  {
+        const firstName = user?.firstName?.trim() || '';
+        const lastName = user?.lastName?.trim() || '';
+        return user?.displayName || user?.username || `${firstName} ${lastName}`.trim() ;
+        }
       };
     }])
 })(window.angular, window.buildfire);

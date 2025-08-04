@@ -120,7 +120,7 @@
                     buildfire.notifications.pushNotification.schedule(
                       {
                         title: "Item Redeem Approval Request",
-                        text: user.displayName + " would like to redeem " + WidgetItem.reward.title,
+                        text: Utils.getUserName(user) + " would like to redeem " + WidgetItem.reward.title,
                         groupName: "employerGroup",
                         queryString: "toEmployer=true"
                         , at: new Date()
