@@ -141,7 +141,7 @@
               buildfire.notifications.pushNotification.schedule(
                 {
                   title: "Points Approval Request",
-                  text: (WidgetBuyItems.currentUser.displayName != "" ? WidgetBuyItems.currentUser.displayName : WidgetBuyItems.currentUser.email)+ " requests " + points + " points earned for "  + (items.length == 1 ? "1 item" : items.length + " items"),
+                  text: Utils.getUserName(WidgetBuyItems.currentUser) + " requests " + points + " points earned for "  + (items.length == 1 ? "1 item" : items.length + " items"),
                   groupName: "employerGroup"
                 , at: new Date()
                 },

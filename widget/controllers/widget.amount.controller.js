@@ -107,7 +107,7 @@
               buildfire.notifications.pushNotification.schedule(
                 {
                   title: "Points Approval Request",
-                  text:  WidgetAmount.currentUser.displayName + " requests " + WidgetAmount.amount + " points earned",
+                  text:  Utils.getUserName(WidgetAmount.currentUser) + " requests " + WidgetAmount.amount + " points earned",
                   groupName: "employerGroup"
                 , at: new Date()
                 },
