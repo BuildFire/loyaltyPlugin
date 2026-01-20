@@ -253,6 +253,8 @@
       })
       .run(['Location', '$location', '$rootScope', 'RewardCache', 'ViewStack', 'Context', '$window',
           function (Location, $location, $rootScope, RewardCache, ViewStack, Context, $window) {
+              buildfire.appearance.titlebar.show();
+              
               buildfire.messaging.onReceivedMessage = function (msg) {
                   switch (msg.type) {
                       case 'AddNewItem':

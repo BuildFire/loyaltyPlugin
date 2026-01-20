@@ -79,8 +79,7 @@ next-btn .amount-next-btn {
 }
 
 html[safe-area="true"] body.has-safe-area .done-btn-container {
-    padding-bottom: calc(2rem + constant(safe-area-inset-bottom)) !important;
-    padding-bottom: calc(2rem + env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(2rem + var(--bf-safe-area-inset-bottom)) !important;
 }
 
 .done-btn {
@@ -105,7 +104,7 @@ html[safe-area="true"] body.has-safe-area .done-btn-container {
 
 .layout1 .list-grid {
     padding: 12px !important;
-    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    padding-bottom: calc(24px + var(--bf-safe-area-inset-top));
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 12px;
@@ -460,7 +459,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 .amount-holder,
 .code-holder,
 .awarded-holder {
-    height: calc(100% - 4vh - env(safe-area-inset-bottom));
+    height: calc(100% - 4vh - var(--bf-safe-area-inset-top));
     position: relative;
     display: flex;
     align-items: center;
@@ -487,7 +486,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 .alert-danger {
     position: absolute;
     width: calc(100% - 32px);
-    bottom: calc(0px + env(safe-area-inset-bottom));
+    bottom: calc(0px + var(--bf-safe-area-inset-top));
     left: 50%;
     transform: translateX(-50%);
 }
