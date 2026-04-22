@@ -191,7 +191,7 @@
             );
             $rootScope.$broadcast('POINTS_ADDED', { points: selectedItem.data.points, userId: updatedItem.data.createdBy._id });
           }, errorLoyaltyPoints = function (err) {
-            if (err ) {
+            if (err) {
                 console.error('Error Add ing Loyalty Points', err);
             }
         };
@@ -278,6 +278,7 @@
           let listViewItemDescription = document.querySelectorAll(".listViewItemDescription")
           let glyphicons = document.querySelectorAll(".glyphicon")
           let listViewItemTitle =  document.querySelectorAll(".listViewItemTitle")
+          let listViewItemImg = document.querySelectorAll(".listViewItemImg")
 
           listViewItemTitle.forEach(el => {
             el.style.color = ApprovalRequests.appTheme.colors.headerText
@@ -290,8 +291,13 @@
           })
           glyphicons.forEach(el => {
             el.style.color = ApprovalRequests.appTheme.colors.icons
+          })
 
-        })
+          listViewItemImg.forEach(img => {
+            img.onerror = function() {
+              this.src = 'https://app.buildfire.com/app/media/avatar.png';
+            }
+          })
         }
 
         /**
@@ -341,11 +347,11 @@
                   ApprovalRequests.RedeemResult = result.filter(element => validUsers.includes(element.data.createdBy.userId));
                   let items = []
                   ApprovalRequests.RedeemResult.forEach(element => {
-
+                    const userImageUrl = buildfire.auth.getUserPictureUrl({ userId: element.data.createdBy.userId });
                     items.push({
                       id: element.id,
                       title: element.data.createdBy.displayName ? element.data.createdBy.displayName : element.data.createdBy.username ,
-                      imageUrl: buildfire.auth.getUserPictureUrl({ userId: element.data.createdBy.userId }),
+                      imageUrl: userImageUrl || 'https://app.buildfire.com/app/media/avatar.png',
                       subtitle: element.data.item.title + " (" + element.data.item.pointsToRedeem + " Points)",
                       description: formatDate(element.data.createdAt),
                       data: {
@@ -395,10 +401,11 @@
                         title = element.data.item.title;
                         subTitle = (element.data.item.title == "POINTS PURCHASE" ? element.data.purchaseAmount + "$" : element.data.item.title)    + " • " + element.data.pointsEarned + " Points"
                       }
+                      const userImageUrl = buildfire.auth.getUserPictureUrl({ userId: element.data.createdBy.userId });
                       items.push({
                         id: element.id,
                         title: element.data.createdBy.displayName ? element.data.createdBy.displayName : element.data.createdBy.username ,
-                        imageUrl: buildfire.auth.getUserPictureUrl({ userId: element.data.createdBy.userId }),
+                        imageUrl: userImageUrl || 'https://app.buildfire.com/app/media/avatar.png',
                         subtitle: subTitle,
                         description: formatDate(element.data.createdAt),
                         data: {
