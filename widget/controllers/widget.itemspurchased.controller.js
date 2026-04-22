@@ -141,6 +141,9 @@
           })
           listViewItemImg.forEach(el => {
             el.style.borderRadius =  "4px"
+            el.onerror = function() {
+              this.src = 'https://app.buildfire.com/app/media/avatar.png';
+            }
           })
         }
 
@@ -172,7 +175,7 @@
                 items.push({
                     id: element.id,
                     title: element.title,
-                    imageUrl: element.listImage,
+                    imageUrl: element.listImage || 'https://app.buildfire.com/app/media/avatar.png',
                     subtitle: element.pointsPerItem + " Points",
                     description: "Quantity: " + element.quantity
                 })

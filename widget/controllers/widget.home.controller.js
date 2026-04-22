@@ -294,10 +294,11 @@
          * This event listener is bound for "POINTS_REDEEMED" event broadcast
          */
         WidgetHome.listeners['POINTS_REDEEMED'] = $rootScope.$on('POINTS_REDEEMED', function (e, points) {
-          if (points)
+          if (points) {
             $rootScope.loyaltyPoints = $rootScope.loyaltyPoints - points;
-            saveLoyaltyPointsInAppData(WidgetHome.currentLoggedInUser._id, $rootScope.loyaltyPoints, points, "Redeemed")
-
+            saveLoyaltyPointsInAppData(WidgetHome.currentLoggedInUser._id, $rootScope.loyaltyPoints, points, "Redeemed");
+            if (!$rootScope.$$phase) $rootScope.$digest();
+          }
         });
 
         /**
@@ -306,8 +307,11 @@
         WidgetHome.listeners['POINTS_ADDED'] = $rootScope.$on('POINTS_ADDED', function (e, { points, userId }) {
           // no userId means points should be assigned to the logged-in user
           if (!userId) {
-            if (points) $rootScope.loyaltyPoints = $rootScope.loyaltyPoints + points;
-            saveLoyaltyPointsInAppData(WidgetHome.currentLoggedInUser._id, $rootScope.loyaltyPoints, points, "Added")
+            if (points) {
+              $rootScope.loyaltyPoints = $rootScope.loyaltyPoints + points;
+              if (!$rootScope.$$phase) $rootScope.$digest();
+            }
+            saveLoyaltyPointsInAppData(WidgetHome.currentLoggedInUser._id, $rootScope.loyaltyPoints, points, "Added");
           } else {
             // defined users, get their totalPoints first
             buildfire.appData.search(
@@ -324,15 +328,17 @@
                 const totalPoints = res && res.length && res[0].data.totalPoints ?
                   (res[0].data.totalPoints + points)
                   : points;
-                saveLoyaltyPointsInAppData(userId, totalPoints, points, "Added")
+                saveLoyaltyPointsInAppData(userId, totalPoints, points, "Added");
               }
             );
           }
         });
 
         WidgetHome.listeners['POINTS_WAITING_APPROVAL_ADDED'] = $rootScope.$on('POINTS_WAITING_APPROVAL_ADDED', function (e, points) {
-          if (points)
+          if (points) {
             $rootScope.PointsWaitingForApproval = parseInt($rootScope.PointsWaitingForApproval) + parseInt(points);
+            if (!$rootScope.$$phase) $rootScope.$digest();
+          }
         });
 
         /**
