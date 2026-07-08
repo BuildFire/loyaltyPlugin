@@ -69,7 +69,8 @@ next-btn .amount-next-btn {
     align-items: center;
     gap: 1rem;
     padding: 2rem 0;
-    width: 100%;
+    padding-bottom: max(var(--bf-safe-area-inset-bottom), 2rem) !important;
+    width: calc(100% - 2rem);
     position: fixed;
     bottom: 0;
 }
@@ -768,4 +769,10 @@ The 'position: fixed' property does not work well with transform.
 .skeleton-layout-2 .skeleton-button {
     width: 56px !important;
     height: 56px !important;
+}
+
+.holder.layout1,
+.holder.layout2,
+.holder.layout3 {
+    padding-bottom: max(16px, var(--bf-safe-area-inset-bottom)) !important;
 }
